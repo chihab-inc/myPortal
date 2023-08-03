@@ -127,6 +127,12 @@ const config = [
             setElementClassName: 'services',
             links: [
                 {
+                    href: 'https://github.com/chihab-inc/myPortal',
+                    src: 'https://w7.pngwing.com/pngs/914/758/png-transparent-github-social-media-computer-icons-logo-android-github-logo-computer-wallpaper-banner-thumbnail.png',
+                    tip: 'GitHub - MyPortal',
+                    active: true
+                },
+                {
                     href: 'https://go.dev',
                     src: 'https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_LightBlue.png',
                     tip: 'Go Lang Online Editor',
