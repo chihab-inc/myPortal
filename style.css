@@ -1,0 +1,130 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  background: #1e1e1f;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  place-items: center;
+  place-content: center;
+  overflow: hidden;
+  font-family: Verdana, sans-serif;
+}
+body main {
+  min-width: 1000px;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+  
+}
+body main section {
+  width: 100%;
+  min-width: 320px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  place-content: center;
+  gap: 10px;
+}
+body main article {
+  background: #eee2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 5px;
+  padding: 15px;
+}
+body main article .services {
+  list-style-type: none;
+  padding: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+body main article .services li {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  margin: 5px;
+}
+body main article .services li a {
+  color: #333333;
+  background: #ffffff;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-decoration: none;
+  padding: 5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
+  transition: all 0.1s ease-in;
+}
+body main article .services .disabled-link a {
+  opacity: .1;
+  pointer-events: none;
+  background: #333;
+}
+body main #tooltip {
+  display: none;
+  justify-content: flex-start;
+  align-items: center;
+  background: #333;
+  color: #fff;
+  font-size: .6em;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 5px;
+  position: absolute;
+}
+/* body main article .services li .tooltipped {
+  position: relative;
+}
+body main article .services li .tooltipped:after {
+  content: attr(tip);
+  color: #fff;
+  font-size: .6em;
+  width: 90%;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 5px;
+  position: absolute;
+  display: none;
+}
+body main article .services li .tooltipped:hover:after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #333;
+} */
+body main article .services li a:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
+  transform: scale(1.04);
+}
+body main article .services li a img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+body main .other h2 {
+  color: #cd533d;
+}
+body main .client-company h2 {
+  color: #3DCD58;
+}
+body main .service-company h2 {
+  color: #586DB4;
+}

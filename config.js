@@ -1,0 +1,204 @@
+'use strict'
+const SPRINT_NUMBER = 14.2
+
+const config = [
+    [// Section
+        {// SubSection
+            componentClassName: 'client-company',
+            title: 'Schneider Electric',
+            setElementClassName: 'services',
+            links: [
+                {// Link
+                    href: 'https://confluence.se.com/display/PAR/EDE+SAP+API+Documentation',
+                    src: 'https://seeklogo.com/images/C/confluence-logo-D9B07137C2-seeklogo.com.png',
+                    tip: 'Confluence SAP Connector',
+                    active: false
+                },
+                {
+                    href: `https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_sprints/taskboard/Edge/IIoT%20Solutions/IIoT%20Solutions%20Program/PI%2014/Sprint%201${SPRINT_NUMBER}`,
+                    src: 'http://code.benco.io/icon-collection/azure-icons/Backlog.svg',
+                    tip: `EDE Sprint number ${SPRINT_NUMBER}`,
+                    active: false
+                },
+                {
+                    href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/EdgeCore',
+                    src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
+                    tip: 'EdgeCore Repository',
+                    active: false
+                },
+                {
+                    href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/Connect-Collect-Web',
+                    src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
+                    tip: 'Connect Collect Web Repository',
+                    active: false
+                },
+                {
+                    href: 'https://se.iobeya.com/s/download/resources/client-html-plugin/4.18.6.117164939/public/#/en-US/room/6080e8dd-1b85-40eb-a067-19a28f1e9998',
+                    src: 'https://www.iobeya.com/wp-content/uploads/2022/07/cropped-cropped-favico-1.png',
+                    tip: 'IObeya',
+                    active: true
+                },
+                {
+                    href: 'https://confluence.se.com/display/ECA',
+                    src: 'https://seeklogo.com/images/C/confluence-logo-D9B07137C2-seeklogo.com.png',
+                    tip: 'Confluence Edge Compute Apps',
+                    active: true
+                },
+                {
+                    href: 'https://jira.se.com/secure/RapidBoard.jspa?rapidView=11549&projectKey=IECA&quickFilter=60348',
+                    src: 'https://cdn.icon-icons.com/icons2/2429/PNG/512/jira_logo_icon_147274.png',
+                    tip: 'Jira IIOT Edge Compute Apps',
+                    active: true
+                },
+                {
+                    href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/cbm-api',
+                    src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
+                    tip: 'CBM API Repository',
+                    active: true
+                },
+                {
+                    href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/cbm-ui',
+                    src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
+                    tip: 'CBM UI Repository',
+                    active: true
+                },
+                {
+                    href: 'https://schneiderelectric.sharepoint.com/sites/SP-GLB-INDB-PSO/SitePages/PSO-Training.aspx?xsdata=MDV8MDF8fDU5NWQxNDczMzQzNTRhNDE5YzhlMDhkYWM3YWUyNGQ5fDZlNTFlMWFkYzU0YjRiMzliNTk4MGZmZTlhZTY4ZmVmfDB8MHw2MzgwNDE4NDc5ODI4MjQ1OTB8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazkwYUdWeUlpd2lWMVFpT2pFeGZRPT18MXxNVFkyT0RVNE56azVOekE1TWpzeE5qWTROVGczT1RrM01Ea3lPekU1T2pjMk1USTFNR0U1TnpkbVpqUTNaamM1WVRoaE1UQXdNbU13Wmpka05EZGtRSFJvY21WaFpDNTJNZz09fDI2ZmEzYTUxZDRlOTQ3NDI5YzhlMDhkYWM3YWUyNGQ5fGY5YjhhMzE0MzUxNDQyNjhiN2I4NmQzN2RkMGM3MGE5&sdata=RVF4SlNCdllqTkVIdkgyay80cHJ2QTV1b2V4dGxQbW03b3ZvcFN5VG9SST0%3D&ovuser=6e51e1ad-c54b-4b39-b598-0ffe9ae68fef%2CSESA684684%40se.com&OR=Teams-HL&CT=1668595303265&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIyNy8yMjEwMjgwNzIwMCIsIkhhc0ZlZGVyYXRlZFVzZXIiOmZhbHNlfQ%3D%3D',
+                    src: 'https://images.vexels.com/media/users/3/148083/isolated/lists/94cb6a418a107a1c8b2c170a857d53c3-training-square-icon.png',
+                    tip: '=S= Training',
+                    active: true
+                },
+                {
+                    href: 'https://schneiderelectric.sharepoint.com/:x:/r/sites/IIoT2.0EdgeAppsProgramGroup-PI1-AssetPerformanceAPPs/_layouts/15/Doc.aspx?sourcedoc=%7B79C5EBB6-5201-42A2-8FB1-03E7614A598A%7D&file=planning_travail_conges_absences.xlsx&action=default&mobileredirect=true',
+                    src: 'https://www.transparentpng.com/download/holidays/beach-holidays-png-transparent-25.png',
+                    tip: 'Sharepoint Holiday File',
+                    active: true
+                },
+                {
+                    href: 'https://schneider.service-now.com/supportatschneider',
+                    src: 'https://w1.pngwing.com/pngs/483/167/png-transparent-call-logo-customer-service-technical-support-purchasing-service-quality-business-call-centre-selfservice.png',
+                    tip: '=S= Service Now',
+                    active: true
+                },
+                {
+                    href: 'https://pages.github.schneider-electric.com/quartzds/se-icons/',
+                    src: 'https://bs-uploads.toptal.io/blackfish-uploads/components/skill_page/content/logo_file/logo/195467/ui-07d394a42504c33be153ae94c14f36cf-24b9a12e4e385375647fd19e9b5ebc2d.png',
+                    tip: '=S= Icon Library',
+                    active: true
+                },
+            ]
+        },
+        {
+            componentClassName: 'service-company',
+            title: 'AVISTO',
+            setElementClassName: 'services',
+            links: [
+                {
+                    href: 'https://outlook.office.com/mail/',
+                    src: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Circle-icons-mail.svg',
+                    tip: 'Outlook',
+                    active: true
+                },
+                {
+                    href: 'https://portail.advans-group.com/CegidPortal/Home/Index/A004_AVISTO',
+                    src: 'https://www.elsys-design.com/wp-content/uploads/2019/04/picto-elsys-design-600px.jpg',
+                    tip: 'Advance Group Portal',
+                    active: true
+                },
+                {
+                    href: 'https://secure.digiposte.fr',
+                    src: 'https://www.index-education.com/contenu/img/commun/logo-digiposte.png',
+                    tip: 'Digiposte',
+                    active: true
+                },
+                {
+                    href: 'https://assure.generation.fr/adherent',
+                    src: 'https://www.generation.fr/portail-generation-drupal-prd/s3fs-public/uploads/images/logo_blanc_picto.png',
+                    tip: 'Mutuelle Generation',
+                    active: true
+                },
+            ]
+        }
+    ],
+    [
+        {
+            componentClassName: 'client-company',
+            title: 'Productivity',
+            setElementClassName: 'services',
+            links: [
+                {
+                    href: 'https://go.dev',
+                    src: 'https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_LightBlue.png',
+                    tip: 'Go Lang Online Editor',
+                    active: true
+                },
+                {
+                    href: 'https://qtext.io/7813',
+                    src: 'https://qtext.io/static/favicon/512x512.png',
+                    tip: 'QText - Shared Text Editor',
+                    active: true
+                },
+                {
+                    href: 'https://jsoncrack.com/editor',
+                    src: 'https://cdn-1.webcatalog.io/catalog/json-crack/json-crack-icon-filled-256.png?v=1669863995747',
+                    tip: 'Visialize JSON',
+                    active: true
+                },
+                {
+                    href: 'https://www.scrumpoker-online.org/',
+                    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Logo_vote.svg/1200px-Logo_vote.svg.png',
+                    tip: 'Scrum Pocker',
+                    active: true
+                },
+                {
+                    href: 'https://vectr.com/design',
+                    src: 'https://blog.gitnux.com/wp-content/uploads/2023/03/vectr-logo.png',
+                    tip: 'Vectr',
+                    active: true
+                },
+                {
+                    href: 'https://www.photopea.com/',
+                    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Photopea_logo.svg/2048px-Photopea_logo.svg.png',
+                    tip: 'PhotoPea',
+                    active: true
+                },
+                {
+                    href: 'https://www.regextester.com/',
+                    src: 'https://user-images.githubusercontent.com/5418178/175823761-ee7996b9-57be-4abf-be93-0ad25e7f37f0.png',
+                    tip: 'Regex Tester',
+                    active: true
+                },
+                {
+                    href: 'https://app.runwayml.com/',
+                    src: 'https://runwayml.com/images/logo-square.png',
+                    tip: 'Online Video Editor (RotoScope)',
+                    active: true
+                },
+                {
+                    href: 'https://online-video-cutter.com/crop-video',
+                    src: 'https://store-images.s-microsoft.com/image/apps.26533.80453411-e24b-40aa-a3b3-ea06a80e5798.34add786-e76f-411d-a93b-5ffd28c9d579.c7b9e9f7-4528-4a12-bbb2-50bca47a9229',
+                    tip: 'Online Video Editor (Crop, Cut)',
+                    active: true
+                },
+                {
+                    href: 'https://cloudconvert.com/mp4-to-gif',
+                    src: 'https://pbs.twimg.com/profile_images/1488073274991030274/_WcKbgdj_400x400.jpg',
+                    tip: 'Online Video Converter (..., GIF)',
+                    active: true
+                },
+                {
+                    href: 'https://ezgif.com/resize/',
+                    src: 'https://cdn-1.webcatalog.io/catalog/ezgif/ezgif-icon-filled-256.png?v=1675597555306',
+                    tip: 'GIF editor',
+                    active: true
+                },
+                {
+                    href: 'https://codepen.io/pen/',
+                    src: 'https://cdn-icons-png.flaticon.com/512/1626/1626319.png',
+                    tip: 'CodePen',
+                    active: true
+                },
+            ]
+        }
+    ]
+]
