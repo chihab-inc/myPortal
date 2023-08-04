@@ -1,259 +1,5 @@
 'use strict'
 
-const SPRINT_NUMBER = 14.2
-
-if (!localStorage.getItem('config')) {
-    localStorage.setItem(
-        'config',
-        JSON.stringify(
-            [
-                [// Section
-                    {// SubSection
-                        componentClassName: 'client-company',
-                        title: 'Schneider Electric',
-                        setElementClassName: 'services',
-                        links: [
-                            {// Link
-                                href: 'https://confluence.se.com/display/PAR/EDE+SAP+API+Documentation',
-                                src: 'https://seeklogo.com/images/C/confluence-logo-D9B07137C2-seeklogo.com.png',
-                                tip: 'Confluence SAP Connector',
-                                active: false,
-                                deleted: false,
-                            },
-                            {
-                                href: `https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_sprints/taskboard/Edge/IIoT%20Solutions/IIoT%20Solutions%20Program/PI%2014/Sprint%201${SPRINT_NUMBER}`,
-                                src: 'http://code.benco.io/icon-collection/azure-icons/Backlog.svg',
-                                tip: `EDE Sprint number ${SPRINT_NUMBER}`,
-                                active: false,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/EdgeCore',
-                                src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
-                                tip: 'EdgeCore Repository',
-                                active: false,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/Connect-Collect-Web',
-                                src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
-                                tip: 'Connect Collect Web Repository',
-                                active: false,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://se.iobeya.com/s/download/resources/client-html-plugin/4.18.6.117164939/public/#/en-US/room/6080e8dd-1b85-40eb-a067-19a28f1e9998',
-                                src: 'https://www.iobeya.com/wp-content/uploads/2022/07/cropped-cropped-favico-1.png',
-                                tip: 'IObeya',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://confluence.se.com/display/ECA',
-                                src: 'https://seeklogo.com/images/C/confluence-logo-D9B07137C2-seeklogo.com.png',
-                                tip: 'Confluence Edge Compute Apps',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://jira.se.com/secure/RapidBoard.jspa?rapidView=11549&projectKey=IECA&quickFilter=60348',
-                                src: 'https://cdn.icon-icons.com/icons2/2429/PNG/512/jira_logo_icon_147274.png',
-                                tip: 'Jira IIOT Edge Compute Apps',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/cbm-api',
-                                src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
-                                tip: 'CBM API Repository',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://dev.azure.com/IIoT-Solutions/IIoT%20Solutions/_git/cbm-ui',
-                                src: 'http://code.benco.io/icon-collection/azure-icons/TFS-VC-Repository.svg',
-                                tip: 'CBM UI Repository',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://schneiderelectric.sharepoint.com/sites/SP-GLB-INDB-PSO/SitePages/PSO-Training.aspx?xsdata=MDV8MDF8fDU5NWQxNDczMzQzNTRhNDE5YzhlMDhkYWM3YWUyNGQ5fDZlNTFlMWFkYzU0YjRiMzliNTk4MGZmZTlhZTY4ZmVmfDB8MHw2MzgwNDE4NDc5ODI4MjQ1OTB8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazkwYUdWeUlpd2lWMVFpT2pFeGZRPT18MXxNVFkyT0RVNE56azVOekE1TWpzeE5qWTROVGczT1RrM01Ea3lPekU1T2pjMk1USTFNR0U1TnpkbVpqUTNaamM1WVRoaE1UQXdNbU13Wmpka05EZGtRSFJvY21WaFpDNTJNZz09fDI2ZmEzYTUxZDRlOTQ3NDI5YzhlMDhkYWM3YWUyNGQ5fGY5YjhhMzE0MzUxNDQyNjhiN2I4NmQzN2RkMGM3MGE5&sdata=RVF4SlNCdllqTkVIdkgyay80cHJ2QTV1b2V4dGxQbW03b3ZvcFN5VG9SST0%3D&ovuser=6e51e1ad-c54b-4b39-b598-0ffe9ae68fef%2CSESA684684%40se.com&OR=Teams-HL&CT=1668595303265&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIyNy8yMjEwMjgwNzIwMCIsIkhhc0ZlZGVyYXRlZFVzZXIiOmZhbHNlfQ%3D%3D',
-                                src: 'https://images.vexels.com/media/users/3/148083/isolated/lists/94cb6a418a107a1c8b2c170a857d53c3-training-square-icon.png',
-                                tip: '=S= Training',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://schneiderelectric.sharepoint.com/:x:/r/sites/IIoT2.0EdgeAppsProgramGroup-PI1-AssetPerformanceAPPs/_layouts/15/Doc.aspx?sourcedoc=%7B79C5EBB6-5201-42A2-8FB1-03E7614A598A%7D&file=planning_travail_conges_absences.xlsx&action=default&mobileredirect=true',
-                                src: 'https://www.transparentpng.com/download/holidays/beach-holidays-png-transparent-25.png',
-                                tip: 'Sharepoint Holiday File',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://schneider.service-now.com/supportatschneider',
-                                src: 'https://w1.pngwing.com/pngs/483/167/png-transparent-call-logo-customer-service-technical-support-purchasing-service-quality-business-call-centre-selfservice.png',
-                                tip: '=S= Service Now',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://pages.github.schneider-electric.com/quartzds/se-icons/',
-                                src: 'https://bs-uploads.toptal.io/blackfish-uploads/components/skill_page/content/logo_file/logo/195467/ui-07d394a42504c33be153ae94c14f36cf-24b9a12e4e385375647fd19e9b5ebc2d.png',
-                                tip: '=S= Icon Library',
-                                active: true,
-                                deleted: false,
-                            },
-                        ]
-                    },
-                    {
-                        componentClassName: 'service-company',
-                        title: 'AVISTO',
-                        setElementClassName: 'services',
-                        links: [
-                            {
-                                href: 'https://outlook.office.com/mail/',
-                                src: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Circle-icons-mail.svg',
-                                tip: 'Outlook',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://portail.advans-group.com/CegidPortal/Home/Index/A004_AVISTO',
-                                src: 'https://www.elsys-design.com/wp-content/uploads/2019/04/picto-elsys-design-600px.jpg',
-                                tip: 'Advance Group Portal',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://secure.digiposte.fr',
-                                src: 'https://www.index-education.com/contenu/img/commun/logo-digiposte.png',
-                                tip: 'Digiposte',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://assure.generation.fr/adherent',
-                                src: 'https://www.generation.fr/portail-generation-drupal-prd/s3fs-public/uploads/images/logo_blanc_picto.png',
-                                tip: 'Mutuelle Generation',
-                                active: true,
-                                deleted: false,
-                            },
-                        ]
-                    }
-                ],
-                [
-                    {
-                        componentClassName: 'client-company',
-                        title: 'Productivity',
-                        setElementClassName: 'services',
-                        links: [
-                            {
-                                href: 'https://github.com/chihab-inc/myPortal',
-                                src: 'https://w7.pngwing.com/pngs/914/758/png-transparent-github-social-media-computer-icons-logo-android-github-logo-computer-wallpaper-banner-thumbnail.png',
-                                tip: 'GitHub - MyPortal',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://go.dev',
-                                src: 'https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_LightBlue.png',
-                                tip: 'Go Lang Online Editor',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://qtext.io/7813',
-                                src: 'https://qtext.io/static/favicon/512x512.png',
-                                tip: 'QText - Shared Text Editor',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://jsoncrack.com/editor',
-                                src: 'https://cdn-1.webcatalog.io/catalog/json-crack/json-crack-icon-filled-256.png?v=1669863995747',
-                                tip: 'Visialize JSON',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://www.scrumpoker-online.org/',
-                                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Logo_vote.svg/1200px-Logo_vote.svg.png',
-                                tip: 'Scrum Pocker',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://vectr.com/design',
-                                src: 'https://blog.gitnux.com/wp-content/uploads/2023/03/vectr-logo.png',
-                                tip: 'Vectr',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://www.photopea.com/',
-                                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Photopea_logo.svg/2048px-Photopea_logo.svg.png',
-                                tip: 'PhotoPea',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://www.regextester.com/',
-                                src: 'https://user-images.githubusercontent.com/5418178/175823761-ee7996b9-57be-4abf-be93-0ad25e7f37f0.png',
-                                tip: 'Regex Tester',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://app.runwayml.com/',
-                                src: 'https://runwayml.com/images/logo-square.png',
-                                tip: 'Online Video Editor (RotoScope)',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://online-video-cutter.com/crop-video',
-                                src: 'https://store-images.s-microsoft.com/image/apps.26533.80453411-e24b-40aa-a3b3-ea06a80e5798.34add786-e76f-411d-a93b-5ffd28c9d579.c7b9e9f7-4528-4a12-bbb2-50bca47a9229',
-                                tip: 'Online Video Editor (Crop, Cut)',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://cloudconvert.com/mp4-to-gif',
-                                src: 'https://pbs.twimg.com/profile_images/1488073274991030274/_WcKbgdj_400x400.jpg',
-                                tip: 'Online Video Converter (..., GIF)',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://ezgif.com/resize/',
-                                src: 'https://cdn-1.webcatalog.io/catalog/ezgif/ezgif-icon-filled-256.png?v=1675597555306',
-                                tip: 'GIF editor',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://codepen.io/pen/',
-                                src: 'https://cdn-icons-png.flaticon.com/512/1626/1626319.png',
-                                tip: 'CodePen',
-                                active: true,
-                                deleted: false,
-                            },
-                            {
-                                href: 'https://www.svgrepo.com/',
-                                src: 'https://cdn.worldvectorlogo.com/logos/svg.svg',
-                                tip: 'SVG Repo',
-                                active: true,
-                                deleted: false,
-                            },
-                        ]
-                    }
-                ]
-            ]
-        )
-    )
-}
-
 const LinkComponent = props => {
     let li = document.createElement('li')
     if (!props.active) {
@@ -281,9 +27,9 @@ const LinkComponent = props => {
                 y: rect.top + 5,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
-                    config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].deleted = true
+                    config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).deleted = true
                     localStorage.setItem('config', JSON.stringify(config))
-                    loadMainComponent()
+                    loadPage()
                 }
             })
         )
@@ -295,15 +41,15 @@ const LinkComponent = props => {
                 y: rect.top + 25,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
-                    config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].active = !config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].active
+                    config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active = !config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active
                     localStorage.setItem('config', JSON.stringify(config))
-                    loadMainComponent()
+                    loadPage()
                 }
             })
         )
         
-        // APPEND TOOLTIP
-        li.appendChild(
+        // APPEND TOOLTIP ONLY IF THERE IS A TIP/DESCRIPTION
+        props.tip && li.appendChild(
             tooltipComponent({
                 tip: props.tip,
                 x: rect.left + 5,
@@ -356,17 +102,31 @@ const closeButtonComponent = props => {
 }
 
 const disableButtonComponent = props => {
-    let close_button = document.createElement('img')
-    close_button.id = 'disable-button'
-    close_button.src = './icons/bar.png'
-    close_button.style.left = `${props.x}px`
-    close_button.style.top = `${props.y}px`
+    let disable_button = document.createElement('img')
+    disable_button.id = 'disable-button'
+    disable_button.src = './icons/bar.png'
+    disable_button.style.left = `${props.x}px`
+    disable_button.style.top = `${props.y}px`
 
-    close_button.addEventListener('click', e => {
+    disable_button.addEventListener('click', e => {
         props.clickHandler()
     })
     
-    return close_button
+    return disable_button
+}
+
+const addButtonComponent = props => {
+    let add_button = document.createElement('img')
+    add_button.id = 'add-button'
+    add_button.src = './icons/add.png'
+    add_button.style.left = `${props.x}px`
+    add_button.style.top = `${props.y}px`
+
+    add_button.addEventListener('click', e => {
+        props.clickHandler()
+    })
+    
+    return add_button
 }
 
 const tooltipComponent = props => {
@@ -379,20 +139,160 @@ const tooltipComponent = props => {
     return tooltip
 }
 
-const SubSectionComponent = props => {
-    let article = document.createElement('article')
-    let ul = document.createElement('ul')
-    let h2 = document.createElement('h2')
+const formModalComponent = props => {
+    const formValidate = fields => {
+        return /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
+        && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo)
+    }
 
-    article.classList.add(props.componentClassName)
-    h2.innerHTML = props.title
-    ul.classList.add(props.setElementClassName)
+    const hide = () => {
+        document.getElementById('form-container')?.remove()
+    }
+
+    let container = document.createElement('div')
+    container.id = 'form-container'
+    
+    let form = document.createElement('div')
+    form.id = 'form'
+
+    let linkField = document.createElement('input')
+    linkField.type = 'url'
+    linkField.placeholder = 'Link'
+
+    let logoField = document.createElement('input')
+    logoField.type = 'url'
+    logoField.placeholder = 'Logo'
+
+    let descriptionField = document.createElement('input')
+    descriptionField.type = 'text'
+    descriptionField.placeholder = 'Description'
+
+    let buttonInput = document.createElement('button')
+    buttonInput.innerText = 'Add'
+    buttonInput.disabled = !formValidate({
+        link: linkField.value,
+        logo: logoField.value,
+    })
+
+    for (const f of [linkField, logoField]) {
+        ['focusout', 'input'].forEach(eventName => {
+            f.addEventListener(eventName, e => {
+                buttonInput.disabled = !formValidate({
+                    link: linkField.value,
+                    logo: logoField.value,
+                })
+            })
+        })
+    }
+
+    buttonInput.addEventListener('click', e => {
+        localStorage.setItem('newLinkData', JSON.stringify({
+            id: crypto.randomUUID(),
+            href: linkField.value,
+            src: logoField.value,
+            tip: descriptionField.value,
+            active: true,
+            deleted: false,
+        }))
+        props.clickHandler()
+        localStorage.removeItem('newLinkData')
+    })
 
     
-    article.appendChild(h2)
+    container.addEventListener('click', e => {
+        const rect = form.getBoundingClientRect()
+        
+        const left = rect.left
+        const top = rect.top
+        const right = rect.right
+        const bottom = rect.bottom
+
+        const x = e.pageX
+        const y = e.pageY
+
+        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
+        if (!(x > left && x < right) || !(y > top && y < bottom)) {
+            hide()
+        }
+    })
+
+    form.appendChild(linkField)
+    form.appendChild(logoField)
+    form.appendChild(descriptionField)
+    form.appendChild(buttonInput)
+
+    container.appendChild(form)
+
+    return container
+}
+
+const SubSectionComponent = props => {
+    const hide = () => {
+        document.getElementById('add-button')?.remove()
+    }
+
+    let article = document.createElement('article')
+    article.classList.add(props.componentClassName)
+    
+    let ul = document.createElement('ul')
+    ul.classList.add(props.setElementClassName)
+    
+    let h2Container = document.createElement('div')
+    h2Container.classList.add('sub-section-title-container')
+
+    let h2 = document.createElement('h2')
+    h2.innerText = props.title
+
+    h2Container.addEventListener('mouseenter', e => {
+        hide()
+
+        const rect = h2Container.getBoundingClientRect()
+
+        h2Container.appendChild(
+            addButtonComponent({
+                x: rect.right - 20,
+                y: rect.top + 10,
+                clickHandler: () => {
+                    document.body.appendChild(
+                        formModalComponent({
+                            clickHandler: () => {
+                                let config = JSON.parse(localStorage.getItem('config'))
+                                config[props.sectionIndex][props.subSectionIndex].links.push(
+                                    JSON.parse(localStorage.getItem('newLinkData'))
+                                )
+                                localStorage.setItem('config', JSON.stringify(config))
+                                loadPage()
+                            }
+                        })
+                    )
+                }
+            })
+        )
+    })
+
+    h2Container.addEventListener('mouseleave', e => {
+        const rect = h2.getBoundingClientRect()
+        
+        const left = rect.left
+        const top = rect.top
+        const right = rect.right
+        const bottom = rect.bottom
+
+        const x = e.pageX
+        const y = e.pageY
+
+        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
+        if (!(x > left && x < right) || !(y > top && y < bottom)) {
+            hide()
+        }
+    })
+    
     props.links.forEach(link => {
         ul.appendChild(link)
     })
+    
+    h2Container.appendChild(h2)
+    article.appendChild(h2Container)
     article.appendChild(ul)
     
     return article
@@ -415,14 +315,16 @@ const MainComponent = props => {
     for (const [sectionIndex, section] of props.config.entries()) {
         main.appendChild(
             SectionComponent({
+                sectionIndex,
                 subSections: section.map((subSection, subSectionIndex) => SubSectionComponent({
+                    sectionIndex,
                     subSectionIndex,
                     componentClassName: subSection.componentClassName,
                     title: subSection.title,
                     setElementClassName: subSection.setElementClassName,
                     links: subSection.links
                         .filter(link => !link.deleted)
-                        .map((link, linkIndex) => LinkComponent({ sectionIndex, subSectionIndex, linkIndex, href: link.href, src: link.src, tip: link.tip, active: link.active }))
+                        .map(link => LinkComponent({ sectionIndex, subSectionIndex, linkId: link.id, href: link.href, src: link.src, tip: link.tip, active: link.active }))
                 }))
             })
         )
@@ -431,15 +333,20 @@ const MainComponent = props => {
     return main
 }
 
-const loadMainComponent = () => {
+const loadPage = () => {
     // RESET MAIN TO AVOID LAGGIND DUPLICATES
     document.getElementById('main')?.remove()
+    document.getElementById('form-container')?.remove()
 
     document.body.appendChild(
-        MainComponent({ config: JSON.parse(localStorage.getItem('config')) })
+        MainComponent({ config: JSON.parse(localStorage.getItem('config') || '[]') })
     )
 }
 
-window.addEventListener('load', e => {
-    loadMainComponent()
-})
+const init = () => {
+    window.addEventListener('load', e => {
+        loadPage()
+    })
+}
+
+init()
