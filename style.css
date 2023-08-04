@@ -135,13 +135,15 @@ body main .service-company h2 {
   color: #586DB4;
 }
 body #form-container {
-  background: #0009;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
+  backdrop-filter: blur(15px);
+  background: #0009;
+  animation: blur-form-in 0.3s ease-in-out 1;
 }
 body #form {
   display: flex;
@@ -152,7 +154,8 @@ body #form {
   max-width: 500px;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 10px #ccc9;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  animation: pop-form-in 0.3s ease-in-out 1;
 }
 #form input {
   height: 40px;
@@ -193,5 +196,35 @@ body #form {
 @keyframes push {
   50% {
     transform: scale(0.99);
+  }
+}
+@keyframes pop-form-in {
+  70% {
+    transform: scale(1.4);
+  }
+}
+@keyframes push-form-out {
+  70% {
+    transform: scale(1.4);
+  }
+}
+@keyframes blur-form-in {
+  from {
+    background: #0000;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    background: #0009;
+    backdrop-filter: blur(15px);
+  }
+}
+@keyframes blur-form-out {
+  from {
+    background: #0009;
+    backdrop-filter: blur(15px);
+  }
+  to {
+    background: #0000;
+    backdrop-filter: blur(0px);
   }
 }

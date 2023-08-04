@@ -146,7 +146,13 @@ const formModalComponent = props => {
     }
 
     const hide = () => {
-        document.getElementById('form-container')?.remove()
+        let form = document.getElementById('form')
+        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+        let formContainer = document.getElementById('form-container')
+        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        setTimeout(() => {
+            document.getElementById('form-container')?.remove()
+        }, 300)
     }
 
     let container = document.createElement('div')
