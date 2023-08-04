@@ -61,7 +61,10 @@ body main article .services li {
 }
 body main article .services li a {
   color: #333333;
-  background: #ffffff;
+  background: #ffffff22;
+  background-size: 90%;
+  background-position: center;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100%;
   border-radius: 5px;
@@ -73,13 +76,22 @@ body main article .services li a {
   box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
 }
+body main article .services li a:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
+  animation: push 0.3s ease-in-out 1;
+}
+body main article .services li a img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
 body main article .services .disabled-link a {
-  opacity: .1;
-  pointer-events: none;
   background: #333;
+  pointer-events: none;
+  opacity: .1;
 }
 body main #tooltip {
-  display: none;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
   background: #333;
@@ -89,35 +101,21 @@ body main #tooltip {
   box-sizing: border-box;
   padding: 5px;
   position: absolute;
+  transform-origin: left;
+  animation: roll-out 0.2s ease-in-out 1;
 }
-/* body main article .services li .tooltipped {
-  position: relative;
-}
-body main article .services li .tooltipped:after {
-  content: attr(tip);
-  color: #fff;
-  font-size: .6em;
-  width: 90%;
-  border-radius: 4px;
-  box-sizing: border-box;
-  padding: 5px;
+body main #close-button {
+  display: block;
   position: absolute;
-  display: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
+  animation: pop 0.3s ease-in-out 1;
 }
-body main article .services li .tooltipped:hover:after {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #333;
-} */
-body main article .services li a:hover {
+body main #close-button:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
-  transform: scale(1.04);
-}
-body main article .services li a img {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
+  transition: all 0.1s ease-in;
 }
 body main .other h2 {
   color: #cd533d;
@@ -127,4 +125,23 @@ body main .client-company h2 {
 }
 body main .service-company h2 {
   color: #586DB4;
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.2);
+  }
+}
+@keyframes roll-out {
+  0% {
+    transform: scaleX(0.1);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+@keyframes push {
+  50% {
+    transform: scale(0.99);
+  }
 }
