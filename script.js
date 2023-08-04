@@ -239,6 +239,13 @@ if (!localStorage.getItem('config')) {
                                 active: true,
                                 deleted: false,
                             },
+                            {
+                                href: 'https://www.svgrepo.com/',
+                                src: 'https://cdn.worldvectorlogo.com/logos/svg.svg',
+                                tip: 'SVG Repo',
+                                active: true,
+                                deleted: false,
+                            },
                         ]
                     }
                 ]
@@ -255,6 +262,7 @@ const LinkComponent = props => {
 
     const hide = () => {
         document.getElementById('close-button')?.remove()
+        document.getElementById('disable-button')?.remove()
         document.getElementById('tooltip')?.remove()
     }
     
@@ -274,6 +282,20 @@ const LinkComponent = props => {
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
                     config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].deleted = true
+                    localStorage.setItem('config', JSON.stringify(config))
+                    loadMainComponent()
+                }
+            })
+        )
+        
+        // APPEND DISABLE BUTTON
+        li.appendChild(
+            disableButtonComponent({
+                x: rect.left + 5,
+                y: rect.top + 25,
+                clickHandler: () => {
+                    let config = JSON.parse(localStorage.getItem('config'))
+                    config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].active = !config[props.sectionIndex][props.subSectionIndex].links[props.linkIndex].active
                     localStorage.setItem('config', JSON.stringify(config))
                     loadMainComponent()
                 }
@@ -323,6 +345,20 @@ const closeButtonComponent = props => {
     let close_button = document.createElement('img')
     close_button.id = 'close-button'
     close_button.src = './icons/cross.png'
+    close_button.style.left = `${props.x}px`
+    close_button.style.top = `${props.y}px`
+
+    close_button.addEventListener('click', e => {
+        props.clickHandler()
+    })
+    
+    return close_button
+}
+
+const disableButtonComponent = props => {
+    let close_button = document.createElement('img')
+    close_button.id = 'disable-button'
+    close_button.src = './icons/bar.png'
     close_button.style.left = `${props.x}px`
     close_button.style.top = `${props.y}px`
 

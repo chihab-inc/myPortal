@@ -86,7 +86,6 @@ body main article .services li a img {
   border-radius: 5px;
 }
 body main article .services .disabled-link a {
-  background: #333;
   pointer-events: none;
   opacity: .1;
 }
@@ -114,6 +113,19 @@ body main #close-button {
   animation: pop 0.3s ease-in-out 1;
 }
 body main #close-button:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
+  transition: all 0.1s ease-in;
+}
+body main #disable-button {
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
+  animation: pop 0.3s ease-in-out 1;
+}
+body main #disable-button:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
 }
