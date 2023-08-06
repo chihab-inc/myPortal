@@ -15,16 +15,17 @@ const LinkComponent = props => {
     li.appendChild(anchorComponent({ href: props.href, src: props.src }))
     
     li.addEventListener('mouseenter', e => {
-        // RESET TO AVOID LAGGIND DUPLICATES
+        // RESET TO AVOID LAGGING DUPLICATES
         hide()
 
         const rect = li.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
         
         // APPEND CLOSE BUTTON
         li.appendChild(
             closeButtonComponent({
                 x: rect.left + 5,
-                y: rect.top + 5,
+                y: rect.top + 5 - scrollTop,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
                     config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).deleted = true
@@ -38,7 +39,7 @@ const LinkComponent = props => {
         li.appendChild(
             disableButtonComponent({
                 x: rect.left + 5,
-                y: rect.top + 25,
+                y: rect.top + 25 - scrollTop,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
                     config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active = !config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active
@@ -53,18 +54,19 @@ const LinkComponent = props => {
             tooltipComponent({
                 tip: props.tip,
                 x: rect.left + 5,
-                y: rect.bottom - 27,
+                y: rect.bottom - 27 - scrollTop,
             })
         )
 
     })
     li.addEventListener('mouseleave', e => {
         const rect = li.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
         
         const left = rect.left
-        const top = rect.top
+        const top = rect.top - scrollTop
         const right = rect.right
-        const bottom = rect.bottom
+        const bottom = rect.bottom - scrollTop
 
         const x = e.pageX
         const y = e.pageY
@@ -152,11 +154,15 @@ const formModalComponent = props => {
         formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
         setTimeout(() => {
             document.getElementById('form-container')?.remove()
+            document.body.style.overflow = 'auto'
         }, 300)
     }
 
     let container = document.createElement('div')
     container.id = 'form-container'
+    container.style.height = props.height
+
+    const scrollTop = document.body.getBoundingClientRect().top
     
     let form = document.createElement('div')
     form.id = 'form'
@@ -253,14 +259,19 @@ const SubSectionComponent = props => {
         hide()
 
         const rect = h2Container.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
 
         h2Container.appendChild(
             addButtonComponent({
                 x: rect.right - 20,
-                y: rect.top + 10,
+                y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
+                    // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                    document.getElementById('form-container')?.remove()
+                    const bodyHeight = document.body.getBoundingClientRect().height
                     document.body.appendChild(
                         formModalComponent({
+                            height: `${bodyHeight}px`,
                             clickHandler: () => {
                                 let config = JSON.parse(localStorage.getItem('config'))
                                 config[props.sectionIndex][props.subSectionIndex].links.push(
@@ -271,6 +282,7 @@ const SubSectionComponent = props => {
                             }
                         })
                     )
+                    document.body.style.overflow = 'hidden'
                 }
             })
         )
@@ -278,11 +290,12 @@ const SubSectionComponent = props => {
 
     h2Container.addEventListener('mouseleave', e => {
         const rect = h2.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
         
         const left = rect.left
-        const top = rect.top
+        const top = rect.top - scrollTop
         const right = rect.right
-        const bottom = rect.bottom
+        const bottom = rect.bottom - scrollTop
 
         const x = e.pageX
         const y = e.pageY
