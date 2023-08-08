@@ -28,7 +28,7 @@ const LinkComponent = props => {
                 y: rect.top + 5 - scrollTop,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
-                    config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).deleted = true
+                    config.links.find(link => link.id === props.id).deleted = true
                     localStorage.setItem('config', JSON.stringify(config))
                     loadPage()
                 }
@@ -42,7 +42,7 @@ const LinkComponent = props => {
                 y: rect.top + 25 - scrollTop,
                 clickHandler: () => {
                     let config = JSON.parse(localStorage.getItem('config'))
-                    config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active = !config[props.sectionIndex][props.subSectionIndex].links.find(link => link.id === props.linkId).active
+                    config.links.find(link => link.id === props.id).active = !config.links.find(link => link.id === props.id).active
                     localStorage.setItem('config', JSON.stringify(config))
                     loadPage()
                 }
@@ -148,10 +148,14 @@ const formModalComponent = props => {
     }
 
     const hide = () => {
-        let form = document.getElementById('form')
-        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-        let formContainer = document.getElementById('form-container')
-        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        try {
+            let form = document.getElementById('form')
+            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+            let formContainer = document.getElementById('form-container')
+            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        } catch (error) {
+            console.warn(error)
+        }
         setTimeout(() => {
             document.getElementById('form-container')?.remove()
             document.body.style.overflow = 'auto'
@@ -200,6 +204,7 @@ const formModalComponent = props => {
     buttonInput.addEventListener('click', e => {
         localStorage.setItem('newLinkData', JSON.stringify({
             id: crypto.randomUUID(),
+            sectionId: props.sectionId,
             href: linkField.value,
             src: logoField.value,
             tip: descriptionField.value,
@@ -238,10 +243,12 @@ const formModalComponent = props => {
     return container
 }
 
-const SubSectionComponent = props => {
+const SectionComponent = props => {
     const hide = () => {
         document.getElementById('add-button')?.remove()
     }
+
+    let section = document.createElement('section')
 
     let article = document.createElement('article')
     article.classList.add(props.componentClassName)
@@ -271,10 +278,11 @@ const SubSectionComponent = props => {
                     const bodyHeight = document.body.getBoundingClientRect().height
                     document.body.appendChild(
                         formModalComponent({
+                            sectionId: props.id,
                             height: `${bodyHeight}px`,
                             clickHandler: () => {
                                 let config = JSON.parse(localStorage.getItem('config'))
-                                config[props.sectionIndex][props.subSectionIndex].links.push(
+                                config.links.push(
                                     JSON.parse(localStorage.getItem('newLinkData'))
                                 )
                                 localStorage.setItem('config', JSON.stringify(config))
@@ -313,17 +321,8 @@ const SubSectionComponent = props => {
     h2Container.appendChild(h2)
     article.appendChild(h2Container)
     article.appendChild(ul)
+    section.appendChild(article)
     
-    return article
-}
-
-const SectionComponent = props => {
-    let section = document.createElement('section')
-
-    props.subSections.forEach(linkSet => {
-        section.appendChild(linkSet)
-    })
-
     return section
 }
 
@@ -331,24 +330,42 @@ const MainComponent = props => {
     let main = document.createElement('main')
     main.id = 'main'
 
-    for (const [sectionIndex, section] of props.config.entries()) {
-        main.appendChild(
+    let linkWrappers = []
+    for (const link of props.config.links) {
+        const id = link.id
+        const sectionId = link.sectionId
+        const href = link.href
+        const src = link.src
+        const tip = link.tip
+        const active = link.active
+        const deleted = link.deleted
+        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted })
+        linkWrappers.push({ sectionId, deleted, linkComponent })
+    }
+
+    let sectionComponents = []
+    for (const section of props.config.sections) {
+        const id = section.id
+        const componentClassName = section.componentClassName
+        const title = section.title
+        const setElementClassName = section.setElementClassName
+        sectionComponents.push(
             SectionComponent({
-                sectionIndex,
-                subSections: section.map((subSection, subSectionIndex) => SubSectionComponent({
-                    sectionIndex,
-                    subSectionIndex,
-                    componentClassName: subSection.componentClassName,
-                    title: subSection.title,
-                    setElementClassName: subSection.setElementClassName,
-                    links: subSection.links
-                        .filter(link => !link.deleted)
-                        .map(link => LinkComponent({ sectionIndex, subSectionIndex, linkId: link.id, href: link.href, src: link.src, tip: link.tip, active: link.active }))
-                }))
+                id,
+                componentClassName,
+                title,
+                setElementClassName,
+                links: linkWrappers
+                    .filter(linkWrapper => linkWrapper.sectionId === id)
+                    .filter(linkWrapper => !linkWrapper.deleted)
+                    .map(linkWrapper => linkWrapper.linkComponent)
             })
         )
     }
-    
+    for (const sectionComponent of sectionComponents) {
+        main.appendChild(sectionComponent)
+    }
+
     return main
 }
 
