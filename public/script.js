@@ -374,8 +374,6 @@ const loadPage = () => {
     document.getElementById('main')?.remove()
     document.getElementById('form-container')?.remove()
 
-    console.log(configName)
-
     document.body.appendChild(
         MainComponent({ config: JSON.parse(localStorage.getItem(configName) || '[]') })
     )
