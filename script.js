@@ -82,8 +82,8 @@ const LinkComponent = props => {
 
 let anchorComponent = props => {
     let a = document.createElement('a')
-    a.setAttribute('target', '_blank')
-    a.setAttribute('href', props.href)
+    a.target = '_blank'
+    a.href = props.href
     a.style.backgroundImage = `url(${props.src})`
 
     return a
@@ -142,10 +142,7 @@ const tooltipComponent = props => {
 }
 
 const formModalComponent = props => {
-    const formValidate = fields => {
-        return /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
-        && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo)
-    }
+    const formValidate = fields => /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
 
     const hide = () => {
         let form = document.getElementById('form')
@@ -162,8 +159,6 @@ const formModalComponent = props => {
     container.id = 'form-container'
     container.style.height = props.height
 
-    const scrollTop = document.body.getBoundingClientRect().top
-    
     let form = document.createElement('div')
     form.id = 'form'
 
@@ -171,28 +166,18 @@ const formModalComponent = props => {
     linkField.type = 'url'
     linkField.placeholder = 'Link'
 
-    let logoField = document.createElement('input')
-    logoField.type = 'url'
-    logoField.placeholder = 'Logo'
-
     let descriptionField = document.createElement('input')
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
 
     let buttonInput = document.createElement('button')
     buttonInput.innerText = 'Add'
-    buttonInput.disabled = !formValidate({
-        link: linkField.value,
-        logo: logoField.value,
-    })
+    buttonInput.disabled = !formValidate({ link: linkField.value })
 
-    for (const f of [linkField, logoField]) {
+    for (const f of [linkField]) {
         ['focusout', 'input'].forEach(eventName => {
             f.addEventListener(eventName, e => {
-                buttonInput.disabled = !formValidate({
-                    link: linkField.value,
-                    logo: logoField.value,
-                })
+                buttonInput.disabled = !formValidate({ link: linkField.value })
             })
         })
     }
@@ -201,7 +186,7 @@ const formModalComponent = props => {
         localStorage.setItem('newLinkData', JSON.stringify({
             id: crypto.randomUUID(),
             href: linkField.value,
-            src: logoField.value,
+            src: `https://logo.clearbit.com/${new URL(linkField.value).hostname.replace('www.', '')}`,
             tip: descriptionField.value,
             active: true,
             deleted: false,
@@ -229,7 +214,6 @@ const formModalComponent = props => {
     })
 
     form.appendChild(linkField)
-    form.appendChild(logoField)
     form.appendChild(descriptionField)
     form.appendChild(buttonInput)
 
