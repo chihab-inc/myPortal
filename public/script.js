@@ -1,4 +1,4 @@
-'use strict'
+const configName = 'config'
 
 const LinkComponent = props => {
     let li = document.createElement('li')
@@ -373,6 +373,8 @@ const loadPage = () => {
     // RESET MAIN TO AVOID LAGGIND DUPLICATES
     document.getElementById('main')?.remove()
     document.getElementById('form-container')?.remove()
+
+    console.log(configName)
 
     document.body.appendChild(
         MainComponent({ config: JSON.parse(localStorage.getItem(configName) || '[]') })
