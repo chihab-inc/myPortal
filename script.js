@@ -27,9 +27,9 @@ const LinkComponent = props => {
                 x: rect.left + 5,
                 y: rect.top + 5 - scrollTop,
                 clickHandler: () => {
-                    let config = JSON.parse(localStorage.getItem('config'))
+                    let config = JSON.parse(localStorage.getItem(configName))
                     config.links.find(link => link.id === props.id).deleted = true
-                    localStorage.setItem('config', JSON.stringify(config))
+                    localStorage.setItem(configName, JSON.stringify(config))
                     loadPage()
                 }
             })
@@ -41,9 +41,9 @@ const LinkComponent = props => {
                 x: rect.left + 5,
                 y: rect.top + 25 - scrollTop,
                 clickHandler: () => {
-                    let config = JSON.parse(localStorage.getItem('config'))
+                    let config = JSON.parse(localStorage.getItem(configName))
                     config.links.find(link => link.id === props.id).active = !config.links.find(link => link.id === props.id).active
-                    localStorage.setItem('config', JSON.stringify(config))
+                    localStorage.setItem(configName, JSON.stringify(config))
                     loadPage()
                 }
             })
@@ -281,11 +281,11 @@ const SectionComponent = props => {
                             sectionId: props.id,
                             height: `${bodyHeight}px`,
                             clickHandler: () => {
-                                let config = JSON.parse(localStorage.getItem('config'))
+                                let config = JSON.parse(localStorage.getItem(configName))
                                 config.links.push(
                                     JSON.parse(localStorage.getItem('newLinkData'))
                                 )
-                                localStorage.setItem('config', JSON.stringify(config))
+                                localStorage.setItem(configName, JSON.stringify(config))
                                 loadPage()
                             }
                         })
@@ -375,7 +375,7 @@ const loadPage = () => {
     document.getElementById('form-container')?.remove()
 
     document.body.appendChild(
-        MainComponent({ config: JSON.parse(localStorage.getItem('config') || '[]') })
+        MainComponent({ config: JSON.parse(localStorage.getItem(configName) || '[]') })
     )
 }
 
