@@ -18,6 +18,14 @@ db.updateDB = (dbName, callBack) => {
     localStorage.setItem(dbName, JSON.stringify(dataBase))
 }
 
+// Create and delete ephemral data
+db.createTemporary = (temporaryDataName, data, callBack) => {
+    localStorage.setItem(temporaryDataName, JSON.stringify(data))
+    const temporaryData = JSON.parse(localStorage.getItem(temporaryDataName))
+    callBack(temporaryData)
+    localStorage.removeItem(temporaryDataName)
+}
+
 // Generic method to allow fetching a dabatase from localStorage
 db.getFromDB = dbName => {
     return JSON.parse(localStorage.getItem(dbName))

@@ -80,8 +80,8 @@ const LinkComponent = props => {
 
 let anchorComponent = props => {
     let a = document.createElement('a')
-    a.setAttribute('target', '_blank')
-    a.setAttribute('href', props.href)
+    a.target = '_blank'
+    a.href = props.href
     a.style.backgroundImage = `url(${props.src})`
 
     return a
@@ -196,17 +196,21 @@ const formModalComponent = props => {
     }
 
     buttonInput.addEventListener('click', e => {
-        localStorage.setItem('newLinkData', JSON.stringify({
-            id: crypto.randomUUID(),
-            sectionId: props.sectionId,
-            href: linkField.value,
-            src: logoField.value,
-            tip: descriptionField.value,
-            active: true,
-            deleted: false,
-        }))
-        props.clickHandler()
-        localStorage.removeItem('newLinkData')
+        db.createTemporary(
+            'newLinkData',
+            {
+                id: crypto.randomUUID(),
+                sectionId: props.sectionId,
+                href: linkField.value,
+                src: logoField.value,
+                tip: descriptionField.value,
+                active: true,
+                deleted: false,
+            },
+            temporaryData => {
+                props.clickHandler(temporaryData)
+            }
+            )
         hide()
     })
 
@@ -275,8 +279,8 @@ const SectionComponent = props => {
                         formModalComponent({
                             sectionId: props.id,
                             height: `${bodyHeight}px`,
-                            clickHandler: () => {
-                                linkDB.createLink(JSON.parse(localStorage.getItem('newLinkData')))
+                            clickHandler: temporaryData => {
+                                linkDB.createLink(temporaryData)
                                 loadPage()
                             }
                         })

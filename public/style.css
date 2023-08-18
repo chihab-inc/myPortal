@@ -149,6 +149,9 @@ body main .client-company h2 {
 body main .service-company h2 {
   color: #586DB4;
 }
+body main .personal h2 {
+  color: #bcc2d5;
+}
 body #form-container {
   width: 100vw;
   display: flex;
