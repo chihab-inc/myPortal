@@ -18,7 +18,7 @@ db.updateDB = (dbName, callBack) => {
     localStorage.setItem(dbName, JSON.stringify(dataBase))
 }
 
-// Create and delete ephemral data
+// Create and delete ephemeral data
 db.createTemporary = (temporaryDataName, data, callBack) => {
     localStorage.setItem(temporaryDataName, JSON.stringify(data))
     const temporaryData = JSON.parse(localStorage.getItem(temporaryDataName))

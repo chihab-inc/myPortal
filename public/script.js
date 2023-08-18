@@ -365,7 +365,7 @@ const MainComponent = props => {
 }
 
 const loadPage = () => {
-    // RESET MAIN TO AVOID LAGGIND DUPLICATES
+    // RESET MAIN TO AVOID LAGGING DUPLICATES
     document.getElementById('main')?.remove()
 
     document.body.appendChild(
