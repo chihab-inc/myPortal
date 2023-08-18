@@ -97,7 +97,7 @@ body main article .services li a {
 }
 body main article .services li a:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
-  animation: push 0.3s ease-in-out 1;
+  animation: push-in 0.3s ease-in-out 1;
 }
 body main article .services li a img {
   width: 100%;
@@ -120,7 +120,7 @@ body main #tooltip {
   padding: 5px;
   position: absolute;
   transform-origin: left;
-  animation: roll-out 0.2s ease-in 1;
+  animation: roll-out 0.2s ease-in-out 1;
 }
 body main #close-button,
 body main #disable-button,
@@ -132,7 +132,7 @@ body main #add-button {
   border: 1px solid white;
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
-  animation: pop 0.3s ease-in-out 1;
+  animation: pop-in 0.3s ease-in-out 1;
 }
 body main #close-button:hover,
 body main #disable-button:hover,
@@ -196,8 +196,8 @@ body #form {
   cursor: pointer;
 }
 
-@keyframes pop {
-  50% {
+@keyframes pop-in {
+  70% {
     transform: scale(1.2);
   }
 }
@@ -209,8 +209,8 @@ body #form {
     transform: scaleY(1);
   }
 }
-@keyframes push {
-  50% {
+@keyframes push-in {
+  70% {
     transform: scale(0.99);
   }
 }

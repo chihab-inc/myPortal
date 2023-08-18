@@ -1,4 +1,6 @@
-const configName = 'config'
+import { linkDB } from './linkDB.js'
+import { sectionDB } from './sectionDB.js'
+import { db } from './db.js'
 
 const LinkComponent = props => {
     let li = document.createElement('li')
@@ -27,9 +29,7 @@ const LinkComponent = props => {
                 x: rect.left + 5,
                 y: rect.top + 5 - scrollTop,
                 clickHandler: () => {
-                    let config = JSON.parse(localStorage.getItem(configName))
-                    config.links.find(link => link.id === props.id).deleted = true
-                    localStorage.setItem(configName, JSON.stringify(config))
+                    linkDB.deleteLinkById(props.id)
                     loadPage()
                 }
             })
@@ -41,9 +41,7 @@ const LinkComponent = props => {
                 x: rect.left + 5,
                 y: rect.top + 25 - scrollTop,
                 clickHandler: () => {
-                    let config = JSON.parse(localStorage.getItem(configName))
-                    config.links.find(link => link.id === props.id).active = !config.links.find(link => link.id === props.id).active
-                    localStorage.setItem(configName, JSON.stringify(config))
+                    linkDB.toggleLinkById(props.id)
                     loadPage()
                 }
             })
@@ -148,14 +146,10 @@ const formModalComponent = props => {
     }
 
     const hide = () => {
-        try {
-            let form = document.getElementById('form')
-            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-            let formContainer = document.getElementById('form-container')
-            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
-        } catch (error) {
-            console.warn(error)
-        }
+        let form = document.getElementById('form')
+        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+        let formContainer = document.getElementById('form-container')
+        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
         setTimeout(() => {
             document.getElementById('form-container')?.remove()
             document.body.style.overflow = 'auto'
@@ -213,6 +207,7 @@ const formModalComponent = props => {
         }))
         props.clickHandler()
         localStorage.removeItem('newLinkData')
+        hide()
     })
 
     
@@ -281,11 +276,7 @@ const SectionComponent = props => {
                             sectionId: props.id,
                             height: `${bodyHeight}px`,
                             clickHandler: () => {
-                                let config = JSON.parse(localStorage.getItem(configName))
-                                config.links.push(
-                                    JSON.parse(localStorage.getItem('newLinkData'))
-                                )
-                                localStorage.setItem(configName, JSON.stringify(config))
+                                linkDB.createLink(JSON.parse(localStorage.getItem('newLinkData')))
                                 loadPage()
                             }
                         })
@@ -372,10 +363,9 @@ const MainComponent = props => {
 const loadPage = () => {
     // RESET MAIN TO AVOID LAGGIND DUPLICATES
     document.getElementById('main')?.remove()
-    document.getElementById('form-container')?.remove()
 
     document.body.appendChild(
-        MainComponent({ config: JSON.parse(localStorage.getItem(configName) || '[]') })
+        MainComponent({ config: db.getFromDB('DATA-BASE') })
     )
 }
 
