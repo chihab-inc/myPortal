@@ -24,15 +24,17 @@ linkDB.getLinksBySectionId = sectionId => {
 }
 
 // Update link instance property with new value using link id
-linkDB.updateLinkPropertyById = (id, propertyName, newPropertyValue) => {
+linkDB.updateLinkPropertyById = data => {
     db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME].find(l => l.id === id)[propertyName] = newPropertyValue
+        Object.keys(data).filter(k => !['', null, undefined].includes(data[k])).forEach(d => {
+            dataBase[COLLECTION_NAME].find(l => l.id === data.id)[d] = data[d]
+        })
     })
 }
 
 // delete link instance from database using link id
 linkDB.deleteLinkById = id => {
-    linkDB.updateLinkPropertyById(id, 'deleted', true)
+    linkDB.updateLinkPropertyById({ id, deleted: true })
 }
 
 // delete link instances from database using section id
