@@ -1,5 +1,4 @@
 import { linkDB } from './linkDB.js'
-import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 
 const LinkComponent = props => {
@@ -11,6 +10,7 @@ const LinkComponent = props => {
     const hide = () => {
         document.getElementById('close-button')?.remove()
         document.getElementById('disable-button')?.remove()
+        document.getElementById('edit-button')?.remove()
         document.getElementById('tooltip')?.remove()
     }
     
@@ -25,7 +25,9 @@ const LinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            closeButtonComponent({
+            toolButtonComponent({
+                id: 'close-button',
+                src: './icons/cross.png',
                 x: rect.left + 5,
                 y: rect.top + 5 - scrollTop,
                 clickHandler: () => {
@@ -37,7 +39,9 @@ const LinkComponent = props => {
         
         // APPEND DISABLE BUTTON
         li.appendChild(
-            disableButtonComponent({
+            toolButtonComponent({
+                id: 'disable-button',
+                src: './icons/minus.png',
                 x: rect.left + 5,
                 y: rect.top + 25 - scrollTop,
                 clickHandler: () => {
@@ -46,6 +50,33 @@ const LinkComponent = props => {
                 }
             })
         )
+        
+        // APPEND EDIT BUTTON
+        props.active
+            && li.appendChild(
+                toolButtonComponent({
+                    id: 'edit-button',
+                    src: './icons/pen.png',
+                    x: rect.left + 5,
+                    y: rect.top + 45 - scrollTop,
+                    clickHandler: () => {
+                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                        document.getElementById('form-container')?.remove()
+                        document.body.appendChild(
+                            formModalComponent({
+                                creating: false,
+                                sectionId: props.sectionId,
+                                linkId: props.id,
+                                clickHandler: temporaryData => {
+                                    linkDB.updateLinkPropertyById(temporaryData)
+                                    loadPage()
+                                }
+                            })
+                        )
+                        document.body.style.overflow = 'hidden'
+                    }
+                })
+            )
         
         // APPEND TOOLTIP ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
@@ -87,46 +118,18 @@ let anchorComponent = props => {
     return a
 }
 
-const closeButtonComponent = props => {
-    let close_button = document.createElement('img')
-    close_button.id = 'close-button'
-    close_button.src = './icons/cross.png'
-    close_button.style.left = `${props.x}px`
-    close_button.style.top = `${props.y}px`
+const toolButtonComponent = props => {
+    let button = document.createElement('img')
+    button.id = props.id
+    button.src = props.src
+    button.style.left = `${props.x}px`
+    button.style.top = `${props.y}px`
 
-    close_button.addEventListener('click', e => {
+    button.addEventListener('click', e => {
         props.clickHandler()
     })
     
-    return close_button
-}
-
-const disableButtonComponent = props => {
-    let disable_button = document.createElement('img')
-    disable_button.id = 'disable-button'
-    disable_button.src = './icons/minus.png'
-    disable_button.style.left = `${props.x}px`
-    disable_button.style.top = `${props.y}px`
-
-    disable_button.addEventListener('click', e => {
-        props.clickHandler()
-    })
-    
-    return disable_button
-}
-
-const addButtonComponent = props => {
-    let add_button = document.createElement('img')
-    add_button.id = 'add-button'
-    add_button.src = './icons/plus.png'
-    add_button.style.left = `${props.x}px`
-    add_button.style.top = `${props.y}px`
-
-    add_button.addEventListener('click', e => {
-        props.clickHandler()
-    })
-    
-    return add_button
+    return button
 }
 
 const tooltipComponent = props => {
@@ -141,8 +144,15 @@ const tooltipComponent = props => {
 
 const formModalComponent = props => {
     const formValidate = fields => {
-        return /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
-        && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo)
+        return (/(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link) && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo) && props.creating)
+        || (
+            (
+                /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
+                || /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo)
+                || !['', null, undefined].includes(fields.description)
+            )
+            && !props.creating
+        )
     }
 
     const hide = () => {
@@ -182,14 +192,16 @@ const formModalComponent = props => {
     addButton.disabled = !formValidate({
         link: linkField.value,
         logo: logoField.value,
+        description: descriptionField.value,
     })
 
-    for (const f of [linkField, logoField]) {
+    for (const f of [linkField, logoField, descriptionField]) {
         ['focusout', 'input'].forEach(eventName => {
             f.addEventListener(eventName, e => {
                 addButton.disabled = !formValidate({
                     link: linkField.value,
                     logo: logoField.value,
+                    description: descriptionField.value,
                 })
             })
         })
@@ -197,9 +209,9 @@ const formModalComponent = props => {
 
     addButton.addEventListener('click', e => {
         db.createTemporary(
-            'newLinkData',
+            'linkData',
             {
-                id: crypto.randomUUID(),
+                id: props.linkId,
                 sectionId: props.sectionId,
                 href: linkField.value,
                 src: logoField.value,
@@ -268,7 +280,9 @@ const SectionComponent = props => {
         const scrollTop = document.body.getBoundingClientRect().top
 
         h2Container.appendChild(
-            addButtonComponent({
+            toolButtonComponent({
+                id: 'add-button',
+                src: './icons/plus.png',
                 x: rect.right - 20,
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
@@ -276,7 +290,9 @@ const SectionComponent = props => {
                     document.getElementById('form-container')?.remove()
                     document.body.appendChild(
                         formModalComponent({
+                            creating: true,
                             sectionId: props.id,
+                            linkId: crypto.randomUUID(),
                             clickHandler: temporaryData => {
                                 linkDB.createLink(temporaryData)
                                 loadPage()
