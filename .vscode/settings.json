@@ -55,6 +55,8 @@
       "server/utils.js": true,
     }
 
+    ,"editor.fontSize": 18
+
     ,"workbench.colorCustomizations": {
       
       "editorGroup.emptyBackground": "#b0565666",
