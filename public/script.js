@@ -104,7 +104,7 @@ const closeButtonComponent = props => {
 const disableButtonComponent = props => {
     let disable_button = document.createElement('img')
     disable_button.id = 'disable-button'
-    disable_button.src = './icons/bar.png'
+    disable_button.src = './icons/minus.png'
     disable_button.style.left = `${props.x}px`
     disable_button.style.top = `${props.y}px`
 
@@ -118,7 +118,7 @@ const disableButtonComponent = props => {
 const addButtonComponent = props => {
     let add_button = document.createElement('img')
     add_button.id = 'add-button'
-    add_button.src = './icons/add.png'
+    add_button.src = './icons/plus.png'
     add_button.style.left = `${props.x}px`
     add_button.style.top = `${props.y}px`
 
@@ -176,9 +176,10 @@ const formModalComponent = props => {
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
 
-    let buttonInput = document.createElement('button')
-    buttonInput.innerText = 'Add'
-    buttonInput.disabled = !formValidate({
+    let addButton = document.createElement('button')
+    addButton.id = 'add-button'
+    addButton.textContent = ''
+    addButton.disabled = !formValidate({
         link: linkField.value,
         logo: logoField.value,
     })
@@ -186,7 +187,7 @@ const formModalComponent = props => {
     for (const f of [linkField, logoField]) {
         ['focusout', 'input'].forEach(eventName => {
             f.addEventListener(eventName, e => {
-                buttonInput.disabled = !formValidate({
+                addButton.disabled = !formValidate({
                     link: linkField.value,
                     logo: logoField.value,
                 })
@@ -194,7 +195,7 @@ const formModalComponent = props => {
         })
     }
 
-    buttonInput.addEventListener('click', e => {
+    addButton.addEventListener('click', e => {
         db.createTemporary(
             'newLinkData',
             {
@@ -234,7 +235,7 @@ const formModalComponent = props => {
     form.appendChild(linkField)
     form.appendChild(logoField)
     form.appendChild(descriptionField)
-    form.appendChild(buttonInput)
+    form.appendChild(addButton)
 
     container.appendChild(form)
 

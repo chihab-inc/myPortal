@@ -63,7 +63,6 @@ body main article {
 body main article .sub-section-title-container {
   padding: 5px;
   padding-right: 25px;
-  /* margin-bottom: 20px; */
 }
 body main article .services {
   list-style-type: none;
@@ -167,6 +166,8 @@ body #form-container {
 }
 body #form {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
   background: #3338;
   width: 100%;
@@ -192,12 +193,27 @@ body #form {
 #form input:invalid {
   background: #f99;
 }
-#form button {
-  min-width: 60px;
+#form #add-button {
+  background: none;
+  min-width: 40px;
+  height: 40px;
+  background-image: url("./icons/plus-disabled.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fff0;
+  box-sizing: border-box;
+  border-radius: 50%;
 }
-#form button:hover:enabled {
-  background: #ccc;
+#form #add-button:enabled {
+  background-image: url("./icons/plus.png");
+}
+#form #add-button:hover {
+  border-color: #fff;
   cursor: pointer;
+  transition: border-color 0.3s ease-in-out;
 }
 
 @keyframes pop-in {
