@@ -1,18 +1,32 @@
 const express = require('express')
 const path = require('path')
+require('dotenv').config()
 
 const app = express()
+const PORT = process.env.PORT || 3899
 
 app.use(express.static(path.join(__dirname, 'public')))
 
 app
 .get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'))
-})
-.get('/dev', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'))
+  const htmlTemplate = `
+    <!DOCTYPE html>
+    <html lang="en" >
+    <head>
+      <title>My Portal${process.env.PORT ? '' : ' (Dev)'}</title>
+      <meta charset="UTF-8">
+      <title>My Portal</title>
+      <link rel="icon" type="image/x-icon" href="./icons/favicon-32x32.png">
+      <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+      <script src="script.js" type="module"></script>
+    </body>
+    </html>
+  `
+  res.send(htmlTemplate)
 })
 
-app.listen(3899, () => {
-  console.log('Listening on port 3899')
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`)
 })
