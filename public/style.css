@@ -153,14 +153,15 @@ body main .personal h2 {
   color: #bcc2d5;
 }
 body #form-container {
-  width: 100vw;
+  background: #0009;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   left: 0px;
   top: 0px;
-  background: #0009;
+  width: 100vw;
+  height: 100vh;
   backdrop-filter: blur(15px);
   animation: blur-form-in 0.3s ease-in-out 1;
 }

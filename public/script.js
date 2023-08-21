@@ -158,7 +158,6 @@ const formModalComponent = props => {
 
     let container = document.createElement('div')
     container.id = 'form-container'
-    container.style.height = props.height
 
     const scrollTop = document.body.getBoundingClientRect().top
     
@@ -274,11 +273,9 @@ const SectionComponent = props => {
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.getElementById('form-container')?.remove()
-                    const bodyHeight = document.body.getBoundingClientRect().height
                     document.body.appendChild(
                         formModalComponent({
                             sectionId: props.id,
-                            height: `${bodyHeight}px`,
                             clickHandler: temporaryData => {
                                 linkDB.createLink(temporaryData)
                                 loadPage()
