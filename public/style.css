@@ -146,15 +146,6 @@ body main #edit-button:hover {
 body main .other h2 {
   color: #cd533d;
 }
-body main .client-company h2 {
-  color: #3DCD58;
-}
-body main .service-company h2 {
-  color: #586DB4;
-}
-body main .personal h2 {
-  color: #bcc2d5;
-}
 body #form-container {
   background: #0009;
   display: flex;
