@@ -1,4 +1,5 @@
 import { linkDB } from './linkDB.js'
+import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 
 // GLOBALS
@@ -155,12 +156,14 @@ const formModalComponent = props => {
         link: props.href,
         logo: props.src,
         description: props.tip,
+        section: props.sectionId,
     }
 
     const hasChanged = (fields, initialValues) => {
         return fields.link !== initialValues.link
         || fields.logo !== initialValues.logo
         || fields.description !== initialValues.description
+        || (!props.creating && ![null, undefined].includes(initialValues.section) && fields.section.toString() !== initialValues.section.toString())
     }
 
     const formValidate = fields => {
@@ -209,41 +212,60 @@ const formModalComponent = props => {
     descriptionField.placeholder = 'Description'
     descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
 
-    let addButton = document.createElement('button')
-    addButton.id = props.creating ? 'add-button' : 'update-button'
-    addButton.textContent = ''
-    addButton.disabled = !formValidate({
+    let sectionSelector
+    if (!props.creating) {
+        sectionSelector = document.createElement('select')
+        sectionDB.getAllSections().forEach(s => {
+            let option = document.createElement('option')
+            option.value = s.id
+            option.textContent = s.title
+            if (s.id === props.sectionId) {
+                option.selected = true
+            }
+            sectionSelector.appendChild(option)
+        })
+    }
+
+    let submitButton = document.createElement('button')
+    submitButton.id = props.creating ? 'add-button' : 'update-button'
+    submitButton.textContent = ''
+    submitButton.disabled = !formValidate({
         link: linkField.value,
         logo: logoField.value,
-        description: descriptionField.value,
-    }) || (!hasChanged({
-            link: linkField.value,
-            logo: logoField.value,
-            description: descriptionField.value,
-        }, initialValues) && !props.creating)
+    }) || (
+        !hasChanged(
+            {
+                link: linkField.value,
+                logo: logoField.value,
+                description: descriptionField.value,
+                section: !props.creating && sectionSelector.value,
+            },
+            initialValues
+        ) && !props.creating
+    )
 
-    for (const f of [linkField, logoField, descriptionField]) {
+    for (const f of [linkField, logoField, descriptionField, sectionSelector]) {
         ['focusout', 'input'].forEach(eventName => {
-            f.addEventListener(eventName, e => {
-                addButton.disabled = !formValidate({
+            ![null, undefined].includes(f) && f.addEventListener(eventName, e => {
+                submitButton.disabled = !formValidate({
                     link: linkField.value,
                     logo: logoField.value,
-                    description: descriptionField.value,
                 }) || (!hasChanged({
                     link: linkField.value,
                     logo: logoField.value,
                     description: descriptionField.value,
+                    section: !props.creating && sectionSelector.value,
                 }, initialValues) && !props.creating)
             })
         })
     }
 
-    addButton.addEventListener('click', e => {
+    submitButton.addEventListener('click', e => {
         db.createTemporary(
             'linkData',
             {
                 id: props.linkId,
-                sectionId: props.sectionId,
+                sectionId: !props.creating ? parseInt(sectionSelector.value) : props.sectionId,
                 href: linkField.value,
                 src: logoField.value,
                 tip: descriptionField.value,
@@ -253,7 +275,7 @@ const formModalComponent = props => {
             temporaryData => {
                 props.clickHandler(temporaryData)
             }
-            )
+        )
         hide()
     })
 
@@ -285,7 +307,10 @@ const formModalComponent = props => {
     form.appendChild(linkField)
     form.appendChild(logoField)
     form.appendChild(descriptionField)
-    form.appendChild(addButton)
+    if (!props.creating) {
+        form.appendChild(sectionSelector)
+    }
+    form.appendChild(submitButton)
 
     container.appendChild(form)
 
