@@ -124,6 +124,7 @@ body main #tooltip {
 body main #close-button,
 body main #disable-button,
 body main #add-button,
+body main #update-button,
 body main #edit-button {
   display: block;
   position: absolute;
@@ -137,6 +138,7 @@ body main #edit-button {
 body main #close-button:hover,
 body main #disable-button:hover,
 body main #add-button:hover,
+body main #update-button:hover,
 body main #edit-button:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
@@ -195,11 +197,11 @@ body #form {
 #form input:invalid {
   background: #f99;
 }
-#form #add-button {
+#form #add-button,
+#form #update-button {
   background: none;
   min-width: 40px;
   height: 40px;
-  background-image: url("./icons/plus-disabled.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -209,10 +211,20 @@ body #form {
   box-sizing: border-box;
   border-radius: 50%;
 }
+#form #add-button {
+  background-image: url("./icons/plus-disabled.png");
+}
+#form #update-button {
+  background-image: url("./icons/check-disabled.png");
+}
 #form #add-button:enabled {
   background-image: url("./icons/plus.png");
 }
-#form #add-button:hover {
+#form #update-button:enabled {
+  background-image: url("./icons/check.png");
+}
+#form #add-button:hover,
+#form #update-button:hover {
   border-color: #fff;
   cursor: pointer;
   transition: border-color 0.3s ease-in-out;
