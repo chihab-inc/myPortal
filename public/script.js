@@ -151,11 +151,12 @@ const tooltipComponent = props => {
 const formModalComponent = props => {
     modalTracker.formModalOpen = true
     const formValidate = fields => {
-        return (/(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link) && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo) && props.creating)
+        const rgx = /^(http(s)?:\/\/)([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/
+        return (rgx.test(fields.link) && rgx.test(fields.logo) && props.creating)
         || (
             (
-                /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link)
-                || /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo)
+                rgx.test(fields.link)
+                || rgx.test(fields.logo)
                 || !['', null, undefined].includes(fields.description)
             )
             && !props.creating
