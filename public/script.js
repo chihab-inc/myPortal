@@ -156,8 +156,7 @@ const formModalComponent = props => {
         || (
             (
                 rgx.test(fields.link)
-                || rgx.test(fields.logo)
-                || !['', null, undefined].includes(fields.description)
+                && rgx.test(fields.logo)
             )
             && !props.creating
         )
@@ -198,7 +197,7 @@ const formModalComponent = props => {
     descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
 
     let addButton = document.createElement('button')
-    addButton.id = 'add-button'
+    addButton.id = props.creating ? 'add-button' : 'update-button'
     addButton.textContent = ''
     addButton.disabled = !formValidate({
         link: linkField.value,
@@ -237,7 +236,7 @@ const formModalComponent = props => {
         hide()
     })
 
-    container.addEventListener('click', e => {
+    container.addEventListener('mousedown', e => {
         const rect = form.getBoundingClientRect()
         
         const left = rect.left
