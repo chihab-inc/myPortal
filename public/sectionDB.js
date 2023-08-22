@@ -18,6 +18,11 @@ sectionDB.getSectionById = id => {
     return db.getFromDB(DB_NAME)[COLLECTION_NAME].find(s => s.id === id)
 }
 
+// Fetch all section instances from database
+sectionDB.getAllSections = () => {
+    return db.getFromDB(DB_NAME)[COLLECTION_NAME]
+}
+
 // Remove section instance from database using section id
 sectionDB.deleteSectionById = id => {
     db.updateDB(DB_NAME, db => {

@@ -173,7 +173,8 @@ body #form {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
   animation: pop-form-in 0.3s ease-in-out 1;
 }
-#form input {
+#form input,
+#form select {
   height: 40px;
   min-width: 100px;
   border-radius: 4px;
@@ -182,7 +183,8 @@ body #form {
   padding: 5px;
   padding-left: 10px;
 }
-#form input:focus {
+#form input:focus,
+#form select:focus {
   outline: none;
 }
 #form input:invalid {
