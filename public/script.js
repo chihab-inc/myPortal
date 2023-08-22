@@ -70,6 +70,9 @@ const LinkComponent = props => {
                                 creating: false,
                                 sectionId: props.sectionId,
                                 linkId: props.id,
+                                href: props.href,
+                                src: props.src,
+                                tip: props.tip,
                                 clickHandler: temporaryData => {
                                     linkDB.updateLinkPropertyById(temporaryData)
                                     loadPage()
@@ -180,15 +183,18 @@ const formModalComponent = props => {
     let linkField = document.createElement('input')
     linkField.type = 'url'
     linkField.placeholder = 'Link'
+    linkField.value = props.creating ? null : props.href
     linkField.autofocus = true
 
     let logoField = document.createElement('input')
     logoField.type = 'url'
     logoField.placeholder = 'Logo'
+    logoField.value = props.creating ? null : props.src
 
     let descriptionField = document.createElement('input')
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
+    descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
 
     let addButton = document.createElement('button')
     addButton.id = 'add-button'
