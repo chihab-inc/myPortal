@@ -300,10 +300,10 @@ const SectionComponent = props => {
     let section = document.createElement('section')
 
     let article = document.createElement('article')
-    article.classList.add(props.componentClassName)
+    article.style.color = props.colorAccent
     
     let ul = document.createElement('ul')
-    ul.classList.add(props.setElementClassName)
+    ul.classList.add('services')
     
     let h2Container = document.createElement('div')
     h2Container.classList.add('sub-section-title-container')
@@ -393,15 +393,13 @@ const MainComponent = props => {
     let sectionComponents = []
     for (const section of props.config.sections) {
         const id = section.id
-        const componentClassName = section.componentClassName
+        const colorAccent = section.colorAccent
         const title = section.title
-        const setElementClassName = section.setElementClassName
         sectionComponents.push(
             SectionComponent({
                 id,
-                componentClassName,
+                colorAccent,
                 title,
-                setElementClassName,
                 links: linkWrappers
                     .filter(linkWrapper => linkWrapper.sectionId === id)
                     .filter(linkWrapper => !linkWrapper.deleted)
