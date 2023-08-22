@@ -150,6 +150,19 @@ const tooltipComponent = props => {
 
 const formModalComponent = props => {
     modalTracker.formModalOpen = true
+    
+    const initialValues = {
+        link: props.href,
+        logo: props.src,
+        description: props.tip,
+    }
+
+    const hasChanged = (fields, initialValues) => {
+        return fields.link !== initialValues.link
+        || fields.logo !== initialValues.logo
+        || fields.description !== initialValues.description
+    }
+
     const formValidate = fields => {
         const rgx = /^(http(s)?:\/\/)([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/
         return (rgx.test(fields.link) && rgx.test(fields.logo) && props.creating)
@@ -203,7 +216,11 @@ const formModalComponent = props => {
         link: linkField.value,
         logo: logoField.value,
         description: descriptionField.value,
-    })
+    }) || (!hasChanged({
+            link: linkField.value,
+            logo: logoField.value,
+            description: descriptionField.value,
+        }, initialValues) && !props.creating)
 
     for (const f of [linkField, logoField, descriptionField]) {
         ['focusout', 'input'].forEach(eventName => {
@@ -212,7 +229,11 @@ const formModalComponent = props => {
                     link: linkField.value,
                     logo: logoField.value,
                     description: descriptionField.value,
-                })
+                }) || (!hasChanged({
+                    link: linkField.value,
+                    logo: logoField.value,
+                    description: descriptionField.value,
+                }, initialValues) && !props.creating)
             })
         })
     }
