@@ -26,7 +26,7 @@ linkDB.getLinksBySectionId = sectionId => {
 // Update link instance property with new value using link id
 linkDB.updateLinkPropertyById = data => {
     db.updateDB(DB_NAME, dataBase => {
-        Object.keys(data).filter(k => !['', null, undefined].includes(data[k])).forEach(d => {
+        Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
             dataBase[COLLECTION_NAME].find(l => l.id === data.id)[d] = data[d]
         })
     })
