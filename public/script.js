@@ -1,6 +1,9 @@
 import { linkDB } from './linkDB.js'
 import { db } from './db.js'
 
+// GLOBALS
+const modalTracker = { formModalOpen: false }
+
 const LinkComponent = props => {
     let li = document.createElement('li')
     if (!props.active) {
@@ -143,6 +146,7 @@ const tooltipComponent = props => {
 }
 
 const formModalComponent = props => {
+    modalTracker.formModalOpen = true
     const formValidate = fields => {
         return (/(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.link) && /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/.test(fields.logo) && props.creating)
         || (
@@ -156,6 +160,7 @@ const formModalComponent = props => {
     }
 
     const hide = () => {
+        modalTracker.formModalOpen = false
         let form = document.getElementById('form')
         form.style.animation = 'push-form-out 0.3s ease-in-out 1'
         let formContainer = document.getElementById('form-container')
@@ -169,14 +174,13 @@ const formModalComponent = props => {
     let container = document.createElement('div')
     container.id = 'form-container'
 
-    const scrollTop = document.body.getBoundingClientRect().top
-    
     let form = document.createElement('div')
     form.id = 'form'
 
     let linkField = document.createElement('input')
     linkField.type = 'url'
     linkField.placeholder = 'Link'
+    linkField.autofocus = true
 
     let logoField = document.createElement('input')
     logoField.type = 'url'
@@ -226,7 +230,6 @@ const formModalComponent = props => {
         hide()
     })
 
-    
     container.addEventListener('click', e => {
         const rect = form.getBoundingClientRect()
         
@@ -242,6 +245,14 @@ const formModalComponent = props => {
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
             hide()
         }
+    })
+
+    container.addEventListener('mouseenter', e => {
+        linkField.focus()
+    })
+
+    modalTracker.formModalOpen && document.addEventListener('keyup', e => {
+        e.key === 'Escape' && hide()
     })
 
     form.appendChild(linkField)
