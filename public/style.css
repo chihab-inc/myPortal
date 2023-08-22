@@ -14,21 +14,20 @@ body {
   place-content: center;
   overflow: auto;
   font-family: Verdana, sans-serif;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 body main {
   min-width: 1000px;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   overflow: auto;
 }
 body::-webkit-scrollbar {
   display: none;
-}
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 @media screen and (max-width: 800px) {
   body {
