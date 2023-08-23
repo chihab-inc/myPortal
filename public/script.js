@@ -11,9 +11,9 @@ const DeletedLinkComponent = props => {
     let li = document.createElement('li')
 
     const hide = () => {
-        document.getElementById('close-button')?.remove()
-        document.getElementById('recover-button')?.remove()
-        document.getElementById('tooltip')?.remove()
+        document.querySelector('#close-button')?.remove()
+        document.querySelector('#recover-button')?.remove()
+        document.querySelector('#description')?.remove()
     }
     
     li.appendChild(anchorComponent({ href: props.href, src: props.src }))
@@ -53,9 +53,9 @@ const DeletedLinkComponent = props => {
             })
         )
         
-        // APPEND TOOLTIP ONLY IF THERE IS A TIP/DESCRIPTION
+        // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
-            tooltipComponent({
+            descriptionComponent({
                 tip: props.tip,
                 x: rect.left + 5,
                 y: rect.bottom - 27 - scrollTop,
@@ -91,10 +91,10 @@ const LinkComponent = props => {
     }
 
     const hide = () => {
-        document.getElementById('close-button')?.remove()
-        document.getElementById('disable-button')?.remove()
-        document.getElementById('edit-button')?.remove()
-        document.getElementById('tooltip')?.remove()
+        document.querySelector('#close-button')?.remove()
+        document.querySelector('#disable-button')?.remove()
+        document.querySelector('#edit-button')?.remove()
+        document.querySelector('#description')?.remove()
     }
     
     li.appendChild(anchorComponent({ href: props.href, src: props.src }))
@@ -144,7 +144,7 @@ const LinkComponent = props => {
                     y: rect.top + 45 - scrollTop,
                     clickHandler: () => {
                         // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        document.getElementById('form-container')?.remove()
+                        document.querySelector('#form-container')?.remove()
                         document.body.appendChild(
                             formModalComponent({
                                 creating: false,
@@ -164,9 +164,9 @@ const LinkComponent = props => {
                 })
             )
         
-        // APPEND TOOLTIP ONLY IF THERE IS A TIP/DESCRIPTION
+        // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
-            tooltipComponent({
+            descriptionComponent({
                 tip: props.tip,
                 x: rect.left + 5,
                 y: rect.bottom - 27 - scrollTop,
@@ -207,6 +207,7 @@ let anchorComponent = props => {
 const toolButtonComponent = props => {
     let button = document.createElement('img')
     button.id = props.id
+    button.classList.add('tool-button')
     button.src = props.src
     button.style.left = `${props.x}px`
     button.style.top = `${props.y}px`
@@ -218,14 +219,14 @@ const toolButtonComponent = props => {
     return button
 }
 
-const tooltipComponent = props => {
-    let tooltip = document.createElement('p')
-    tooltip.id = 'tooltip'
-    tooltip.textContent = props.tip
-    tooltip.style.left = `${props.x}px`
-    tooltip.style.top = `${props.y}px`
+const descriptionComponent = props => {
+    let description = document.createElement('p')
+    description.id = 'description'
+    description.textContent = props.tip
+    description.style.left = `${props.x}px`
+    description.style.top = `${props.y}px`
 
-    return tooltip
+    return description
 }
 
 const formModalComponent = props => {
@@ -259,12 +260,12 @@ const formModalComponent = props => {
 
     const hide = () => {
         modalTracker.formModalOpen = false
-        let form = document.getElementById('form')
+        let form = document.querySelector('#form')
         form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-        let formContainer = document.getElementById('form-container')
+        let formContainer = document.querySelector('#form-container')
         formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
         setTimeout(() => {
-            document.getElementById('form-container')?.remove()
+            document.querySelector('#form-container')?.remove()
             document.body.style.overflow = 'auto'
         }, 300)
     }
@@ -279,7 +280,6 @@ const formModalComponent = props => {
     linkField.type = 'url'
     linkField.placeholder = 'Link'
     linkField.value = props.creating ? null : props.href
-    linkField.autofocus = true
 
     let logoField = document.createElement('input')
     logoField.type = 'url'
@@ -307,6 +307,7 @@ const formModalComponent = props => {
 
     let submitButton = document.createElement('button')
     submitButton.id = props.creating ? 'add-button' : 'update-button'
+    submitButton.classList.add('tool-button')
     submitButton.textContent = ''
     submitButton.disabled = !formValidate({
         link: linkField.value,
@@ -398,8 +399,9 @@ const formModalComponent = props => {
 
 const SectionComponent = props => {
     const hide = () => {
-        document.getElementById('add-button')?.remove()
-        document.getElementById('view-button')?.remove()
+        document.querySelector('#add-button')?.remove()
+        document.querySelector('#view-button')?.remove()
+        document.querySelector('#section-disable-button')?.remove()
     }
 
     let section = document.createElement('section')
@@ -422,6 +424,7 @@ const SectionComponent = props => {
         const rect = h2Container.getBoundingClientRect()
         const scrollTop = document.body.getBoundingClientRect().top
 
+        // APPEND ADD BUTTON
         h2Container.appendChild(
             toolButtonComponent({
                 id: 'add-button',
@@ -430,7 +433,7 @@ const SectionComponent = props => {
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                    document.getElementById('form-container')?.remove()
+                    document.querySelector('#form-container')?.remove()
                     document.body.appendChild(
                         formModalComponent({
                             creating: true,
@@ -447,6 +450,7 @@ const SectionComponent = props => {
             })
         )
 
+        // APPEND VIEW BUTTON
         h2Container.appendChild(
             toolButtonComponent({
                 id: 'view-button',
@@ -455,6 +459,20 @@ const SectionComponent = props => {
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     sectionDB.toggleExtendedViewById(props.id)
+                    loadPage()
+                }
+            })
+        )
+
+        // APPEND DISABLE BUTTON
+        h2Container.appendChild(
+            toolButtonComponent({
+                id: 'section-disable-button',
+                src: './icons/minus.png',
+                x: rect.right + 30,
+                y: rect.top + 10 - scrollTop,
+                clickHandler: () => {
+                    linkDB.toggleLinksBySectionId(props.id)
                     loadPage()
                 }
             })
@@ -537,7 +555,7 @@ const MainComponent = props => {
 
 const loadPage = () => {
     // RESET MAIN TO AVOID LAGGING DUPLICATES
-    document.getElementById('main')?.remove()
+    document.querySelector('#main')?.remove()
 
     document.body.appendChild(
         MainComponent({ config: db.getFromDB(DB_NAME) })

@@ -58,6 +58,20 @@ linkDB.deleteLinksBySectionId = sectionId => {
 }
 
 // disable link instance using link id
+linkDB.disableLinkById = id => {
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME].find(l => l.id === id).active = false
+    })
+}
+
+// enable link instance using link id
+linkDB.enableLinkById = id => {
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME].find(l => l.id === id).active = true
+    })
+}
+
+// toggle link instance using link id
 linkDB.toggleLinkById = id => {
     db.updateDB(DB_NAME, dataBase => {
         dataBase[COLLECTION_NAME].find(l => l.id === id).active = !dataBase[COLLECTION_NAME].find(l => l.id === id).active
@@ -66,9 +80,19 @@ linkDB.toggleLinkById = id => {
 
 // disable link instances using section id
 linkDB.toggleLinksBySectionId = sectionId => {
-    linkDB.getLinksBySectionId(sectionId).forEach(l => {
-        linkDB.toggleLinkById(l.id)
-    })
+    linkDB.getLinksBySectionId(sectionId)
+    .filter(l => !l.deleted)
+    .some(l => l.active)
+        ? linkDB.getLinksBySectionId(sectionId)
+        .filter(l => !l.deleted)
+        .forEach(l => {
+            linkDB.disableLinkById(l.id)
+        })
+        : linkDB.getLinksBySectionId(sectionId)
+        .filter(l => !l.deleted)
+        .forEach(l => {
+            linkDB.enableLinkById(l.id)
+        })
 }
 
 export { linkDB }
