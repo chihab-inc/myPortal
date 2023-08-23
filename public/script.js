@@ -2,8 +2,122 @@ import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 
+/* // MANUAL TESTS ------------------------------------------
+
+
+const testDB = 'testDB'
+const testCol = 'testCol'
+// SET UP DATABASE
+db.createDB(testDB)
+db.createCollection(testDB, testCol)
+// POPULATE DATABASE
+db.updateDB(testDB, dataBase => {
+    dataBase[testCol].push({ id: 0, deleted: false })
+    dataBase[testCol].push({ id: 1, deleted: false })
+    dataBase[testCol].push({ id: 2, deleted: false })
+})
+// DELETE FIRST ELEMENT
+db.updateDB(testDB, dataBase => {
+    const data = { id: 0, deleted: true }
+    Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
+        dataBase[testCol].find(l => l.id === data.id)[d] = data[d]
+    })
+})
+// RECOVER FIRST ELEMENT
+db.updateDB(testDB, dataBase => {
+    const data = { id: 0, deleted: false }
+    Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
+        dataBase[testCol].find(l => l.id === data.id)[d] = data[d]
+    })
+})
+// PERMANENTLY DELETE FIRST ELEMENT
+db.updateDB(testDB, dataBase => {
+    dataBase[testCol] = dataBase[testCol].filter(l => l.id !== 0)
+})
+
+
+
+// MANUAL TESTS END ------------------------------------------ */
+
 // GLOBALS
 const modalTracker = { formModalOpen: false }
+
+const DeletedLinkComponent = props => {
+    let li = document.createElement('li')
+
+    const hide = () => {
+        document.getElementById('close-button')?.remove()
+        document.getElementById('recover-button')?.remove()
+        document.getElementById('tooltip')?.remove()
+    }
+    
+    li.appendChild(anchorComponent({ href: props.href, src: props.src }))
+    
+    li.addEventListener('mouseenter', e => {
+        // RESET TO AVOID LAGGING DUPLICATES
+        hide()
+
+        const rect = li.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
+        
+        // APPEND CLOSE BUTTON
+        li.appendChild(
+            toolButtonComponent({
+                id: 'close-button',
+                src: './icons/cross.png',
+                x: rect.left + 5,
+                y: rect.top + 5 - scrollTop,
+                clickHandler: () => {
+                    linkDB.permanentlyDeleteLinkById(props.id)
+                    loadPage()
+                }
+            })
+        )
+        
+        // APPEND CLOSE BUTTON
+        li.appendChild(
+            toolButtonComponent({
+                id: 'recover-button',
+                src: './icons/arrow-left.png',
+                x: rect.left + 5,
+                y: rect.top + 25 - scrollTop,
+                clickHandler: () => {
+                    linkDB.recoverDeletedLinkById(props.id)
+                    loadPage()
+                }
+            })
+        )
+        
+        // APPEND TOOLTIP ONLY IF THERE IS A TIP/DESCRIPTION
+        props.tip && li.appendChild(
+            tooltipComponent({
+                tip: props.tip,
+                x: rect.left + 5,
+                y: rect.bottom - 27 - scrollTop,
+            })
+        )
+
+    })
+    li.addEventListener('mouseleave', e => {
+        const rect = li.getBoundingClientRect()
+        const scrollTop = document.body.getBoundingClientRect().top
+        
+        const left = rect.left
+        const top = rect.top - scrollTop
+        const right = rect.right
+        const bottom = rect.bottom - scrollTop
+
+        const x = e.pageX
+        const y = e.pageY
+
+        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
+        if (!(x > left && x < right) || !(y > top && y < bottom)) {
+            hide()
+        }
+    })
+    
+    return li
+}
 
 const LinkComponent = props => {
     let li = document.createElement('li')
@@ -320,6 +434,7 @@ const formModalComponent = props => {
 const SectionComponent = props => {
     const hide = () => {
         document.getElementById('add-button')?.remove()
+        document.getElementById('view-button')?.remove()
     }
 
     let section = document.createElement('section')
@@ -336,7 +451,7 @@ const SectionComponent = props => {
     let h2 = document.createElement('h2')
     h2.innerText = props.title
 
-    h2Container.addEventListener('mouseenter', e => {
+    article.addEventListener('mouseenter', e => {
         hide()
 
         const rect = h2Container.getBoundingClientRect()
@@ -366,9 +481,22 @@ const SectionComponent = props => {
                 }
             })
         )
+
+        h2Container.appendChild(
+            toolButtonComponent({
+                id: 'view-button',
+                src: props.extendedView ? './icons/hide.png' : './icons/view.png',
+                x: rect.right + 5,
+                y: rect.top + 10 - scrollTop,
+                clickHandler: () => {
+                    sectionDB.toggleExtendedViewById(props.id)
+                    loadPage()
+                }
+            })
+        )
     })
 
-    h2Container.addEventListener('mouseleave', e => {
+    article.addEventListener('mouseleave', e => {
         const rect = h2.getBoundingClientRect()
         const scrollTop = document.body.getBoundingClientRect().top
         
@@ -411,23 +539,26 @@ const MainComponent = props => {
         const tip = link.tip
         const active = link.active
         const deleted = link.deleted
-        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted })
+        const linkTypeClass = deleted ? DeletedLinkComponent : LinkComponent
+        let linkComponent = linkTypeClass({ id, sectionId, href, src, tip, active, deleted })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
     let sectionComponents = []
     for (const section of props.config.sections) {
         const id = section.id
-        const colorAccent = section.colorAccent
         const title = section.title
+        const colorAccent = section.colorAccent
+        const extendedView = section.extendedView
         sectionComponents.push(
             SectionComponent({
                 id,
                 colorAccent,
                 title,
+                extendedView,
                 links: linkWrappers
                     .filter(linkWrapper => linkWrapper.sectionId === id)
-                    .filter(linkWrapper => !linkWrapper.deleted)
+                    .filter(linkWrapper => !linkWrapper.deleted || (linkWrapper.deleted && extendedView))
                     .map(linkWrapper => linkWrapper.linkComponent)
             })
         )

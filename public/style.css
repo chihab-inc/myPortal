@@ -121,8 +121,10 @@ body main #tooltip {
   animation: roll-out 0.2s ease-in-out 1;
 }
 body main #close-button,
+body main #recover-button,
 body main #disable-button,
 body main #add-button,
+body main #view-button,
 body main #update-button,
 body main #edit-button {
   display: block;
@@ -135,15 +137,14 @@ body main #edit-button {
   animation: pop-in 0.3s ease-in-out 1;
 }
 body main #close-button:hover,
+body main #recover-button:hover,
 body main #disable-button:hover,
 body main #add-button:hover,
+body main #view-button:hover,
 body main #update-button:hover,
 body main #edit-button:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
-}
-body main .other h2 {
-  color: #cd533d;
 }
 body #form-container {
   background: #0009;

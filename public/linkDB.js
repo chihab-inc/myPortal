@@ -13,6 +13,13 @@ linkDB.createLink = data => {
     })
 }
 
+// Permanently delete link from database using its id
+linkDB.permanentlyDeleteLinkById = id => {
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME] = dataBase[COLLECTION_NAME].filter(l => l.id !== id)
+    })
+}
+
 // Fetch link instance from database using link id
 linkDB.getLinkById = id => {
     return db.getFromDB(DB_NAME)[COLLECTION_NAME].find(l => l.id === id)
@@ -35,6 +42,11 @@ linkDB.updateLinkPropertyById = data => {
 // delete link instance from database using link id
 linkDB.deleteLinkById = id => {
     linkDB.updateLinkPropertyById({ id, deleted: true })
+}
+
+// delete link instance from database using link id
+linkDB.recoverDeletedLinkById = id => {
+    linkDB.updateLinkPropertyById({ id, deleted: false })
 }
 
 // delete link instances from database using section id
