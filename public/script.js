@@ -2,42 +2,7 @@ import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 
-/* // MANUAL TESTS ------------------------------------------
-
-
-const testDB = 'testDB'
-const testCol = 'testCol'
-// SET UP DATABASE
-db.createDB(testDB)
-db.createCollection(testDB, testCol)
-// POPULATE DATABASE
-db.updateDB(testDB, dataBase => {
-    dataBase[testCol].push({ id: 0, deleted: false })
-    dataBase[testCol].push({ id: 1, deleted: false })
-    dataBase[testCol].push({ id: 2, deleted: false })
-})
-// DELETE FIRST ELEMENT
-db.updateDB(testDB, dataBase => {
-    const data = { id: 0, deleted: true }
-    Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
-        dataBase[testCol].find(l => l.id === data.id)[d] = data[d]
-    })
-})
-// RECOVER FIRST ELEMENT
-db.updateDB(testDB, dataBase => {
-    const data = { id: 0, deleted: false }
-    Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
-        dataBase[testCol].find(l => l.id === data.id)[d] = data[d]
-    })
-})
-// PERMANENTLY DELETE FIRST ELEMENT
-db.updateDB(testDB, dataBase => {
-    dataBase[testCol] = dataBase[testCol].filter(l => l.id !== 0)
-})
-
-
-
-// MANUAL TESTS END ------------------------------------------ */
+const DB_NAME = 'DATA-BASE'
 
 // GLOBALS
 const modalTracker = { formModalOpen: false }
@@ -575,12 +540,20 @@ const loadPage = () => {
     document.getElementById('main')?.remove()
 
     document.body.appendChild(
-        MainComponent({ config: db.getFromDB('DATA-BASE') })
+        MainComponent({ config: db.getFromDB(DB_NAME) })
     )
+}
+
+const resetDisplaySettings = () => {
+    sectionDB.getAllSections().forEach(s => {
+        sectionDB.disableExtendedViewById(s.id)
+    })
 }
 
 const init = () => {
     window.addEventListener('load', e => {
+        // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
+        resetDisplaySettings()
         loadPage()
     })
 }
