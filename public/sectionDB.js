@@ -37,4 +37,11 @@ sectionDB.toggleExtendedViewById = id => {
     })
 }
 
+// Toggle extended view of content
+sectionDB.disableExtendedViewById = id => {
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME].find(s => s.id === id).extendedView = false
+    })
+}
+
 export { sectionDB }
