@@ -30,4 +30,11 @@ sectionDB.deleteSectionById = id => {
     })
 }
 
+// Toggle extended view of content
+sectionDB.toggleExtendedViewById = id => {
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME].find(s => s.id === id).extendedView = !dataBase[COLLECTION_NAME].find(s => s.id === id).extendedView
+    })
+}
+
 export { sectionDB }
