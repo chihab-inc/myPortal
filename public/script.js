@@ -295,6 +295,7 @@ const formModalComponent = props => {
 
     let logoFinderButton = document.createElement('button')
     logoFinderButton.innerText = "Find"
+    logoFinderButton.className = "findLogoButton"
     logoFinderButton.addEventListener('click', () => {
         let logoF = new logoFinder()
         logoF.fetchImages(descriptionField.value)

@@ -12,6 +12,10 @@ export class logoFinder {
     }
 
     fetchImages(token){
+        if(! token || token.trim() == ""){
+            this.close()
+            return
+        }
         token = token.replace(" ", "+")
         let url = "https://devcrawlers.com/proxies/google_images.php?q="+token
         fetch(url, {
