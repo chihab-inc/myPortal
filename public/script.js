@@ -230,6 +230,8 @@ const descriptionComponent = props => {
     return description
 }
 
+let logoF = new logoFinder()
+
 const formModalComponent = props => {
     modalTracker.formModalOpen = true
     
@@ -265,6 +267,8 @@ const formModalComponent = props => {
         form.style.animation = 'push-form-out 0.3s ease-in-out 1'
         let formContainer = document.querySelector('#form-container')
         formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        // hide also the logoFinder modal
+        document.querySelector('.logoFinder').style.display = "none"
         setTimeout(() => {
             document.querySelector('#form-container')?.remove()
             document.body.style.overflow = 'auto'
@@ -296,8 +300,8 @@ const formModalComponent = props => {
     let logoFinderButton = document.createElement('button')
     logoFinderButton.innerText = "Find"
     logoFinderButton.className = "findLogoButton"
+
     logoFinderButton.addEventListener('click', () => {
-        let logoF = new logoFinder()
         logoF.fetchImages(descriptionField.value)
     })
 

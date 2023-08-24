@@ -1,19 +1,21 @@
-
 export class logoFinder {
     
+    // Create the modal
     constructor(){
         this.modal = document.createElement('div')
         this.modal.setAttribute('class', 'logoFinder')
         document.body.appendChild(this.modal)
-        this.images = []
-        this.open()
-        this.modal.innerHTML = "<img class='laoding' src='https://i.pinimg.com/originals/be/ce/0c/bece0c797cb134aefb2cb836578c9249.gif'>"
-        
     }
 
+    // a function that gets the source code of google images page
+    // it goes througth a proxy hosted in devcrawlers.com (to avoid CORS policy)
+    // you can create your own proxy and use it
     fetchImages(token){
+        this.images = []
+        this.modal.style.display = "block" // show the modal
+        this.modal.innerHTML = "<img class='laoding' src='https://i.pinimg.com/originals/be/ce/0c/bece0c797cb134aefb2cb836578c9249.gif'>"
         if(! token || token.trim() == ""){
-            this.close()
+            this.modal.style.display = "none" // close the model if no token provided
             return
         }
         token = token.replace(" ", "+")
@@ -36,14 +38,6 @@ export class logoFinder {
         .catch(err => console.log(err))
     }
 
-    open(){
-        this.modal.style.display = "block"
-    }
-
-    close(){
-        this.modal.style.display = "none"
-    }
-
     loadImages(){
         this.modal.style.display = "grid"
         this.modal.innerHTML = ""
@@ -55,7 +49,7 @@ export class logoFinder {
             this.modal.appendChild(elem)
             elem.addEventListener('click', (evt) => {
                 document.getElementById('logoUrl').value = evt.target.getAttribute('data-url')
-                this.close()
+                this.modal.style.display = "none" // close the modal when item selected
             })
         })
     }
