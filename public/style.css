@@ -255,3 +255,47 @@ body #form {
     backdrop-filter: blur(0px);
   }
 }
+
+.logoFinder {
+  width: 80%;
+  height: 50vh;
+  overflow-y: scroll;
+  background-color: #fff;
+  display: none;
+  z-index: 9999;
+  position: fixed;
+  margin: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  max-width: 1000px;
+  min-width: 800px;
+  text-align: center;
+}
+
+.logoFinder .img {
+  border-radius: 10px;
+  border: 3px solid #ccc;
+  width: 140px;
+  height: 140px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+
+.logoFinder .img:hover {
+  transition: all .3s ease;
+  box-shadow: 0px 0px 10px rgb(136, 90, 206);
+  transform: scale(1.05);
+  border-width: 1px;
+  border-radius: 0;
+}
+
+.laoding {
+  width: 470px;
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
+import { logoFinder } from './logo-finder.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -284,12 +285,20 @@ const formModalComponent = props => {
     let logoField = document.createElement('input')
     logoField.type = 'url'
     logoField.placeholder = 'Logo'
+    logoField.id = 'logoUrl'
     logoField.value = props.creating ? null : props.src
 
     let descriptionField = document.createElement('input')
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
     descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
+
+    let logoFinderButton = document.createElement('button')
+    logoFinderButton.innerText = "Find"
+    logoFinderButton.addEventListener('click', () => {
+        let logoF = new logoFinder()
+        logoF.fetchImages(descriptionField.value)
+    })
 
     let sectionSelector
     if (!props.creating) {
@@ -386,6 +395,7 @@ const formModalComponent = props => {
 
     form.appendChild(linkField)
     form.appendChild(logoField)
+    form.appendChild(logoFinderButton)
     form.appendChild(descriptionField)
     if (!props.creating) {
         form.appendChild(sectionSelector)
