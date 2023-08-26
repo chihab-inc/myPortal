@@ -1,6 +1,7 @@
 import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
+import { logoFinder } from './logo-finder.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -229,6 +230,8 @@ const descriptionComponent = props => {
     return description
 }
 
+let logoF = new logoFinder()
+
 const formModalComponent = props => {
     modalTracker.formModalOpen = true
     
@@ -264,6 +267,8 @@ const formModalComponent = props => {
         form.style.animation = 'push-form-out 0.3s ease-in-out 1'
         let formContainer = document.querySelector('#form-container')
         formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        // hide also the logoFinder modal
+        document.querySelector('.logoFinder').style.display = "none"
         setTimeout(() => {
             document.querySelector('#form-container')?.remove()
             document.body.style.overflow = 'auto'
@@ -284,12 +289,21 @@ const formModalComponent = props => {
     let logoField = document.createElement('input')
     logoField.type = 'url'
     logoField.placeholder = 'Logo'
+    logoField.id = 'logoUrl'
     logoField.value = props.creating ? null : props.src
 
     let descriptionField = document.createElement('input')
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
     descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
+
+    let logoFinderButton = document.createElement('button')
+    logoFinderButton.innerText = "Find"
+    logoFinderButton.className = "findLogoButton"
+
+    logoFinderButton.addEventListener('click', () => {
+        logoF.fetchImages(descriptionField.value)
+    })
 
     let sectionSelector
     if (!props.creating) {
@@ -386,6 +400,7 @@ const formModalComponent = props => {
 
     form.appendChild(linkField)
     form.appendChild(logoField)
+    form.appendChild(logoFinderButton)
     form.appendChild(descriptionField)
     if (!props.creating) {
         form.appendChild(sectionSelector)
