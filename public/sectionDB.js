@@ -23,6 +23,11 @@ sectionDB.getAllSections = () => {
     return db.getFromDB(DB_NAME)[COLLECTION_NAME]
 }
 
+// Coount all section instances in database
+sectionDB.getSectionCount = () => {
+    return sectionDB.getAllSections().length
+}
+
 // Remove section instance from database using section id
 sectionDB.deleteSectionById = id => {
     db.updateDB(DB_NAME, db => {

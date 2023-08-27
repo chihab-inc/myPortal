@@ -16,7 +16,7 @@ const DeletedLinkComponent = props => {
         document.querySelector('#description')?.remove()
     }
     
-    li.appendChild(anchorComponent({ href: props.href, src: props.src }))
+    li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
     
     li.addEventListener('mouseenter', e => {
         // RESET TO AVOID LAGGING DUPLICATES
@@ -27,7 +27,7 @@ const DeletedLinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'close-button',
                 src: './icons/cross.png',
                 x: rect.left + 5,
@@ -41,7 +41,7 @@ const DeletedLinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'recover-button',
                 src: './icons/arrow-left.png',
                 x: rect.left + 5,
@@ -55,7 +55,7 @@ const DeletedLinkComponent = props => {
         
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
-            descriptionComponent({
+            DescriptionComponent({
                 tip: props.tip,
                 x: rect.left + 5,
                 y: rect.bottom - 27 - scrollTop,
@@ -97,7 +97,7 @@ const LinkComponent = props => {
         document.querySelector('#description')?.remove()
     }
     
-    li.appendChild(anchorComponent({ href: props.href, src: props.src }))
+    li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
     
     li.addEventListener('mouseenter', e => {
         // RESET TO AVOID LAGGING DUPLICATES
@@ -108,7 +108,7 @@ const LinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'close-button',
                 src: './icons/cross.png',
                 x: rect.left + 5,
@@ -122,7 +122,7 @@ const LinkComponent = props => {
         
         // APPEND DISABLE BUTTON
         li.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'disable-button',
                 src: './icons/minus.png',
                 x: rect.left + 5,
@@ -137,7 +137,7 @@ const LinkComponent = props => {
         // APPEND EDIT BUTTON
         props.active
             && li.appendChild(
-                toolButtonComponent({
+                ToolButtonComponent({
                     id: 'edit-button',
                     src: './icons/pen.png',
                     x: rect.left + 5,
@@ -146,7 +146,7 @@ const LinkComponent = props => {
                         // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                         document.querySelector('#form-container')?.remove()
                         document.body.appendChild(
-                            formModalComponent({
+                            LinkFormModalComponent({
                                 creating: false,
                                 sectionId: props.sectionId,
                                 linkId: props.id,
@@ -166,7 +166,7 @@ const LinkComponent = props => {
         
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
-            descriptionComponent({
+            DescriptionComponent({
                 tip: props.tip,
                 x: rect.left + 5,
                 y: rect.bottom - 27 - scrollTop,
@@ -195,7 +195,7 @@ const LinkComponent = props => {
     return li
 }
 
-let anchorComponent = props => {
+let AnchorComponent = props => {
     let a = document.createElement('a')
     a.target = '_blank'
     a.href = props.href
@@ -204,7 +204,7 @@ let anchorComponent = props => {
     return a
 }
 
-const toolButtonComponent = props => {
+const ToolButtonComponent = props => {
     let button = document.createElement('img')
     button.id = props.id
     button.classList.add('tool-button')
@@ -219,7 +219,7 @@ const toolButtonComponent = props => {
     return button
 }
 
-const descriptionComponent = props => {
+const DescriptionComponent = props => {
     let description = document.createElement('p')
     description.id = 'description'
     description.textContent = props.tip
@@ -229,7 +229,7 @@ const descriptionComponent = props => {
     return description
 }
 
-const formModalComponent = props => {
+const LinkFormModalComponent = props => {
     modalTracker.formModalOpen = true
     
     const initialValues = {
@@ -397,6 +397,115 @@ const formModalComponent = props => {
     return container
 }
 
+const SectionFormModalComponent = props => {
+    const formValidate = fields => {
+        return !['', null, undefined].includes(fields.title)
+            && ![''].includes(fields.title.replaceAll(' ', ''))
+    }
+
+    const hide = () => {
+        modalTracker.formModalOpen = false
+        let form = document.querySelector('#form')
+        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+        let formContainer = document.querySelector('#form-container')
+        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+        setTimeout(() => {
+            document.querySelector('#form-container')?.remove()
+            document.body.style.overflow = 'auto'
+        }, 300)
+    }
+
+    let container = document.createElement('div')
+    container.id = 'form-container'
+
+    let form = document.createElement('div')
+    form.id = 'form'
+
+    let titleField = document.createElement('input')
+    titleField.type = 'text'
+    titleField.placeholder = 'Title'
+
+    let colorAccentField = document.createElement('input')
+    colorAccentField.type = 'color'
+    colorAccentField.value = '#bf616a'
+
+    let submitButton = document.createElement('button')
+    submitButton.id = props.creating ? 'add-button' : 'update-button'
+    submitButton.classList.add('tool-button')
+    submitButton.textContent = ''
+    submitButton.disabled = !formValidate({ title: titleField.value })
+
+    for (const f of [titleField, colorAccentField]) {
+        ['focusout', 'input'].forEach(eventName => {
+            ![null, undefined].includes(f) && f.addEventListener(eventName, e => {
+                submitButton.disabled = !formValidate({ title: titleField.value })
+            })
+        })
+    }
+
+    submitButton.addEventListener('click', e => {
+        db.createTemporary(
+            'sectionData',
+            {
+                id: props.sectionId,
+                title: titleField.value,
+                colorAccent: colorAccentField.value,
+                extendedView: false,
+            },
+            temporaryData => {
+                props.clickHandler(temporaryData)
+            }
+        )
+        hide()
+    })
+
+    container.addEventListener('mousedown', e => {
+        const rect = form.getBoundingClientRect()
+        
+        const left = rect.left
+        const top = rect.top
+        const right = rect.right
+        const bottom = rect.bottom
+
+        const x = e.pageX
+        const y = e.pageY
+
+        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
+        if (!(x > left && x < right) || !(y > top && y < bottom)) {
+            hide()
+        }
+    })
+
+    container.addEventListener('mouseenter', e => {
+        titleField.focus()
+    })
+
+    modalTracker.formModalOpen && document.addEventListener('keyup', e => {
+        e.key === 'Escape' && hide()
+    })
+
+    form.appendChild(titleField)
+    form.appendChild(colorAccentField)
+    form.appendChild(submitButton)
+    container.appendChild(form)
+    return container
+}
+
+const EmptyData = props => {
+    const container = document.createElement('div')
+    container.id = 'empty-data'
+
+    const p = document.createElement('p')
+    p.textContent = 'No data present yet. Please double-click here to create new data.'
+
+    container.addEventListener('dblclick', e => {
+        props.callBack()
+    })
+
+    container.appendChild(p)
+    return container
+}
+
 const SectionComponent = props => {
     const hide = () => {
         document.querySelector('#add-button')?.remove()
@@ -426,7 +535,7 @@ const SectionComponent = props => {
 
         // APPEND ADD BUTTON
         h2Container.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'add-button',
                 src: './icons/plus.png',
                 x: rect.right - 20,
@@ -435,7 +544,7 @@ const SectionComponent = props => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.querySelector('#form-container')?.remove()
                     document.body.appendChild(
-                        formModalComponent({
+                        LinkFormModalComponent({
                             creating: true,
                             sectionId: props.id,
                             linkId: crypto.randomUUID(),
@@ -452,7 +561,7 @@ const SectionComponent = props => {
 
         // APPEND VIEW BUTTON
         h2Container.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'view-button',
                 src: props.extendedView ? './icons/hide.png' : './icons/view.png',
                 x: rect.right + 5,
@@ -466,7 +575,7 @@ const SectionComponent = props => {
 
         // APPEND DISABLE BUTTON
         h2Container.appendChild(
-            toolButtonComponent({
+            ToolButtonComponent({
                 id: 'section-disable-button',
                 src: './icons/minus.png',
                 x: rect.right + 30,
@@ -556,10 +665,30 @@ const MainComponent = props => {
 const loadPage = () => {
     // RESET MAIN TO AVOID LAGGING DUPLICATES
     document.querySelector('#main')?.remove()
+    document.querySelector('#empty-data')?.remove()
 
-    document.body.appendChild(
-        MainComponent({ config: db.getFromDB(DB_NAME) })
-    )
+    if (!db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0) {
+        document.body.appendChild(
+            EmptyData({ callBack: () => {
+                // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                document.querySelector('#form-container')?.remove()
+                document.body.appendChild(
+                    SectionFormModalComponent({
+                        sectionId: crypto.randomUUID(),
+                        clickHandler: temporaryData => {
+                            sectionDB.createSection(temporaryData)
+                            loadPage()
+                        }
+                    })
+                )
+                document.body.style.overflow = 'hidden'
+            } })
+        )
+    } else {
+        document.body.appendChild(
+            MainComponent({ config: db.getFromDB(DB_NAME) })
+        )
+    }
 }
 
 const resetDisplaySettings = () => {
