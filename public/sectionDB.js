@@ -8,8 +8,18 @@ db.init(DB_NAME, COLLECTION_NAME)
 
 // Insert new section instance into database
 sectionDB.createSection = data => {
-    db.updateDB(DB_NAME, db => {
-        db[COLLECTION_NAME].push(data)
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME].push(data)
+    })
+}
+
+// Update section instance property with new value using section id
+sectionDB.updateSectionPropertyById = data => {
+    db.updateDB(DB_NAME, dataBase => {
+        //dataBase[COLLECTION_NAME].push(data)
+        Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
+            dataBase[COLLECTION_NAME].find(s => s.id === data.id)[d] = data[d]
+        })
     })
 }
 
@@ -30,8 +40,8 @@ sectionDB.getSectionCount = () => {
 
 // Remove section instance from database using section id
 sectionDB.deleteSectionById = id => {
-    db.updateDB(DB_NAME, db => {
-        db[COLLECTION_NAME] = db[COLLECTION_NAME].filter(s => s.id !== id)
+    db.updateDB(DB_NAME, dataBase => {
+        dataBase[COLLECTION_NAME] = dataBase[COLLECTION_NAME].filter(s => s.id !== id)
     })
 }
 

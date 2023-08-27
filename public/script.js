@@ -398,9 +398,22 @@ const LinkFormModalComponent = props => {
 }
 
 const SectionFormModalComponent = props => {
+    modalTracker.formModalOpen = true
+
+    const initialValues = {
+        title: props.title,
+        colorAccent: props.colorAccent,
+    }
+
+    const hasChanged = (fields, initialValues) => {
+        return fields.title !== initialValues.title
+        || fields.colorAccent !== initialValues.colorAccent
+    }
     const formValidate = fields => {
-        return !['', null, undefined].includes(fields.title)
+        return (
+            !['', null, undefined].includes(fields.title)
             && ![''].includes(fields.title.replaceAll(' ', ''))
+        )
     }
 
     const hide = () => {
@@ -424,21 +437,41 @@ const SectionFormModalComponent = props => {
     let titleField = document.createElement('input')
     titleField.type = 'text'
     titleField.placeholder = 'Title'
+    titleField.value = props.creating ? null : props.title
 
     let colorAccentField = document.createElement('input')
     colorAccentField.type = 'color'
     colorAccentField.value = '#bf616a'
+    colorAccentField.value = props.creating ? null : props.colorAccent
 
     let submitButton = document.createElement('button')
     submitButton.id = props.creating ? 'add-button' : 'update-button'
     submitButton.classList.add('tool-button')
     submitButton.textContent = ''
     submitButton.disabled = !formValidate({ title: titleField.value })
+    || (
+        !hasChanged(
+            {
+                title: titleField.value,
+                colorAccent: colorAccentField.value,
+            },
+            initialValues
+        ) && !props.creating
+    )
 
     for (const f of [titleField, colorAccentField]) {
         ['focusout', 'input'].forEach(eventName => {
             ![null, undefined].includes(f) && f.addEventListener(eventName, e => {
                 submitButton.disabled = !formValidate({ title: titleField.value })
+                || (
+                    !hasChanged(
+                        {
+                            title: titleField.value,
+                            colorAccent: colorAccentField.value,
+                        },
+                        initialValues
+                    ) && !props.creating
+                )
             })
         })
     }
@@ -508,6 +541,7 @@ const EmptyData = props => {
 
 const SectionComponent = props => {
     const hide = () => {
+        document.querySelector('#edit-button')?.remove()
         document.querySelector('#add-button')?.remove()
         document.querySelector('#view-button')?.remove()
         document.querySelector('#section-disable-button')?.remove()
@@ -536,9 +570,38 @@ const SectionComponent = props => {
         // APPEND ADD BUTTON
         h2Container.appendChild(
             ToolButtonComponent({
+                id: 'edit-button',
+                src: './icons/pen.png',
+                x: rect.right - 20,
+                y: rect.top + 10 - scrollTop,
+                clickHandler: () => {
+                    // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                    document.querySelector('#form-container')?.remove()
+                    document.body.appendChild(
+                        SectionFormModalComponent({
+                            creating: false,
+                            sectionId: props.id,
+                            title: props.title,
+                            colorAccent: props.colorAccent,
+                            extendedView: props.extendedView,
+                            linkId: crypto.randomUUID(),
+                            clickHandler: temporaryData => {
+                                sectionDB.updateSectionPropertyById(temporaryData)
+                                loadPage()
+                            }
+                        })
+                    )
+                    document.body.style.overflow = 'hidden'
+                }
+            })
+        )
+
+        // APPEND ADD BUTTON
+        h2Container.appendChild(
+            ToolButtonComponent({
                 id: 'add-button',
                 src: './icons/plus.png',
-                x: rect.right - 20,
+                x: rect.right + 5,
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
@@ -564,7 +627,7 @@ const SectionComponent = props => {
             ToolButtonComponent({
                 id: 'view-button',
                 src: props.extendedView ? './icons/hide.png' : './icons/view.png',
-                x: rect.right + 5,
+                x: rect.right + 30,
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     sectionDB.toggleExtendedViewById(props.id)
@@ -578,7 +641,7 @@ const SectionComponent = props => {
             ToolButtonComponent({
                 id: 'section-disable-button',
                 src: './icons/minus.png',
-                x: rect.right + 30,
+                x: rect.right + 55,
                 y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     linkDB.toggleLinksBySectionId(props.id)
