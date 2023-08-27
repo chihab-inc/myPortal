@@ -272,15 +272,17 @@ const LinkFormModalComponent = props => {
     }
 
     const hide = () => {
-        modalTracker.formModalOpen = false
-        let form = document.querySelector('#form')
-        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-        let formContainer = document.querySelector('#form-container')
-        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
-        setTimeout(() => {
-            document.querySelector('#form-container')?.remove()
-            document.body.style.overflow = 'auto'
-        }, 300)
+        if (modalTracker.formModalOpen) {
+            modalTracker.formModalOpen = false
+            let form = document.querySelector('#form')
+            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+            let formContainer = document.querySelector('#form-container')
+            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+            setTimeout(() => {
+                document.querySelector('#form-container')?.remove()
+                document.body.style.overflow = 'auto'
+            }, 300)
+        }
     }
 
     let container = document.createElement('div')
@@ -430,15 +432,17 @@ const SectionFormModalComponent = props => {
     }
 
     const hide = () => {
-        modalTracker.formModalOpen = false
-        let form = document.querySelector('#form')
-        form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-        let formContainer = document.querySelector('#form-container')
-        formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
-        setTimeout(() => {
-            document.querySelector('#form-container')?.remove()
-            document.body.style.overflow = 'auto'
-        }, 300)
+        if (modalTracker.formModalOpen) {
+            modalTracker.formModalOpen = false
+            let form = document.querySelector('#form')
+            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
+            let formContainer = document.querySelector('#form-container')
+            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
+            setTimeout(() => {
+                document.querySelector('#form-container')?.remove()
+                document.body.style.overflow = 'auto'
+            }, 300)
+        }
     }
 
     let container = document.createElement('div')
