@@ -454,8 +454,7 @@ const SectionFormModalComponent = props => {
 
     let colorAccentField = document.createElement('input')
     colorAccentField.type = 'color'
-    colorAccentField.value = '#bf616a'
-    colorAccentField.value = props.creating ? null : props.colorAccent
+    colorAccentField.value = props.creating ? '#bf616a' : props.colorAccent
 
     let submitButton = document.createElement('button')
     submitButton.id = props.creating ? 'add-button' : 'update-button'
@@ -745,6 +744,7 @@ const loadPage = () => {
                 document.querySelector('#form-container')?.remove()
                 document.body.appendChild(
                     SectionFormModalComponent({
+                        creating: true,
                         sectionId: crypto.randomUUID(),
                         clickHandler: temporaryData => {
                             sectionDB.createSection(temporaryData)
