@@ -52,6 +52,13 @@ body main article {
 }
 body main article .sub-section-title-container {
   padding: 5px; padding-right: 25px;
+  display: flex; justify-content: flex-start; align-items: center; gap: 5px;
+}
+body main article .sub-section-title-container h2 {
+  display: inline-block;
+}
+body main article .sub-section-title-container span {
+  display: flex; justify-content: flex-start; align-items: center; gap: 5px;
 }
 body main article .services {
   list-style-type: none;
@@ -95,9 +102,11 @@ body main #description {
   transform-origin: left;
   animation: roll-out 0.2s ease-in-out 1;
 }
+body main .fixed-tool-button {
+  position: absolute;
+}
 body main .tool-button {
   display: block;
-  position: absolute;
   width: 20px; height: 20px;
   opacity: .6;
   border-radius: 50%;

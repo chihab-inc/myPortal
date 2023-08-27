@@ -11,9 +11,9 @@ const DeletedLinkComponent = props => {
     let li = document.createElement('li')
 
     const hide = () => {
-        document.querySelector('#close-button')?.remove()
-        document.querySelector('#recover-button')?.remove()
-        document.querySelector('#description')?.remove()
+        document.querySelector('.services li #close-button')?.remove()
+        document.querySelector('.services li #recover-button')?.remove()
+        document.querySelector('.services li #description')?.remove()
     }
     
     li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
@@ -27,7 +27,7 @@ const DeletedLinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            ToolButtonComponent({
+            FixedToolButtonComponent({
                 id: 'close-button',
                 src: './icons/cross.png',
                 x: rect.left + 5,
@@ -41,7 +41,7 @@ const DeletedLinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            ToolButtonComponent({
+            FixedToolButtonComponent({
                 id: 'recover-button',
                 src: './icons/arrow-left.png',
                 x: rect.left + 5,
@@ -91,10 +91,10 @@ const LinkComponent = props => {
     }
 
     const hide = () => {
-        document.querySelector('#close-button')?.remove()
-        document.querySelector('#disable-button')?.remove()
-        document.querySelector('#edit-button')?.remove()
-        document.querySelector('#description')?.remove()
+        document.querySelector('.services li #close-button')?.remove()
+        document.querySelector('.services li #disable-button')?.remove()
+        document.querySelector('.services li #edit-button')?.remove()
+        document.querySelector('.services li #description')?.remove()
     }
     
     li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
@@ -108,7 +108,7 @@ const LinkComponent = props => {
         
         // APPEND CLOSE BUTTON
         li.appendChild(
-            ToolButtonComponent({
+            FixedToolButtonComponent({
                 id: 'close-button',
                 src: './icons/cross.png',
                 x: rect.left + 5,
@@ -122,7 +122,7 @@ const LinkComponent = props => {
         
         // APPEND DISABLE BUTTON
         li.appendChild(
-            ToolButtonComponent({
+            FixedToolButtonComponent({
                 id: 'disable-button',
                 src: './icons/minus.png',
                 x: rect.left + 5,
@@ -137,7 +137,7 @@ const LinkComponent = props => {
         // APPEND EDIT BUTTON
         props.active
             && li.appendChild(
-                ToolButtonComponent({
+                FixedToolButtonComponent({
                     id: 'edit-button',
                     src: './icons/pen.png',
                     x: rect.left + 5,
@@ -204,13 +204,26 @@ let AnchorComponent = props => {
     return a
 }
 
+const FixedToolButtonComponent = props => {
+    let button = document.createElement('img')
+    button.id = props.id
+    button.classList.add('fixed-tool-button', 'tool-button')
+    button.src = props.src
+    button.style.left = `${props.x}px`
+    button.style.top = `${props.y}px`
+
+    button.addEventListener('click', e => {
+        props.clickHandler()
+    })
+    
+    return button
+}
+
 const ToolButtonComponent = props => {
     let button = document.createElement('img')
     button.id = props.id
     button.classList.add('tool-button')
     button.src = props.src
-    button.style.left = `${props.x}px`
-    button.style.top = `${props.y}px`
 
     button.addEventListener('click', e => {
         props.clickHandler()
@@ -541,10 +554,10 @@ const EmptyData = props => {
 
 const SectionComponent = props => {
     const hide = () => {
-        document.querySelector('#edit-button')?.remove()
-        document.querySelector('#add-button')?.remove()
-        document.querySelector('#view-button')?.remove()
-        document.querySelector('#section-disable-button')?.remove()
+        document.querySelector('.sub-section-title-container span #edit-button')?.remove()
+        document.querySelector('.sub-section-title-container span #add-button')?.remove()
+        document.querySelector('.sub-section-title-container span #view-button')?.remove()
+        document.querySelector('.sub-section-title-container span #section-disable-button')?.remove()
     }
 
     let section = document.createElement('section')
@@ -561,6 +574,8 @@ const SectionComponent = props => {
     let h2 = document.createElement('h2')
     h2.innerText = props.title
 
+    let buttonContainer = document.createElement('span')
+
     article.addEventListener('mouseenter', e => {
         hide()
 
@@ -568,12 +583,10 @@ const SectionComponent = props => {
         const scrollTop = document.body.getBoundingClientRect().top
 
         // APPEND ADD BUTTON
-        h2Container.appendChild(
+        buttonContainer.appendChild(
             ToolButtonComponent({
                 id: 'edit-button',
                 src: './icons/pen.png',
-                x: rect.right - 20,
-                y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.querySelector('#form-container')?.remove()
@@ -597,12 +610,10 @@ const SectionComponent = props => {
         )
 
         // APPEND ADD BUTTON
-        h2Container.appendChild(
+        buttonContainer.appendChild(
             ToolButtonComponent({
                 id: 'add-button',
                 src: './icons/plus.png',
-                x: rect.right + 5,
-                y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.querySelector('#form-container')?.remove()
@@ -623,12 +634,10 @@ const SectionComponent = props => {
         )
 
         // APPEND VIEW BUTTON
-        h2Container.appendChild(
+        buttonContainer.appendChild(
             ToolButtonComponent({
                 id: 'view-button',
                 src: props.extendedView ? './icons/hide.png' : './icons/view.png',
-                x: rect.right + 30,
-                y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     sectionDB.toggleExtendedViewById(props.id)
                     loadPage()
@@ -637,12 +646,10 @@ const SectionComponent = props => {
         )
 
         // APPEND DISABLE BUTTON
-        h2Container.appendChild(
+        buttonContainer.appendChild(
             ToolButtonComponent({
                 id: 'section-disable-button',
                 src: './icons/minus.png',
-                x: rect.right + 55,
-                y: rect.top + 10 - scrollTop,
                 clickHandler: () => {
                     linkDB.toggleLinksBySectionId(props.id)
                     loadPage()
@@ -674,6 +681,7 @@ const SectionComponent = props => {
     })
     
     h2Container.appendChild(h2)
+    h2Container.appendChild(buttonContainer)
     article.appendChild(h2Container)
     article.appendChild(ul)
     section.appendChild(article)
