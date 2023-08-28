@@ -20,6 +20,13 @@ linkDB.permanentlyDeleteLinkById = id => {
     })
 }
 
+// Permanently delete link instances from database using their sectionId
+linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
+    linkDB.getLinksBySectionId(sectionId).forEach(l => {
+        linkDB.permanentlyDeleteLinkById(l.id)
+    })
+}
+
 // Fetch link instance from database using link id
 linkDB.getLinkById = id => {
     return db.getFromDB(DB_NAME)[COLLECTION_NAME].find(l => l.id === id)
