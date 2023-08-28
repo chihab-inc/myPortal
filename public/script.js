@@ -625,6 +625,7 @@ const SectionComponent = props => {
                 src: './icons/cross.png',
                 clickHandler: () => {
                     sectionDB.deleteSectionById(props.id)
+                    linkDB.permanentlyDeleteLinksBySectionId(props.id)
                     loadPage()
                 }
             })
