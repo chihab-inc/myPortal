@@ -563,6 +563,7 @@ const AddDataPanel = props => {
 const SectionComponent = props => {
     const hide = () => {
         document.querySelector('.sub-section-title-container span #edit-button')?.remove()
+        document.querySelector('.sub-section-title-container span #delete-button')?.remove()
         document.querySelector('.sub-section-title-container span #add-button')?.remove()
         document.querySelector('.sub-section-title-container span #view-button')?.remove()
         document.querySelector('.sub-section-title-container span #section-disable-button')?.remove()
@@ -590,7 +591,7 @@ const SectionComponent = props => {
         const rect = h2Container.getBoundingClientRect()
         const scrollTop = document.body.getBoundingClientRect().top
 
-        // APPEND ADD BUTTON
+        // APPEND EDIT BUTTON
         buttonContainer.appendChild(
             ToolButtonComponent({
                 id: 'edit-button',
@@ -613,6 +614,18 @@ const SectionComponent = props => {
                         })
                     )
                     document.body.style.overflow = 'hidden'
+                }
+            })
+        )
+
+        // APPEND DELETE BUTTON
+        buttonContainer.appendChild(
+            ToolButtonComponent({
+                id: 'delete-button',
+                src: './icons/cross.png',
+                clickHandler: () => {
+                    sectionDB.deleteSectionById(props.id)
+                    loadPage()
                 }
             })
         )
