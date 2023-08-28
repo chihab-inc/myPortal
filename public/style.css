@@ -4,23 +4,26 @@
 body {
   background: #1e1e1f;
   width: 100vw; height: 100vh;
-  display: flex; place-items: center; place-content: center;
+  display: flex; flex-direction: column; place-items: center; place-content: center; gap: 10px;
   overflow: auto;
+  padding: 10px;
   font-family: Verdana, sans-serif;
   -ms-overflow-style: none; scrollbar-width: none;
 }
-body #empty-data {
-  background: transparent;
-  border: 10px solid #48586840;
-  border-radius: 40px;
-  width: 500px; height: 300px;
-  display: flex; justify-content: center; align-items: center;
-  padding: 20px;
-}
-body #empty-data p {
-  text-align: center;
-  color: #495969; font-size: 20px; font-weight: bold; font-family: “Helvetica Neue”, Helvetica, Arial, sans-serif;
+body #add-data-panel {
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px;
   user-select: none;
+}
+body .non-initial {
+  height: 60px;
+}
+body #add-data-panel img {
+  height: 100%;
+  max-height: 150px;
+}
+body #add-data-panel span {
+  text-align: center;
+  color: #282c31; font-size: 30px; font-weight: bold; font-family: “Helvetica Neue”, Helvetica, Arial, sans-serif;
 }
 body main {
   min-width: 1000px;
