@@ -18,12 +18,15 @@ body .non-initial {
   height: 60px;
 }
 body #add-data-panel img {
-  height: 100%;
-  max-height: 150px;
+  height: 100%; max-height: 150px;
+  opacity: .7;
 }
 body #add-data-panel span {
   text-align: center;
   color: #282c31; font-size: 30px; font-weight: bold; font-family: “Helvetica Neue”, Helvetica, Arial, sans-serif;
+}
+body #add-data-panel:hover img {
+  opacity: 1;
 }
 body main {
   min-width: 1000px;
@@ -48,7 +51,7 @@ body main section {
 }
 body main article {
   background: #eee2;
-  max-height: 100%;
+  max-height: 100%; min-width: 600px;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   border-radius: 5px;
   padding: 15px;
