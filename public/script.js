@@ -360,7 +360,7 @@ const LinkFormModalComponent = props => {
             'linkData',
             {
                 id: props.linkId,
-                sectionId: !props.creating ? parseInt(sectionSelector.value) : props.sectionId,
+                sectionId: !props.creating ? sectionSelector.value : props.sectionId,
                 href: linkField.value,
                 src: logoField.value,
                 tip: descriptionField.value,

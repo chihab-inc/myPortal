@@ -16,7 +16,6 @@ sectionDB.createSection = data => {
 // Update section instance property with new value using section id
 sectionDB.updateSectionPropertyById = data => {
     db.updateDB(DB_NAME, dataBase => {
-        //dataBase[COLLECTION_NAME].push(data)
         Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
             dataBase[COLLECTION_NAME].find(s => s.id === data.id)[d] = data[d]
         })
