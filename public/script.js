@@ -540,18 +540,23 @@ const SectionFormModalComponent = props => {
     return container
 }
 
-const EmptyData = props => {
+const AddDataPanel = props => {
     const container = document.createElement('div')
-    container.id = 'empty-data'
+    container.id = 'add-data-panel'
+    !props.initial && container.classList.add('non-initial')
 
-    const p = document.createElement('p')
-    p.textContent = 'No data present yet. Please double-click here to create new data.'
+    const icon = document.createElement('img')
+    icon.src = './icons/plus-large.png'
 
-    container.addEventListener('dblclick', e => {
+    const span = document.createElement('span')
+    span.textContent = 'Add New Section'
+
+    container.addEventListener('click', e => {
         props.callBack()
     })
 
-    container.appendChild(p)
+    container.appendChild(icon)
+    props.initial && container.appendChild(span)
     return container
 }
 
@@ -739,11 +744,14 @@ const MainComponent = props => {
 const loadPage = () => {
     // RESET MAIN TO AVOID LAGGING DUPLICATES
     document.querySelector('#main')?.remove()
-    document.querySelector('#empty-data')?.remove()
+    document.querySelector('#add-data-panel')?.remove()
 
-    if (!db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0) {
-        document.body.appendChild(
-            EmptyData({ callBack: () => {
+    const noData = !db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0
+    
+    document.body.appendChild(
+        AddDataPanel({
+            initial: noData,
+            callBack: () => {
                 // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                 document.querySelector('#form-container')?.remove()
                 document.body.appendChild(
@@ -757,9 +765,11 @@ const loadPage = () => {
                     })
                 )
                 document.body.style.overflow = 'hidden'
-            } })
-        )
-    } else {
+            }
+        })
+    )
+
+    if (!noData) {
         document.body.appendChild(
             MainComponent({ config: db.getFromDB(DB_NAME) })
         )
