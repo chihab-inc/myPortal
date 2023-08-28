@@ -1,0 +1,7 @@
+.env export-ignore
+.git export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+node_modules export-ignore
+package-lock.json export-ignore
+.vscode export-ignore
