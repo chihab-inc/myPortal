@@ -1,7 +1,7 @@
 import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
-import { setElementStyle, append, icon, backgroundImage } from './web_utils.js'
+import { create, select, setElementStyle, append, icon, backgroundImage } from './web_utils.js'
 import { ButtonGroup } from './components/ButtonGroup.js'
 import { LinkDescription } from './components/LinkDescription.js'
 import { LinkAnchor } from './components/LinkAnchor.js'
@@ -15,7 +15,7 @@ const LinkComponent = props => {
     const anchor = props.anchor
     const description = props.description
     const buttonGroup = props.buttonGroup
-    let li = document.createElement('li')
+    let li = create('li')
     li.classList.add('link-item')
     if (!props.active) {
         li.classList.add('disabled-link')
@@ -62,7 +62,7 @@ const LinkComponent = props => {
 }
 
 const ToolButtonComponent = props => {
-    let button = document.createElement('img')
+    let button = create('img')
     button.id = props.id
     button.classList.add('tool-button')
     button.src = props.src
@@ -106,43 +106,43 @@ const LinkFormModalComponent = props => {
     const hide = () => {
         if (modalTracker.formModalOpen) {
             modalTracker.formModalOpen = false
-            let form = document.querySelector('#form')
+            let form = select('#form')
             form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-            let formContainer = document.querySelector('#form-container')
+            let formContainer = select('#form-container')
             formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
             setTimeout(() => {
-                document.querySelector('#form-container')?.remove()
+                select('#form-container')?.remove()
                 document.body.style.overflow = 'auto'
             }, 300)
         }
     }
 
-    let container = document.createElement('div')
+    let container = create('div')
     container.id = 'form-container'
 
-    let form = document.createElement('div')
+    let form = create('div')
     form.id = 'form'
 
-    let linkField = document.createElement('input')
+    let linkField = create('input')
     linkField.type = 'url'
     linkField.placeholder = 'Link'
     linkField.value = props.creating ? null : props.href
 
-    let logoField = document.createElement('input')
+    let logoField = create('input')
     logoField.type = 'url'
     logoField.placeholder = 'Logo'
     logoField.value = props.creating ? null : props.src
 
-    let descriptionField = document.createElement('input')
+    let descriptionField = create('input')
     descriptionField.type = 'text'
     descriptionField.placeholder = 'Description'
     descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
 
     let sectionSelector
     if (!props.creating) {
-        sectionSelector = document.createElement('select')
+        sectionSelector = create('select')
         sectionDB.getAllSections().forEach(s => {
-            let option = document.createElement('option')
+            let option = create('option')
             option.value = s.id
             option.textContent = s.title
             if (s.id === props.sectionId) {
@@ -152,7 +152,7 @@ const LinkFormModalComponent = props => {
         })
     }
 
-    let submitButton = document.createElement('button')
+    let submitButton = create('button')
     submitButton.id = props.creating ? 'add-button' : 'update-button'
     submitButton.classList.add('tool-button')
     submitButton.textContent = ''
@@ -266,33 +266,33 @@ const SectionFormModalComponent = props => {
     const hide = () => {
         if (modalTracker.formModalOpen) {
             modalTracker.formModalOpen = false
-            let form = document.querySelector('#form')
+            let form = select('#form')
             form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-            let formContainer = document.querySelector('#form-container')
+            let formContainer = select('#form-container')
             formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
             setTimeout(() => {
-                document.querySelector('#form-container')?.remove()
+                select('#form-container')?.remove()
                 document.body.style.overflow = 'auto'
             }, 300)
         }
     }
 
-    let container = document.createElement('div')
+    let container = create('div')
     container.id = 'form-container'
 
-    let form = document.createElement('div')
+    let form = create('div')
     form.id = 'form'
 
-    let titleField = document.createElement('input')
+    let titleField = create('input')
     titleField.type = 'text'
     titleField.placeholder = 'Title'
     titleField.value = props.creating ? null : props.title
 
-    let colorAccentField = document.createElement('input')
+    let colorAccentField = create('input')
     colorAccentField.type = 'color'
     colorAccentField.value = props.creating ? '#bf616a' : props.colorAccent
 
-    let submitButton = document.createElement('button')
+    let submitButton = create('button')
     submitButton.id = props.creating ? 'add-button' : 'update-button'
     submitButton.classList.add('tool-button')
     submitButton.textContent = ''
@@ -373,14 +373,14 @@ const SectionFormModalComponent = props => {
 }
 
 const AddDataPanel = props => {
-    const container = document.createElement('div')
+    const container = create('div')
     container.id = 'add-data-panel'
     !props.initial && container.classList.add('non-initial')
 
-    const icon = document.createElement('img')
+    const icon = create('img')
     icon.src = './icons/plus-large.png'
 
-    const span = document.createElement('span')
+    const span = create('span')
     span.textContent = 'Add New Section'
 
     container.addEventListener('click', e => {
@@ -393,24 +393,11 @@ const AddDataPanel = props => {
 }
 
 const SectionComponent = props => {
-    const hide = elements => {
-        elements.forEach(e => e.remove())
-    }
-
-    let section = document.createElement('section')
-
-    let article = document.createElement('article')
-    article.style.color = props.colorAccent
-    
-    let ul = document.createElement('ul')
-    ul.classList.add('services')
-    
-    let h2Container = document.createElement('div')
-    h2Container.classList.add('sub-section-title-container')
-
-    let h2 = document.createElement('h2')
-    h2.innerText = props.title
-
+    const id = props.id
+    const title = props.title
+    const colorAccent = props.colorAccent
+    const extendedView = props.extendedView
+    const links = props.links
     const buttonGroup = ButtonGroup({
         options: { type: 'rounded' },
         buttons:[
@@ -421,14 +408,14 @@ const SectionComponent = props => {
                 hover: { opacity: '1' },
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                    document.querySelector('#form-container')?.remove()
+                    select('#form-container')?.remove()
                     document.body.appendChild(
                         SectionFormModalComponent({
                             creating: false,
-                            sectionId: props.id,
-                            title: props.title,
-                            colorAccent: props.colorAccent,
-                            extendedView: props.extendedView,
+                            sectionId: id,
+                            title: title,
+                            colorAccent: colorAccent,
+                            extendedView: extendedView,
                             linkId: crypto.randomUUID(),
                             clickHandler: temporaryData => {
                                 sectionDB.updateSectionPropertyById(temporaryData)
@@ -445,8 +432,8 @@ const SectionComponent = props => {
                 },
                 hover: { opacity: '1' },
                 clickHandler: () => {
-                    sectionDB.deleteSectionById(props.id)
-                    linkDB.permanentlyDeleteLinksBySectionId(props.id)
+                    sectionDB.deleteSectionById(id)
+                    linkDB.permanentlyDeleteLinksBySectionId(id)
                     loadPage()
                 },
             },
@@ -457,11 +444,11 @@ const SectionComponent = props => {
                 hover: { opacity: '1' },
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                    document.querySelector('#form-container')?.remove()
+                    select('#form-container')?.remove()
                     document.body.appendChild(
                         LinkFormModalComponent({
                             creating: true,
-                            sectionId: props.id,
+                            sectionId: id,
                             linkId: crypto.randomUUID(),
                             clickHandler: temporaryData => {
                                 linkDB.createLink(temporaryData)
@@ -474,11 +461,11 @@ const SectionComponent = props => {
             },
             {
                 style: {
-                    backgroundImage: backgroundImage(icon(props.extendedView ? 'hide' : 'view')),
+                    backgroundImage: backgroundImage(icon(extendedView ? 'hide' : 'view')),
                 },
                 hover: { opacity: '1' },
                 clickHandler: () => {
-                    sectionDB.toggleExtendedViewById(props.id)
+                    sectionDB.toggleExtendedViewById(id)
                     loadPage()
                 },
             },
@@ -488,19 +475,74 @@ const SectionComponent = props => {
                 },
                 hover: { opacity: '1' },
                 clickHandler: () => {
-                    linkDB.toggleLinksBySectionId(props.id)
+                    linkDB.toggleLinksBySectionId(id)
                     loadPage()
                 },
             },
         ]
     })
+    
+    const hide = elements => {
+        elements.forEach(e => e.remove())
+    }
 
-    article.addEventListener('mouseenter', e => {
-        hide([])
-        append(h2Container, buttonGroup)
+    const section = create('section')
+    setElementStyle(section, {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '5px',
+        width: '425px',
+        minHeight: '20px',
     })
 
-    article.addEventListener('mouseleave', e => {
+    const header = create('header')
+    setElementStyle(header, {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        height: '20px',
+        paddingRight: '5px',
+    })
+    
+    const h2 = create('h2')
+    h2.innerText = title
+    setElementStyle(h2, {
+        background: '#2a2c2c',
+        minWidth: '50%',
+        maxWidth: '60%',
+        height: '100%',
+        textAlign: 'center',
+        fontSize: '1em',
+        color: colorAccent,
+        borderRadius: '5px',
+    })
+    header.appendChild(h2)
+    section.appendChild(header)
+    
+    
+    const ul = create('ul')
+    setElementStyle(ul, {
+        background: '#2a2c2c',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: '5px',
+        padding: '5px',
+        listStyleType: 'none',
+        borderRadius: '5px',
+    })
+    section.appendChild(ul)
+
+    section.addEventListener('mouseenter', e => {
+        hide([])
+        append(header, buttonGroup)
+    })
+
+    section.addEventListener('mouseleave', e => {
         const rect = h2.getBoundingClientRect()
         const scrollTop = document.body.getBoundingClientRect().top
         
@@ -518,20 +560,15 @@ const SectionComponent = props => {
         }
     })
     
-    props.links.forEach(link => {
+    links.forEach(link => {
         ul.appendChild(link)
     })
-    
-    h2Container.appendChild(h2)
-    article.appendChild(h2Container)
-    article.appendChild(ul)
-    section.appendChild(article)
     
     return section
 }
 
 const MainComponent = props => {
-    let main = document.createElement('main')
+    let main = create('main')
     main.id = 'main'
 
     let linkWrappers = []
@@ -596,7 +633,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        document.querySelector('#form-container')?.remove()
+                        select('#form-container')?.remove()
                         document.body.appendChild(
                             LinkFormModalComponent({
                                 creating: false,
@@ -650,8 +687,8 @@ const MainComponent = props => {
 
 const loadPage = () => {
     // RESET MAIN TO AVOID LAGGING DUPLICATES
-    document.querySelector('#main')?.remove()
-    document.querySelector('#add-data-panel')?.remove()
+    select('#main')?.remove()
+    select('#add-data-panel')?.remove()
 
     const noData = !db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0
     
@@ -660,7 +697,7 @@ const loadPage = () => {
             initial: noData,
             callBack: () => {
                 // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                document.querySelector('#form-container')?.remove()
+                select('#form-container')?.remove()
                 document.body.appendChild(
                     SectionFormModalComponent({
                         creating: true,
