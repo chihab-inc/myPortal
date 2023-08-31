@@ -393,12 +393,8 @@ const AddDataPanel = props => {
 }
 
 const SectionComponent = props => {
-    const hide = () => {
-        document.querySelector('.sub-section-title-container span #edit-button')?.remove()
-        document.querySelector('.sub-section-title-container span #delete-button')?.remove()
-        document.querySelector('.sub-section-title-container span #add-button')?.remove()
-        document.querySelector('.sub-section-title-container span #view-button')?.remove()
-        document.querySelector('.sub-section-title-container span #section-disable-button')?.remove()
+    const hide = elements => {
+        elements.forEach(e => e.remove())
     }
 
     let section = document.createElement('section')
@@ -415,19 +411,14 @@ const SectionComponent = props => {
     let h2 = document.createElement('h2')
     h2.innerText = props.title
 
-    let buttonContainer = document.createElement('span')
-
-    article.addEventListener('mouseenter', e => {
-        hide()
-
-        const rect = h2Container.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-
-        // APPEND EDIT BUTTON
-        buttonContainer.appendChild(
-            ToolButtonComponent({
-                id: 'edit-button',
-                src: './icons/pen.png',
+    const buttonGroup = ButtonGroup({
+        options: { type: 'rounded' },
+        buttons:[
+            {
+                style: {
+                    backgroundImage: backgroundImage(icon('pen')),
+                },
+                hover: { opacity: '1' },
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.querySelector('#form-container')?.remove()
@@ -446,28 +437,24 @@ const SectionComponent = props => {
                         })
                     )
                     document.body.style.overflow = 'hidden'
-                }
-            })
-        )
-
-        // APPEND DELETE BUTTON
-        buttonContainer.appendChild(
-            ToolButtonComponent({
-                id: 'delete-button',
-                src: './icons/cross.png',
+                },
+            },
+            {
+                style: {
+                    backgroundImage: backgroundImage(icon('cross')),
+                },
+                hover: { opacity: '1' },
                 clickHandler: () => {
                     sectionDB.deleteSectionById(props.id)
                     linkDB.permanentlyDeleteLinksBySectionId(props.id)
                     loadPage()
-                }
-            })
-        )
-
-        // APPEND ADD BUTTON
-        buttonContainer.appendChild(
-            ToolButtonComponent({
-                id: 'add-button',
-                src: './icons/plus.png',
+                },
+            },
+            {
+                style: {
+                    backgroundImage: backgroundImage(icon('plus')),
+                },
+                hover: { opacity: '1' },
                 clickHandler: () => {
                     // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
                     document.querySelector('#form-container')?.remove()
@@ -483,33 +470,34 @@ const SectionComponent = props => {
                         })
                     )
                     document.body.style.overflow = 'hidden'
-                }
-            })
-        )
-
-        // APPEND VIEW BUTTON
-        buttonContainer.appendChild(
-            ToolButtonComponent({
-                id: 'view-button',
-                src: props.extendedView ? './icons/hide.png' : './icons/view.png',
+                },
+            },
+            {
+                style: {
+                    backgroundImage: backgroundImage(icon(props.extendedView ? 'hide' : 'view')),
+                },
+                hover: { opacity: '1' },
                 clickHandler: () => {
                     sectionDB.toggleExtendedViewById(props.id)
                     loadPage()
-                }
-            })
-        )
-
-        // APPEND DISABLE BUTTON
-        buttonContainer.appendChild(
-            ToolButtonComponent({
-                id: 'section-disable-button',
-                src: './icons/minus.png',
+                },
+            },
+            {
+                style: {
+                    backgroundImage: backgroundImage(icon('minus')),
+                },
+                hover: { opacity: '1' },
                 clickHandler: () => {
                     linkDB.toggleLinksBySectionId(props.id)
                     loadPage()
-                }
-            })
-        )
+                },
+            },
+        ]
+    })
+
+    article.addEventListener('mouseenter', e => {
+        hide([])
+        append(h2Container, buttonGroup)
     })
 
     article.addEventListener('mouseleave', e => {
@@ -526,7 +514,7 @@ const SectionComponent = props => {
 
         // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide()
+            hide([ buttonGroup ])
         }
     })
     
@@ -535,7 +523,6 @@ const SectionComponent = props => {
     })
     
     h2Container.appendChild(h2)
-    h2Container.appendChild(buttonContainer)
     article.appendChild(h2Container)
     article.appendChild(ul)
     section.appendChild(article)
@@ -557,8 +544,7 @@ const MainComponent = props => {
         const active = link.active
         const deleted = link.deleted
         const buttonGroup = ButtonGroup({
-            id: 'link-button-group',
-            options: { orientation: 'v', type: 'rounded' },
+            options: { orientation: 'v', type: 'rounded', absolute: true },
             buttons: deleted
             ? [
                 {

@@ -24,6 +24,9 @@ const ButtonGroup = props => {
         listStyleType: 'none',
         display: 'flex',
         flexDirection: ['vertical', 'v'].includes(options.orientation || 'horizontal') ? 'column' : 'row',
+        position: 'relative',
+    })
+    options.absolute && setElementStyle(element, {
         position: 'absolute',
         top: '5px',
         left: '5px',

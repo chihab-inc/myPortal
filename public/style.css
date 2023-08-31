@@ -63,9 +63,9 @@ body main article .sub-section-title-container {
 body main article .sub-section-title-container h2 {
   display: inline-block;
 }
-body main article .sub-section-title-container span {
+/* body main article .sub-section-title-container span {
   display: flex; justify-content: flex-start; align-items: center; gap: 5px;
-}
+} */
 body main article .services {
   list-style-type: none;
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
