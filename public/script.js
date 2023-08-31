@@ -398,6 +398,7 @@ const SectionComponent = props => {
     const colorAccent = props.colorAccent
     const extendedView = props.extendedView
     const links = props.links
+    const hasLinks = links.length > 0
     const buttonGroup = ButtonGroup({
         options: { type: 'rounded' },
         buttons:[
@@ -500,7 +501,7 @@ const SectionComponent = props => {
     const header = create('header')
     setElementStyle(header, {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: hasLinks ? 'space-between' : 'flec-start',
         alignItems: 'center',
         width: '100%',
         height: '20px',
@@ -511,6 +512,8 @@ const SectionComponent = props => {
     h2.innerText = title
     setElementStyle(h2, {
         background: '#2a2c2c',
+        // background: '#2a2c2c80',
+        // backdropFilter: 'blur(15px)',
         minWidth: '50%',
         maxWidth: '60%',
         height: '100%',
@@ -526,16 +529,19 @@ const SectionComponent = props => {
     const ul = create('ul')
     setElementStyle(ul, {
         background: '#2a2c2c',
+        // background: '#2a2c2c80',
+        // backdropFilter: 'blur(15px)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         gap: '5px',
+        width: '100%',
         padding: '5px',
         listStyleType: 'none',
         borderRadius: '5px',
     })
-    section.appendChild(ul)
+    hasLinks && section.appendChild(ul)
 
     section.addEventListener('mouseenter', e => {
         hide([])
@@ -587,6 +593,7 @@ const MainComponent = props => {
                 {
                     style: {
                         backgroundImage: backgroundImage(icon('cross')),
+                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {
@@ -597,6 +604,7 @@ const MainComponent = props => {
                 {
                     style: {
                         backgroundImage: backgroundImage(icon('arrow-left')),
+                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {
@@ -609,6 +617,7 @@ const MainComponent = props => {
                 {
                     style: {
                         backgroundImage: backgroundImage(icon('cross')),
+                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {
@@ -619,6 +628,7 @@ const MainComponent = props => {
                 {
                     style: {
                         backgroundImage: backgroundImage(icon('minus')),
+                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {
@@ -629,6 +639,7 @@ const MainComponent = props => {
                 active && {
                     style: {
                         backgroundImage: backgroundImage(icon('pen')),
+                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {

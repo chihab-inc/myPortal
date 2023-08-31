@@ -2,19 +2,24 @@
   margin: 0; padding: 0; box-sizing: border-box; user-select: none;
 }
 body {
-  background: #1e1e1f;
-  width: 100vw; height: 100vh;
-  display: flex; flex-direction: column; place-items: center; place-content: center; gap: 10px;
-  overflow: auto;
+  background: #1c1e1e;
+  /* background: #d8dddd; */
+  /* background-image: url('https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; */
+  display: flex; flex-direction: column; place-items: start; place-content: center; gap: 10px;
   padding: 10px;
   font-family: Verdana, sans-serif;
-  -ms-overflow-style: none; scrollbar-width: none;
 }
 body #add-data-panel {
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px;
   user-select: none;
 }
 body .non-initial {
+  position: fixed;
+  top: 20px;
+  left: 20px;
   height: 60px;
 }
 body #add-data-panel img {
@@ -29,49 +34,13 @@ body #add-data-panel:hover img {
   opacity: 1;
 }
 body main {
-  width: 100%;
-  height: 100%;
+  /* width: 100vw; */ height: 100%;
   display: flex; justify-content: flex-start; align-items: flex-start; gap: 10px;
   overflow: auto;
-  padding-top: 100px;
-  padding-left: 100px;
+  padding: 100px;
 }
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   display: none;
-}
-@media screen and (max-width: 800px) {
-  body {
-    min-width: 350px; height: 100%;
-  }
-}
-@media screen and (max-width: 1001px) {
-  body main {
-    min-width: 350px; max-width: 1000px;
-  }
-}
-body main section {
-  /* display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 10px; */
-}
-body main article {
-  background: #eee2;
-  max-height: 100%; min-width: 600px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  border-radius: 5px;
-  padding: 15px;
-}
-body main article .sub-section-title-container {
-  padding: 5px; padding-right: 25px;
-  display: flex; justify-content: flex-start; align-items: center; gap: 5px;
-}
-body main article .sub-section-title-container h2 {
-  display: inline-block;
-}
-/* body main article .sub-section-title-container span {
-  display: flex; justify-content: flex-start; align-items: center; gap: 5px;
-} */
-/* body main .services {
-  list-style-type: none;
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
 } */
 body main .link-item {
   width: 100px; height: 100px;
@@ -100,32 +69,6 @@ body main .link-item .link-anchor:hover {
 body main  .disabled-link .link-anchor {
   pointer-events: none;
   opacity: .1;
-}
-body main .link-item #vertical-button-container {
-  /* background: #d63c3c; */
-  /* width: 20px; */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* border-radius: 5px; */
-  position: absolute;
-  top: 5px;
-  left: 5px;
-}
-body main #description {
-  display: flex; justify-content: flex-start; align-items: center;
-  background: #333;
-  color: #fff; font-size: .6em; white-space: nowrap;
-  z-index: 3;
-  border-radius: 5px;
-  box-sizing: border-box;
-  padding: 5px;
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  transform-origin: left;
-  animation: roll-out 0.2s ease-in-out 1;
 }
 body main .fixed-tool-button {
   position: absolute;
@@ -158,6 +101,7 @@ body #form {
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  /* border: 1px solid #3c3c3c; */
   animation: pop-form-in 0.3s ease-in-out 1;
 }
 #form input,
