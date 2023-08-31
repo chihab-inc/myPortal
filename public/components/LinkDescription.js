@@ -3,8 +3,8 @@ import { setElementStyle } from '../web_utils.js'
 const LinkDescription = props => {
     const tip = props.tip
 
-    const remove = e => {
-        e.remove()
+    const remove = () => {
+        element.remove()
     }
     
     const element = document.createElement('p')

@@ -1,17 +1,15 @@
 import { setElementStyle } from '../web_utils.js'
 
 const ButtonGroup = props => {
-    const id = props.id
     const options = props.options || {}
     const buttons = props.buttons
-    
-    const remove = e => {
-        e.remove()
+
+    const remove = () => {
+        element.remove()
     }
 
-    const list = document.createElement('ul')
-    list.id = id
-    setElementStyle(list, {
+    const element = document.createElement('ul')
+    setElementStyle(element, {
         background: '#1f1f1f',
         borderRadius: {
             'squared': '2px',
@@ -75,10 +73,10 @@ const ButtonGroup = props => {
         })
 
         item.appendChild(button)
-        list.appendChild(item)
+        element.appendChild(item)
     }
 
-    return { element: list, id, remove }
+    return { element, remove }
 }
 
 export { ButtonGroup }

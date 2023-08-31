@@ -4,6 +4,7 @@ import { db } from './db.js'
 import { setElementStyle, append, icon, backgroundImage } from './web_utils.js'
 import { ButtonGroup } from './components/ButtonGroup.js'
 import { LinkDescription } from './components/LinkDescription.js'
+import { LinkAnchor } from './components/LinkAnchor.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -11,19 +12,20 @@ const DB_NAME = 'DATA-BASE'
 const modalTracker = { formModalOpen: false }
 
 const LinkComponent = props => {
+    const anchor = props.anchor
     const description = props.description
+    const buttonGroup = props.buttonGroup
     let li = document.createElement('li')
     li.classList.add('link-item')
     if (!props.active) {
         li.classList.add('disabled-link')
     }
 
-    const hide = removers => {
-        document.querySelector('.services li #description')?.remove()
-        removers.forEach(r => { r.remove(r.element) })
+    const hide = elements => {
+        elements.forEach(e => e.remove())
     }
     
-    li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
+    append(li, anchor)
 
     li.addEventListener('mouseenter', e => {
         // RESET TO AVOID LAGGING DUPLICATES
@@ -52,24 +54,11 @@ const LinkComponent = props => {
 
         // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide([
-                { remove: props.buttonGroup.remove, element: props.buttonGroup.element },
-                { remove: description.remove, element: description.element },
-            ])
+            hide([ buttonGroup, description ])
         }
     })
     
     return li
-}
-
-let AnchorComponent = props => {
-    let a = document.createElement('a')
-    a.classList.add('link-anchor')
-    a.target = '_blank'
-    a.href = props.href
-    a.style.backgroundImage = `url(${props.src})`
-
-    return a
 }
 
 const ToolButtonComponent = props => {
@@ -641,8 +630,9 @@ const MainComponent = props => {
                 },
             ],
         })
+        const anchor = LinkAnchor({ href, src, active })
         const description = LinkDescription({ tip })
-        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup: buttonGroup, description })
+        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
