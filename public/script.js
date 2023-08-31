@@ -3,6 +3,7 @@ import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 import { setElementStyle, append, icon, backgroundImage } from './web_utils.js'
 import { ButtonGroup } from './components/ButtonGroup.js'
+import { LinkDescription } from './components/LinkDescription.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -10,6 +11,7 @@ const DB_NAME = 'DATA-BASE'
 const modalTracker = { formModalOpen: false }
 
 const LinkComponent = props => {
+    const description = props.description
     let li = document.createElement('li')
     li.classList.add('link-item')
     if (!props.active) {
@@ -18,7 +20,7 @@ const LinkComponent = props => {
 
     const hide = removers => {
         document.querySelector('.services li #description')?.remove()
-        removers.forEach(r => { r() })
+        removers.forEach(r => { r.remove(r.element) })
     }
     
     li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
@@ -31,13 +33,7 @@ const LinkComponent = props => {
         const scrollTop = document.body.getBoundingClientRect().top
         
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
-        props.tip && li.appendChild(
-            DescriptionComponent({
-                tip: props.tip,
-                x: rect.left + 5,
-                y: rect.bottom - 27 - scrollTop,
-            })
-        )
+        props.tip && append(li, description)
 
         append(li, props.buttonGroup)
 
@@ -56,7 +52,10 @@ const LinkComponent = props => {
 
         // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide([ props.buttonGroup.remove ])
+            hide([
+                { remove: props.buttonGroup.remove, element: props.buttonGroup.element },
+                { remove: description.remove, element: description.element },
+            ])
         }
     })
     
@@ -84,16 +83,6 @@ const ToolButtonComponent = props => {
     })
     
     return button
-}
-
-const DescriptionComponent = props => {
-    let description = document.createElement('p')
-    description.id = 'description'
-    description.textContent = props.tip
-    // description.style.left = `${props.x}px`
-    // description.style.top = `${props.y}px`
-
-    return description
 }
 
 const LinkFormModalComponent = props => {
@@ -581,7 +570,30 @@ const MainComponent = props => {
         const buttonGroup = ButtonGroup({
             id: 'link-button-group',
             options: { orientation: 'v', type: 'rounded' },
-            buttons: [
+            buttons: deleted
+            ? [
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('cross')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.permanentlyDeleteLinkById(id)
+                        loadPage()
+                    },
+                },
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('arrow-left')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.recoverDeletedLinkById(id)
+                        loadPage()
+                    },
+                },
+            ]
+            : [
                 {
                     style: {
                         backgroundImage: backgroundImage(icon('cross')),
@@ -629,33 +641,8 @@ const MainComponent = props => {
                 },
             ],
         })
-        const buttonGroupDeleted = ButtonGroup({
-            id: 'link-button-group',
-            options: { orientation: 'v', type: 'rounded' },
-            buttons: [
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('cross')),
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.permanentlyDeleteLinkById(id)
-                        loadPage()
-                    },
-                },
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('arrow-left')),
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.recoverDeletedLinkById(id)
-                        loadPage()
-                    },
-                },
-            ],
-        })
-        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup: deleted ? buttonGroupDeleted : buttonGroup })
+        const description = LinkDescription({ tip })
+        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup: buttonGroup, description })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 

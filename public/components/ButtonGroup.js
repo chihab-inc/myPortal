@@ -5,8 +5,8 @@ const ButtonGroup = props => {
     const options = props.options || {}
     const buttons = props.buttons
     
-    const remove = () => {
-        document.getElementById(id).remove()
+    const remove = e => {
+        e.remove()
     }
 
     const list = document.createElement('ul')
