@@ -1,168 +1,34 @@
 import { linkDB } from './linkDB.js'
 import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
+import { setElementStyle, append, icon, backgroundImage } from './web_utils.js'
+import { ButtonGroup } from './components/ButtonGroup.js'
 
 const DB_NAME = 'DATA-BASE'
 
 // GLOBALS
 const modalTracker = { formModalOpen: false }
 
-const DeletedLinkComponent = props => {
-    let li = document.createElement('li')
-
-    const hide = () => {
-        document.querySelector('.services li #close-button')?.remove()
-        document.querySelector('.services li #recover-button')?.remove()
-        document.querySelector('.services li #description')?.remove()
-    }
-    
-    li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
-    
-    li.addEventListener('mouseenter', e => {
-        // RESET TO AVOID LAGGING DUPLICATES
-        hide()
-
-        const rect = li.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-        
-        // APPEND CLOSE BUTTON
-        li.appendChild(
-            FixedToolButtonComponent({
-                id: 'close-button',
-                src: './icons/cross.png',
-                x: rect.left + 5,
-                y: rect.top + 5 - scrollTop,
-                clickHandler: () => {
-                    linkDB.permanentlyDeleteLinkById(props.id)
-                    loadPage()
-                }
-            })
-        )
-        
-        // APPEND CLOSE BUTTON
-        li.appendChild(
-            FixedToolButtonComponent({
-                id: 'recover-button',
-                src: './icons/arrow-left.png',
-                x: rect.left + 5,
-                y: rect.top + 25 - scrollTop,
-                clickHandler: () => {
-                    linkDB.recoverDeletedLinkById(props.id)
-                    loadPage()
-                }
-            })
-        )
-        
-        // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
-        props.tip && li.appendChild(
-            DescriptionComponent({
-                tip: props.tip,
-                x: rect.left + 5,
-                y: rect.bottom - 27 - scrollTop,
-            })
-        )
-
-    })
-    li.addEventListener('mouseleave', e => {
-        const rect = li.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-        
-        const left = rect.left
-        const top = rect.top - scrollTop
-        const right = rect.right
-        const bottom = rect.bottom - scrollTop
-
-        const x = e.pageX
-        const y = e.pageY
-
-        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
-        if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide()
-        }
-    })
-    
-    return li
-}
-
 const LinkComponent = props => {
     let li = document.createElement('li')
+    li.classList.add('link-item')
     if (!props.active) {
         li.classList.add('disabled-link')
     }
 
-    const hide = () => {
-        document.querySelector('.services li #close-button')?.remove()
-        document.querySelector('.services li #disable-button')?.remove()
-        document.querySelector('.services li #edit-button')?.remove()
+    const hide = removers => {
         document.querySelector('.services li #description')?.remove()
+        removers.forEach(r => { r() })
     }
     
     li.appendChild(AnchorComponent({ href: props.href, src: props.src }))
-    
+
     li.addEventListener('mouseenter', e => {
         // RESET TO AVOID LAGGING DUPLICATES
-        hide()
+        hide([])
 
         const rect = li.getBoundingClientRect()
         const scrollTop = document.body.getBoundingClientRect().top
-        
-        // APPEND CLOSE BUTTON
-        li.appendChild(
-            FixedToolButtonComponent({
-                id: 'close-button',
-                src: './icons/cross.png',
-                x: rect.left + 5,
-                y: rect.top + 5 - scrollTop,
-                clickHandler: () => {
-                    linkDB.deleteLinkById(props.id)
-                    loadPage()
-                }
-            })
-        )
-        
-        // APPEND DISABLE BUTTON
-        li.appendChild(
-            FixedToolButtonComponent({
-                id: 'disable-button',
-                src: './icons/minus.png',
-                x: rect.left + 5,
-                y: rect.top + 25 - scrollTop,
-                clickHandler: () => {
-                    linkDB.toggleLinkById(props.id)
-                    loadPage()
-                }
-            })
-        )
-        
-        // APPEND EDIT BUTTON
-        props.active
-            && li.appendChild(
-                FixedToolButtonComponent({
-                    id: 'edit-button',
-                    src: './icons/pen.png',
-                    x: rect.left + 5,
-                    y: rect.top + 45 - scrollTop,
-                    clickHandler: () => {
-                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        document.querySelector('#form-container')?.remove()
-                        document.body.appendChild(
-                            LinkFormModalComponent({
-                                creating: false,
-                                sectionId: props.sectionId,
-                                linkId: props.id,
-                                href: props.href,
-                                src: props.src,
-                                tip: props.tip,
-                                clickHandler: temporaryData => {
-                                    linkDB.updateLinkPropertyById(temporaryData)
-                                    loadPage()
-                                }
-                            })
-                        )
-                        document.body.style.overflow = 'hidden'
-                    }
-                })
-            )
         
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         props.tip && li.appendChild(
@@ -172,6 +38,8 @@ const LinkComponent = props => {
                 y: rect.bottom - 27 - scrollTop,
             })
         )
+
+        append(li, props.buttonGroup)
 
     })
     li.addEventListener('mouseleave', e => {
@@ -188,7 +56,7 @@ const LinkComponent = props => {
 
         // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide()
+            hide([ props.buttonGroup.remove ])
         }
     })
     
@@ -197,26 +65,12 @@ const LinkComponent = props => {
 
 let AnchorComponent = props => {
     let a = document.createElement('a')
+    a.classList.add('link-anchor')
     a.target = '_blank'
     a.href = props.href
     a.style.backgroundImage = `url(${props.src})`
 
     return a
-}
-
-const FixedToolButtonComponent = props => {
-    let button = document.createElement('img')
-    button.id = props.id
-    button.classList.add('fixed-tool-button', 'tool-button')
-    button.src = props.src
-    button.style.left = `${props.x}px`
-    button.style.top = `${props.y}px`
-
-    button.addEventListener('click', e => {
-        props.clickHandler()
-    })
-    
-    return button
 }
 
 const ToolButtonComponent = props => {
@@ -236,8 +90,8 @@ const DescriptionComponent = props => {
     let description = document.createElement('p')
     description.id = 'description'
     description.textContent = props.tip
-    description.style.left = `${props.x}px`
-    description.style.top = `${props.y}px`
+    // description.style.left = `${props.x}px`
+    // description.style.top = `${props.y}px`
 
     return description
 }
@@ -724,8 +578,84 @@ const MainComponent = props => {
         const tip = link.tip
         const active = link.active
         const deleted = link.deleted
-        const linkTypeClass = deleted ? DeletedLinkComponent : LinkComponent
-        let linkComponent = linkTypeClass({ id, sectionId, href, src, tip, active, deleted })
+        const buttonGroup = ButtonGroup({
+            id: 'link-button-group',
+            options: { orientation: 'v', type: 'rounded' },
+            buttons: [
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('cross')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.deleteLinkById(id)
+                        loadPage()
+                    },
+                },
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('minus')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.toggleLinkById(id)
+                        loadPage()
+                    },
+                },
+                active && {
+                    style: {
+                        backgroundImage: backgroundImage(icon('pen')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                        document.querySelector('#form-container')?.remove()
+                        document.body.appendChild(
+                            LinkFormModalComponent({
+                                creating: false,
+                                sectionId: sectionId,
+                                linkId: id,
+                                href: href,
+                                src: src,
+                                tip: tip,
+                                clickHandler: temporaryData => {
+                                    linkDB.updateLinkPropertyById(temporaryData)
+                                    loadPage()
+                                }
+                            })
+                        )
+                        document.body.style.overflow = 'hidden'
+                    }
+                },
+            ],
+        })
+        const buttonGroupDeleted = ButtonGroup({
+            id: 'link-button-group',
+            options: { orientation: 'v', type: 'rounded' },
+            buttons: [
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('cross')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.permanentlyDeleteLinkById(id)
+                        loadPage()
+                    },
+                },
+                {
+                    style: {
+                        backgroundImage: backgroundImage(icon('arrow-left')),
+                    },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.recoverDeletedLinkById(id)
+                        loadPage()
+                    },
+                },
+            ],
+        })
+        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup: deleted ? buttonGroupDeleted : buttonGroup })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 

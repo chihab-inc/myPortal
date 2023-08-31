@@ -70,41 +70,57 @@ body main article .services {
   list-style-type: none;
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
 }
-body main article .services li {
+body main article .services .link-item {
   width: 100px; height: 100px;
   display: inline-block;
   margin: 5px;
+  position: relative;
 }
-body main article .services li a {
-  background: #ffffff22; background-size: 90%; background-position: center; background-repeat: no-repeat;
+body main article .services .link-item .link-anchor {
+  background: #ffffff; background-size: 100%; background-position: center; background-repeat: no-repeat;
   width: 100%; height: 100%;
   border-radius: 5px;
   display: flex; justify-content: flex-start; align-items: flex-start;
   text-decoration: none; color: #333333;
-  padding: 5px;
+  /* padding: 5px; */
   box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
 }
-body main article .services li a:hover {
+body main article .services .link-item .link-anchor:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
   animation: push-in 0.3s ease-in-out 1;
 }
-body main article .services li a img {
+/* body main article .services .link-item .link-anchor img {
   width: 100%; height: 100%;
   border-radius: 5px;
-}
-body main article .services .disabled-link a {
+} */
+body main article .services .disabled-link .link-anchor {
   pointer-events: none;
   opacity: .1;
+}
+body main article .services .link-item #vertical-button-container {
+  /* background: #d63c3c; */
+  /* width: 20px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border-radius: 5px; */
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
 body main #description {
   display: flex; justify-content: flex-start; align-items: center;
   background: #333;
-  color: #fff; font-size: .6em;
+  color: #fff; font-size: .6em; white-space: nowrap;
+  z-index: 3;
   border-radius: 5px;
   box-sizing: border-box;
   padding: 5px;
   position: absolute;
+  bottom: 5px;
+  left: 5px;
   transform-origin: left;
   animation: roll-out 0.2s ease-in-out 1;
 }
