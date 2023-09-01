@@ -6,61 +6,13 @@ import { ButtonGroup } from './components/ButtonGroup.js'
 import { Button } from './components/Button.js'
 import { LinkDescription } from './components/LinkDescription.js'
 import { LinkAnchor } from './components/LinkAnchor.js'
+import { Link } from './components/Link.js'
+import { Section } from './components/Section.js'
 
 const DB_NAME = 'DATA-BASE'
 
 // GLOBALS
 const modalTracker = { formModalOpen: false }
-
-const LinkComponent = props => {
-    const anchor = props.anchor
-    const description = props.description
-    const buttonGroup = props.buttonGroup
-    let li = create('li')
-    li.classList.add('link-item')
-    if (!props.active) {
-        li.classList.add('disabled-link')
-    }
-
-    const hide = elements => {
-        elements.forEach(e => e.remove())
-    }
-    
-    append(li, anchor)
-
-    li.addEventListener('mouseenter', e => {
-        // RESET TO AVOID LAGGING DUPLICATES
-        hide([])
-
-        const rect = li.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-        
-        // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
-        props.tip && append(li, description)
-
-        append(li, props.buttonGroup)
-
-    })
-    li.addEventListener('mouseleave', e => {
-        const rect = li.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-        
-        const left = rect.left
-        const top = rect.top - scrollTop
-        const right = rect.right
-        const bottom = rect.bottom - scrollTop
-
-        const x = e.pageX
-        const y = e.pageY
-
-        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
-        if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide([ buttonGroup, description ])
-        }
-    })
-    
-    return li
-}
 
 const LinkFormModalComponent = props => {
     modalTracker.formModalOpen = true
@@ -380,105 +332,6 @@ const AddDataPanel = props => {
     return container
 }
 
-const SectionComponent = props => {
-    const id = props.id
-    const title = props.title
-    const colorAccent = props.colorAccent
-    const extendedView = props.extendedView
-    const links = props.links
-    const hasLinks = links.length > 0
-    const buttonGroup = props.buttonGroup
-    
-    const hide = elements => {
-        elements.forEach(e => e.remove())
-    }
-
-    const section = create('section')
-    setElementStyle(section, {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '5px',
-        width: '425px',
-        minHeight: '20px',
-    })
-
-    const header = create('header')
-    setElementStyle(header, {
-        display: 'flex',
-        justifyContent: hasLinks ? 'space-between' : 'flec-start',
-        alignItems: 'center',
-        width: '100%',
-        height: '20px',
-        paddingRight: '5px',
-    })
-    
-    const h2 = create('h2')
-    h2.innerText = title
-    setElementStyle(h2, {
-        background: '#2a2c2c',
-        // background: '#2a2c2c80',
-        // backdropFilter: 'blur(15px)',
-        minWidth: '50%',
-        maxWidth: '60%',
-        height: '100%',
-        textAlign: 'center',
-        fontSize: '1em',
-        color: colorAccent,
-        borderRadius: '5px',
-    })
-    header.appendChild(h2)
-    section.appendChild(header)
-    
-    
-    const ul = create('ul')
-    setElementStyle(ul, {
-        background: '#2a2c2c',
-        // background: '#2a2c2c80',
-        // backdropFilter: 'blur(15px)',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        gap: '5px',
-        width: '100%',
-        padding: '5px',
-        listStyleType: 'none',
-        borderRadius: '5px',
-    })
-    hasLinks && section.appendChild(ul)
-
-    section.addEventListener('mouseenter', e => {
-        hide([])
-        append(header, buttonGroup)
-    })
-
-    section.addEventListener('mouseleave', e => {
-        const rect = h2.getBoundingClientRect()
-        const scrollTop = document.body.getBoundingClientRect().top
-        
-        const left = rect.left
-        const top = rect.top - scrollTop
-        const right = rect.right
-        const bottom = rect.bottom - scrollTop
-
-        const x = e.pageX
-        const y = e.pageY
-
-        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
-        if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide([ buttonGroup ])
-        }
-    })
-    
-    links.forEach(link => {
-        ul.appendChild(link)
-    })
-    
-    return section
-}
-
 const MainComponent = props => {
     let main = create('main')
     main.id = 'main'
@@ -572,7 +425,7 @@ const MainComponent = props => {
         })
         const anchor = LinkAnchor({ href, src, active })
         const description = LinkDescription({ tip })
-        let linkComponent = LinkComponent({ id, sectionId, href, src, tip, active, deleted, buttonGroup, description, anchor })
+        let linkComponent = Link({ id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
@@ -582,7 +435,7 @@ const MainComponent = props => {
         const title = section.title
         const colorAccent = section.colorAccent
         const extendedView = section.extendedView
-        const buttonGroup = ButtonGroup({// TODO - This should be a prop
+        const buttonGroup = ButtonGroup({
             options: { type: 'rounded' },
             buttons:[
                 {
@@ -656,7 +509,7 @@ const MainComponent = props => {
             ]
         })
         sectionComponents.push(
-            SectionComponent({
+            Section({
                 id,
                 colorAccent,
                 title,
@@ -670,7 +523,7 @@ const MainComponent = props => {
         )
     }
     for (const sectionComponent of sectionComponents) {
-        main.appendChild(sectionComponent)
+        append(main, sectionComponent)
     }
 
     return main

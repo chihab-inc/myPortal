@@ -19,6 +19,7 @@ const LinkAnchor = props => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         opacity: active ? '1' : '.1',
+        pointerEvents: active ? 'auto' : 'none',
         width: '100%',
         height: '100%',
         borderRadius: '5px',

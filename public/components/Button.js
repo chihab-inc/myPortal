@@ -7,6 +7,10 @@ const Button = props => {
     const hover = props.hover || {}
     const clickHandler = props.clickHandler || (() => {})
 
+    const remove = () => {
+        element.remove()
+    }
+
     const maxBorderRadius = style.borderRadius
     ? style.borderRadius
     : style.width && style.height
@@ -40,10 +44,6 @@ const Button = props => {
 
     const element = create()
     setElementStyle(element, style)
-
-    const remove = () => {
-        element.remove()
-    }
 
     element.addEventListener('click', clickHandler)
     element.addEventListener('mouseenter', () => {setElementStyle(element, hover)})
