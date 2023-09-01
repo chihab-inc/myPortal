@@ -1,13 +1,30 @@
 * {
   margin: 0; padding: 0; box-sizing: border-box; user-select: none;
 }
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-corner {
+  background: #1c1e1e;
+}
+::-webkit-scrollbar-track {
+  background: #1c1e1e;
+}
+::-webkit-scrollbar-track:hover {
+  background: #1c1e1e;
+}
+::-webkit-scrollbar-thumb {
+  background: #3c3e3e40; 
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4c4e4eff;
+}
 body {
   background: #1c1e1e;
-  /* background: #d8dddd; */
-  /* background-image: url('https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; */
   display: flex; flex-direction: column; place-items: start; place-content: center; gap: 10px;
   padding: 10px;
   font-family: Verdana, sans-serif;

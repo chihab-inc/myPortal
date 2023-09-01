@@ -1,4 +1,4 @@
-import { setElementStyle, backgroundImage } from '../web_utils.js'
+import { setElementStyle, backgroundImage, create } from '../web_utils.js'
 
 const LinkAnchor = props => {
     const href = props.href
@@ -9,7 +9,7 @@ const LinkAnchor = props => {
         element.remove()
     }
     
-    const element = document.createElement('a')
+    const element = create('a')
     element.target = '_blank'
     element.href = href
     setElementStyle(element, {

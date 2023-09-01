@@ -1,4 +1,4 @@
-import { setElementStyle } from '../web_utils.js'
+import { setElementStyle, create } from '../web_utils.js'
 
 const LinkDescription = props => {
     const tip = props.tip
@@ -7,7 +7,7 @@ const LinkDescription = props => {
         element.remove()
     }
     
-    const element = document.createElement('p')
+    const element = create('p')
     element.textContent = tip
     setElementStyle(element, {
         display: 'flex',

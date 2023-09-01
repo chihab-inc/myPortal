@@ -1,4 +1,4 @@
-import { setElementStyle } from '../web_utils.js'
+import { setElementStyle, create } from '../web_utils.js'
 
 const ButtonGroup = props => {
     const options = props.options || {}
@@ -8,7 +8,7 @@ const ButtonGroup = props => {
         element.remove()
     }
 
-    const element = document.createElement('ul')
+    const element = create('ul')
     setElementStyle(element, {
         background: '#1f1f1f',
         borderRadius: {
@@ -35,7 +35,7 @@ const ButtonGroup = props => {
     // Filter out the elements that are not a valid object (a.k.a. equal to false, null, undefined)
     const nbButtons = buttons.filter((i) => ![false, null, undefined].includes(i)).length
     for (const [idx, b] of buttons.filter((i) => ![false, null, undefined].includes(i)).entries()) {
-        const item = document.createElement('li')
+        const item = create('li')
         setElementStyle(item, {
             display: 'inherit',
             justifyContent: 'center',
@@ -64,7 +64,7 @@ const ButtonGroup = props => {
             }[options.type || 'bubbles'],
         }, ...b.style }
         
-        const button = document.createElement('span')
+        const button = create('span')
         setElementStyle(button, style)
 
         button.addEventListener('click', b.clickHandler || (() => {}))

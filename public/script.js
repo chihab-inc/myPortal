@@ -62,7 +62,7 @@ const LinkComponent = props => {
 }
 
 const ToolButtonComponent = props => {
-    let button = create('img')
+    /* let button = create('img')
     button.id = props.id
     button.classList.add('tool-button')
     button.src = props.src
@@ -71,7 +71,20 @@ const ToolButtonComponent = props => {
         props.clickHandler()
     })
     
-    return button
+    return button */
+    const remove = () => {
+        element.remove()
+    }
+
+    const element = create()
+
+    element.addEventListener('click', () => {})
+
+    element.addEventListener('mouseenter', () => {})
+
+    element.addEventListener('mouseleave', () => {})
+
+    return element
 }
 
 const LinkFormModalComponent = props => {
