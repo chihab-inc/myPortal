@@ -8,6 +8,7 @@ import { LinkDescription } from './components/LinkDescription.js'
 import { LinkAnchor } from './components/LinkAnchor.js'
 import { Link } from './components/Link.js'
 import { Section } from './components/Section.js'
+import { AddDataPanel } from './components/AddDataPanel.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -312,26 +313,6 @@ const SectionFormModalComponent = props => {
     return container
 }
 
-const AddDataPanel = props => {
-    const container = create('div')
-    container.id = 'add-data-panel'
-    !props.initial && container.classList.add('non-initial')
-
-    const icon = create('img')
-    icon.src = './icons/plus-large.png'
-
-    const span = create('span')
-    span.textContent = 'Add New Section'
-
-    container.addEventListener('click', e => {
-        props.callBack()
-    })
-
-    container.appendChild(icon)
-    props.initial && container.appendChild(span)
-    return container
-}
-
 const MainComponent = props => {
     let main = create('main')
     main.id = 'main'
@@ -535,33 +516,36 @@ const loadPage = () => {
     select('#add-data-panel')?.remove()
 
     const noData = !db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0
-    
-    document.body.appendChild(
-        AddDataPanel({
-            initial: noData,
-            callBack: () => {
-                // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                select('#form-container')?.remove()
-                document.body.appendChild(
-                    SectionFormModalComponent({
-                        creating: true,
-                        sectionId: crypto.randomUUID(),
-                        clickHandler: temporaryData => {
-                            sectionDB.createSection(temporaryData)
-                            loadPage()
-                        }
-                    })
-                )
-                document.body.style.overflow = 'hidden'
-            }
-        })
-    )
 
+    document.body.style.justifyContent = noData ? 'center' : 'flex-start'
+    document.body.style.alignItems = noData ? 'center' : 'flex-start'
+    
+    const addDataPanel = AddDataPanel({
+        initial: noData,
+        callBack: () => {
+            // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+            select('#form-container')?.remove()
+            document.body.appendChild(
+                SectionFormModalComponent({
+                    creating: true,
+                    sectionId: crypto.randomUUID(),
+                    clickHandler: temporaryData => {
+                        sectionDB.createSection(temporaryData)
+                        loadPage()
+                    }
+                })
+            )
+            document.body.style.overflow = 'hidden'
+        }
+    })
+
+    
     if (!noData) {
         document.body.appendChild(
             MainComponent({ config: db.getFromDB(DB_NAME) })
         )
     }
+    append(document.body, addDataPanel)
 }
 
 const resetDisplaySettings = () => {

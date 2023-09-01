@@ -6,8 +6,12 @@ const Section = props => {
     const links = props.links
     const hasLinks = links.length > 0
     const buttonGroup = props.buttonGroup
+
+    // Keep track of children elements to remove
+    const children = []
     
     const remove = () => {
+        children.forEach(c => c.remove())
         element.remove()
     }
 
@@ -19,10 +23,12 @@ const Section = props => {
         alignItems: 'center',
         gap: '5px',
         width: '425px',
+        minWidth: '425px',
         minHeight: '20px',
     })
 
     const header = create('header')
+    children.push(header)
     setElementStyle(header, {
         display: 'flex',
         justifyContent: hasLinks ? 'space-between' : 'flec-start',
@@ -33,6 +39,7 @@ const Section = props => {
     })
     
     const h2 = create('h2')
+    children.push(h2)
     h2.innerText = title
     setElementStyle(h2, {
         background: '#2a2c2c',
@@ -50,6 +57,7 @@ const Section = props => {
     element.appendChild(header)
     
     const ul = create('ul')
+    children.push(ul)
     setElementStyle(ul, {
         background: '#2a2c2c',
         // background: '#2a2c2c80',
@@ -68,6 +76,7 @@ const Section = props => {
 
     element.addEventListener('mouseenter', e => {
         append(header, buttonGroup)
+        children.push(buttonGroup)
     })
 
     element.addEventListener('mouseleave', e => {

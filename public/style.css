@@ -24,36 +24,11 @@
   background: #4c4e4eff;
 }
 body {
+  height: 100vh; width: 100vw;
   background: #1c1e1e;
-  display: flex; flex-direction: column; place-items: start; place-content: center; gap: 10px;
-  padding: 10px;
+  display: flex;
+  /* padding: 10px; */
   font-family: Verdana, sans-serif;
-}
-
-
-
-
-/* ADD DATA PANEL */
-body #add-data-panel {
-  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px;
-  user-select: none;
-}
-body .non-initial {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  height: 60px;
-}
-body #add-data-panel img {
-  height: 100%; max-height: 150px;
-  opacity: .7;
-}
-body #add-data-panel span {
-  text-align: center;
-  color: #282c31; font-size: 30px; font-weight: bold; font-family: “Helvetica Neue”, Helvetica, Arial, sans-serif;
-}
-body #add-data-panel:hover img {
-  opacity: 1;
 }
 
 
@@ -71,19 +46,16 @@ body main {
 
 
 /* FORM */
-body main .tool-button {
+/* body main .tool-button {
   display: block;
   width: 20px; height: 20px;
   opacity: .6;
   border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.24);
-  animation: pop-in 0.3s ease-in-out 1;
-}
-body main .tool-button:hover {
+} */
+/* body main .tool-button:hover {
   opacity: 1;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24);
   transition: all 0.1s ease-in;
-}
+} */
 body #form-container {
   background: #0009;
   display: flex; justify-content: center; align-items: center;
@@ -118,12 +90,13 @@ body #form {
   background: #f99;
 }
 #form .tool-button {
-  background: none;
   min-width: 40px; height: 40px;
   background-position: center; background-size: cover; background-repeat: no-repeat;
-  border-width: 2px; border-style: solid; border-color: #fff0;
+  border: none;
   box-sizing: border-box;
   border-radius: 50%;
+  opacity: .6;
+  transition: all .1s ease-in-out;
 }
 #form #add-button {
   background-image: url("./icons/plus-disabled.png");
@@ -138,9 +111,8 @@ body #form {
   background-image: url("./icons/check.png");
 }
 #form .tool-button:hover {
-  border-color: #fff;
+  opacity: 1;
   cursor: pointer;
-  transition: border-color 0.3s ease-in-out;
 }
 
 
