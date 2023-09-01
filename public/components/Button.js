@@ -42,7 +42,7 @@ const Button = props => {
         },
     }
 
-    const element = create()
+    const element = create('span')
     setElementStyle(element, style)
 
     element.addEventListener('click', clickHandler)

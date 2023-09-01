@@ -17,7 +17,7 @@ const DB_NAME = 'DATA-BASE'
 // GLOBALS
 const modalTracker = { formModalOpen: false }
 
-const LinkFormModalComponent = props => {
+const LinkFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
     modalTracker.formModalOpen = true
     
     const initialValues = {
@@ -187,7 +187,7 @@ const LinkFormModalComponent = props => {
     return container
 }
 
-const SectionFormModalComponent = props => {
+const SectionFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
     modalTracker.formModalOpen = true
 
     const initialValues = {
