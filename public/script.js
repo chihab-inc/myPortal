@@ -9,6 +9,7 @@ import { LinkAnchor } from './components/LinkAnchor.js'
 import { Link } from './components/Link.js'
 import { Section } from './components/Section.js'
 import { AddDataPanel } from './components/AddDataPanel.js'
+import { TextInput } from './components/TextInput.js'
 
 const DB_NAME = 'DATA-BASE'
 
