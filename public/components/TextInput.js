@@ -43,6 +43,7 @@ const TextInput = props => {
     setElementStyle(element, {
         ...style,
         height: '40px',
+        minWidth: '40px',
         borderRadius: '4px',
         border: 'none',
         fontSize: '1em',
@@ -62,7 +63,7 @@ const TextInput = props => {
         })
     })
 
-    return { element, remove }
+    return { element, remove, value: element.value }
 }
 
 export { TextInput }
