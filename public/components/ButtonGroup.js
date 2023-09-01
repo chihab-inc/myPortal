@@ -1,8 +1,9 @@
 import { setElementStyle, create } from '../web_utils.js'
+import { max } from '../utils.js'
 
 const ButtonGroup = props => {
     const options = props.options || {}
-    const buttons = props.buttons
+    const buttons = props.buttons || []
 
     const remove = () => {
         element.remove()
@@ -26,10 +27,12 @@ const ButtonGroup = props => {
         flexDirection: ['vertical', 'v'].includes(options.orientation || 'horizontal') ? 'column' : 'row',
         position: 'relative',
     })
-    options.absolute && setElementStyle(element, {
+    options.position && setElementStyle(element, {
         position: 'absolute',
-        top: '5px',
-        left: '5px',
+        top: options.position.top || 'auto',
+        right: options.position.right || 'auto',
+        bottom: options.position.bottom || 'auto',
+        left: options.position.left || 'auto',
     })
 
     // Filter out the elements that are not a valid object (a.k.a. equal to false, null, undefined)
@@ -42,27 +45,45 @@ const ButtonGroup = props => {
             alignItems: 'center',
         })
 
-        const style = { ...{
-            display: 'inline-block',
-            boxSizing: 'border-box',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            width: '20px',
-            height: '20px',
-            opacity: '.6',
-            borderRadius: {
-                'squared': '2px',
-                'rounded': nbButtons === 1
-                    ? '50%'
-                    : idx === 0
-                        ? options.orientation === 'v' ? '50% 50% 0% 0%' : '50% 0% 0% 50%'
-                        : idx === nbButtons - 1
-                            ? options.orientation === 'v' ? '0% 0% 50% 50%' : '0% 50% 50% 0%'
-                            : '0%',
-                'bubbles': '50%',
-            }[options.type || 'bubbles'],
-        }, ...b.style }
+        const maxBorderRadius = b.style.borderRadius
+            ? b.style.borderRadius
+            : options.buttonWidth && options.buttonHeight
+                ? options.buttonWidth.toString().includes('px') && options.buttonWidth.toString().includes('px')
+                    ? max(options.buttonWidth, options.buttonHeight)
+                    : '20px'
+                : options.buttonWidth
+                    ? max(options.buttonWidth, '20px')
+                    : options.buttonHeight
+                        ? max('20px', options.buttonHeight)
+                        : '20px'
+
+        const style = {
+            // Take external style, then add to it pre-defined style while overwriting external style properties with pre-defined ones
+            ...b.style,
+            ...{
+                display: 'inline-block',
+                boxSizing: 'border-box',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                opacity: '.6',
+            },
+            ...{
+                width: options.buttonWidth || '20px',
+                height: options.buttonHeight || '20px',
+                borderRadius: {
+                    'squared': '2px',
+                    'rounded': nbButtons === 1
+                        ? '50%'
+                        : idx === 0
+                            ? options.orientation === 'v' ? `${maxBorderRadius} ${maxBorderRadius} 0% 0%` : `${maxBorderRadius} 0% 0% ${maxBorderRadius}`
+                            : idx === nbButtons - 1
+                                ? options.orientation === 'v' ? `0% 0% ${maxBorderRadius} ${maxBorderRadius}` : `0% ${maxBorderRadius} ${maxBorderRadius} 0%`
+                                : '0%',
+                    'bubbles': maxBorderRadius,
+                }[options.type || 'bubbles'],
+            },
+        }
         
         const button = create('span')
         setElementStyle(button, style)

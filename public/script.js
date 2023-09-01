@@ -3,6 +3,7 @@ import { sectionDB } from './sectionDB.js'
 import { db } from './db.js'
 import { create, select, setElementStyle, append, icon, backgroundImage } from './web_utils.js'
 import { ButtonGroup } from './components/ButtonGroup.js'
+import { Button } from './components/Button.js'
 import { LinkDescription } from './components/LinkDescription.js'
 import { LinkAnchor } from './components/LinkAnchor.js'
 
@@ -59,32 +60,6 @@ const LinkComponent = props => {
     })
     
     return li
-}
-
-const ToolButtonComponent = props => {
-    /* let button = create('img')
-    button.id = props.id
-    button.classList.add('tool-button')
-    button.src = props.src
-
-    button.addEventListener('click', e => {
-        props.clickHandler()
-    })
-    
-    return button */
-    const remove = () => {
-        element.remove()
-    }
-
-    const element = create()
-
-    element.addEventListener('click', () => {})
-
-    element.addEventListener('mouseenter', () => {})
-
-    element.addEventListener('mouseleave', () => {})
-
-    return element
 }
 
 const LinkFormModalComponent = props => {
@@ -412,89 +387,7 @@ const SectionComponent = props => {
     const extendedView = props.extendedView
     const links = props.links
     const hasLinks = links.length > 0
-    const buttonGroup = ButtonGroup({
-        options: { type: 'rounded' },
-        buttons:[
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('pen')),
-                },
-                hover: { opacity: '1' },
-                clickHandler: () => {
-                    // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                    select('#form-container')?.remove()
-                    document.body.appendChild(
-                        SectionFormModalComponent({
-                            creating: false,
-                            sectionId: id,
-                            title: title,
-                            colorAccent: colorAccent,
-                            extendedView: extendedView,
-                            linkId: crypto.randomUUID(),
-                            clickHandler: temporaryData => {
-                                sectionDB.updateSectionPropertyById(temporaryData)
-                                loadPage()
-                            }
-                        })
-                    )
-                    document.body.style.overflow = 'hidden'
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('cross')),
-                },
-                hover: { opacity: '1' },
-                clickHandler: () => {
-                    sectionDB.deleteSectionById(id)
-                    linkDB.permanentlyDeleteLinksBySectionId(id)
-                    loadPage()
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('plus')),
-                },
-                hover: { opacity: '1' },
-                clickHandler: () => {
-                    // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                    select('#form-container')?.remove()
-                    document.body.appendChild(
-                        LinkFormModalComponent({
-                            creating: true,
-                            sectionId: id,
-                            linkId: crypto.randomUUID(),
-                            clickHandler: temporaryData => {
-                                linkDB.createLink(temporaryData)
-                                loadPage()
-                            }
-                        })
-                    )
-                    document.body.style.overflow = 'hidden'
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon(extendedView ? 'hide' : 'view')),
-                },
-                hover: { opacity: '1' },
-                clickHandler: () => {
-                    sectionDB.toggleExtendedViewById(id)
-                    loadPage()
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('minus')),
-                },
-                hover: { opacity: '1' },
-                clickHandler: () => {
-                    linkDB.toggleLinksBySectionId(id)
-                    loadPage()
-                },
-            },
-        ]
-    })
+    const buttonGroup = props.buttonGroup
     
     const hide = elements => {
         elements.forEach(e => e.remove())
@@ -600,7 +493,7 @@ const MainComponent = props => {
         const active = link.active
         const deleted = link.deleted
         const buttonGroup = ButtonGroup({
-            options: { orientation: 'v', type: 'rounded', absolute: true },
+            options: { orientation: 'v', type: 'rounded', position: { top: '5px', left: '5px' } },
             buttons: deleted
             ? [
                 {
@@ -689,12 +582,86 @@ const MainComponent = props => {
         const title = section.title
         const colorAccent = section.colorAccent
         const extendedView = section.extendedView
+        const buttonGroup = ButtonGroup({// TODO - This should be a prop
+            options: { type: 'rounded' },
+            buttons:[
+                {
+                    style: { backgroundImage: backgroundImage(icon('pen')) },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                        select('#form-container')?.remove()
+                        document.body.appendChild(
+                            SectionFormModalComponent({
+                                creating: false,
+                                sectionId: id,
+                                title: title,
+                                colorAccent: colorAccent,
+                                extendedView: extendedView,
+                                linkId: crypto.randomUUID(),
+                                clickHandler: temporaryData => {
+                                    sectionDB.updateSectionPropertyById(temporaryData)
+                                    loadPage()
+                                }
+                            })
+                        )
+                        document.body.style.overflow = 'hidden'
+                    },
+                },
+                {
+                    style: { backgroundImage: backgroundImage(icon('cross')) },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        sectionDB.deleteSectionById(id)
+                        linkDB.permanentlyDeleteLinksBySectionId(id)
+                        loadPage()
+                    },
+                },
+                {
+                    style: { backgroundImage: backgroundImage(icon('plus')) },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
+                        select('#form-container')?.remove()
+                        document.body.appendChild(
+                            LinkFormModalComponent({
+                                creating: true,
+                                sectionId: id,
+                                linkId: crypto.randomUUID(),
+                                clickHandler: temporaryData => {
+                                    linkDB.createLink(temporaryData)
+                                    loadPage()
+                                }
+                            })
+                        )
+                        document.body.style.overflow = 'hidden'
+                    },
+                },
+                {
+                    style: { backgroundImage: backgroundImage(icon(extendedView ? 'hide' : 'view')) },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        sectionDB.toggleExtendedViewById(id)
+                        loadPage()
+                    },
+                },
+                {
+                    style: { backgroundImage: backgroundImage(icon('minus')) },
+                    hover: { opacity: '1' },
+                    clickHandler: () => {
+                        linkDB.toggleLinksBySectionId(id)
+                        loadPage()
+                    },
+                },
+            ]
+        })
         sectionComponents.push(
             SectionComponent({
                 id,
                 colorAccent,
                 title,
                 extendedView,
+                buttonGroup,
                 links: linkWrappers
                     .filter(linkWrapper => linkWrapper.sectionId === id)
                     .filter(linkWrapper => !linkWrapper.deleted || (linkWrapper.deleted && extendedView))
@@ -752,6 +719,24 @@ const resetDisplaySettings = () => {
 
 const init = () => {
     window.addEventListener('load', e => {
+        append(document.body, Button({
+            options: { type: 'bubbles' },
+            style: {
+                backgroundImage: backgroundImage(icon('plus-disabled')),
+                width: '200px',
+                height: '200px',
+                position: 'absolute',
+                top: '300px',
+                left: '15px',
+            },
+            hover: {
+                backgroundImage: backgroundImage(icon('plus')),
+            },
+            clickHandler: () => {
+                alert('Clicked !')
+            }
+        }))
+        return
         // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
         resetDisplaySettings()
         loadPage()
