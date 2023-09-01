@@ -719,24 +719,6 @@ const resetDisplaySettings = () => {
 
 const init = () => {
     window.addEventListener('load', e => {
-        append(document.body, Button({
-            options: { type: 'bubbles' },
-            style: {
-                backgroundImage: backgroundImage(icon('plus-disabled')),
-                width: '200px',
-                height: '200px',
-                position: 'absolute',
-                top: '300px',
-                left: '15px',
-            },
-            hover: {
-                backgroundImage: backgroundImage(icon('plus')),
-            },
-            clickHandler: () => {
-                alert('Clicked !')
-            }
-        }))
-        return
         // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
         resetDisplaySettings()
         loadPage()
