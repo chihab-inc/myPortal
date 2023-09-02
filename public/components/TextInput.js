@@ -5,6 +5,7 @@ const TextInput = props => {
     const type = props.type || 'text'
     const placeholder = props.placeholder
     const required = props.required || false
+    const maxLength = props.maxLength || 524288
     const initialValue = props.initialValue
     const callBack = props.callBack || (() => {})
     
@@ -12,29 +13,37 @@ const TextInput = props => {
         element.remove()
     }
 
+    const focus = () => {
+        element.focus()
+    }
+
     const isValid = () => {
         const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/
         const urlRegex = /^(http(s)?:\/\/)([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/
-        return type === 'email'
-        ? required
-            ? !['', null, undefined].includes(element.value)
-                ? false
-                : emailRegex.test(element.value)
-            : emailRegex.test(element.value) || ['', null, undefined].includes(element.value)
-        : type === 'url'
+        return element.value.length < maxLength
+        ? type === 'email'
             ? required
                 ? !['', null, undefined].includes(element.value)
-                    ? false
-                    : urlRegex.test(element.value)
-                : urlRegex.test(element.value) || ['', null, undefined].includes(element.value)
-            : ['password', 'search', 'tel', 'text'].includes(type)
+                    ? emailRegex.test(element.value)
+                    : false
+                : emailRegex.test(element.value) || ['', null, undefined].includes(element.value)
+            : type === 'url'
                 ? required
                     ? !['', null, undefined].includes(element.value)
-                    : true
-                : false
+                        ? urlRegex.test(element.value)
+                        : false
+                    : urlRegex.test(element.value) || ['', null, undefined].includes(element.value)
+                : ['password', 'search', 'tel', 'text'].includes(type)
+                    ? required
+                        ? !['', null, undefined].includes(element.value)
+                        : true
+                    : false
+        : false
     }
 
     const hasChanged = () => element.value !== initialValue
+
+    const getValue = () => element.value
 
     const element = create('input')
     element.type = ['email', 'password', 'search', 'tel', 'text', 'url'].includes(type) ? type : 'text'
@@ -59,11 +68,11 @@ const TextInput = props => {
             setElementStyle(element, {
                 background: !isValid() ? '#f99' : '#fff',
             })
-            callBack(isValid(), hasChanged())
+            callBack()
         })
     })
 
-    return { element, remove, value: element.value }
+    return { element, remove, focus, isValid, hasChanged, getValue }
 }
 
 export { TextInput }

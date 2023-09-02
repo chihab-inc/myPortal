@@ -7,8 +7,16 @@ const SelectInput = props => {
     const initialValue = props.initialValue
     const callBack = props.callBack || (() => {})
 
+    const hasChanged = () => element.value !== initialValue
+
+    const getValue = () => element.value
+
     const remove = () => {
         element.remove()
+    }
+
+    const focus = () => {
+        element.focus()
     }
 
     const isValid = () => required ? !['', null, undefined].includes(element.value) : true
@@ -37,10 +45,10 @@ const SelectInput = props => {
     })
 
     element.addEventListener('change', () => {
-        callBack(element.value, isValid)
+        callBack()
     })
 
-    return { element, remove, value: element.value }
+    return { element, remove, focus, isValid, hasChanged, getValue }
 }
 
 export { SelectInput }

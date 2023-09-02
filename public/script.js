@@ -18,68 +18,101 @@ const DB_NAME = 'DATA-BASE'
 const modalTracker = { formModalOpen: false }
 
 const LinkFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
-    modalTracker.formModalOpen = true
-    
-    const initialValues = {
-        link: props.href,
-        logo: props.src,
-        description: props.tip,
-        section: props.sectionId,
+    const style = props.style || {}
+    const fields = props.fields = []
+    const creating = props.creating
+    const initialValues = props.initialValues || {}
+
+    const inputFields = []
+
+    const checkForm = () => {
+        let allValid = true
+        let someChanged = false
+        inputFields.map(f => f.inputField).forEach(f => {
+            allValid = allValid && f.isValid()
+            someChanged = someChanged || f.hasChanged()
+        })
+        submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
     }
 
-    const hasChanged = (fields, initialValues) => {
-        return fields.link !== initialValues.link
-        || fields.logo !== initialValues.logo
-        || fields.description !== initialValues.description
-        || (!props.creating && ![null, undefined].includes(initialValues.section) && fields.section.toString() !== initialValues.section.toString())
+    const remove = () => {
+        setElementStyle(form, { animation: 'push-form-out 0.3s ease-in-out 1' })
+        setElementStyle(element, { animation: 'blur-form-out 0.3s ease-in-out 1' })
+        setTimeout(() => {
+            inputFields.forEach(f => f.inputField.remove())
+            element.remove()
+        }, 300)
     }
 
-    const formValidate = fields => {
-        const rgx = /^(http(s)?:\/\/)([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/
-        return (rgx.test(fields.link) && rgx.test(fields.logo) && props.creating)
-        || (
-            (
-                rgx.test(fields.link)
-                && rgx.test(fields.logo)
-            )
-            && !props.creating
-        )
-    }
-
-    const hide = () => {
-        if (modalTracker.formModalOpen) {
-            modalTracker.formModalOpen = false
-            let form = select('#form')
-            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-            let formContainer = select('#form-container')
-            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
-            setTimeout(() => {
-                select('#form-container')?.remove()
-                document.body.style.overflow = 'auto'
-            }, 300)
-        }
-    }
-
-    let container = create('div')
-    container.id = 'form-container'
+    let element = create('div')
+    setElementStyle(element, {
+        background: '#0009',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'fixed',
+        left: '0px',
+        top: '0px',
+        width: '100vw',
+        height: '100vh',
+        backdropFilter: 'blur(15px)',
+        animation: 'blur-form-in 0.3s ease-in-out 1',
+    })
 
     let form = create('div')
     form.id = 'form'
+    setElementStyle(form, {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '5px',
+        background: '#3338',
+        minWidth: '300px',
+        padding: '10px',
+        borderRadius: '10px',
+        boxShadow: '0 0 30px rgba(0, 0, 0, 0.6)',
+        animation: 'pop-form-in 0.3s ease-in-out 1',
+    })
 
-    let linkField = create('input')
-    linkField.type = 'url'
-    linkField.placeholder = 'Link'
-    linkField.value = props.creating ? null : props.href
+    const linkField = TextInput({
+        type: 'url',
+        placeholder: 'Link',
+        initialValue: creating ? null : props.href,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
+        required: true && creating, // TODO - 'true' SHOULD BE DYNAMIC (props.required) same as above
+        callBack: checkForm,
+    })
+    inputFields.push({ inputField: linkField, propertyName: 'href', autoFocus: true })
 
-    let logoField = create('input')
-    logoField.type = 'url'
-    logoField.placeholder = 'Logo'
-    logoField.value = props.creating ? null : props.src
+    const logoField = TextInput({
+        type: 'url',
+        placeholder: 'Logo URL (it can be a local file URL)',
+        initialValue: creating ? null : props.src,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
+        required: true && creating, // TODO - 'true' SHOULD BE DYNAMIC (props.required) same as above
+        callBack: checkForm,
+    })
+    inputFields.push({ inputField: logoField, propertyName: 'src' })
 
-    let descriptionField = create('input')
-    descriptionField.type = 'text'
-    descriptionField.placeholder = 'Description'
-    descriptionField.value = (props.creating || ['', null, undefined].includes(props.tip)) ? null : props.tip
+    const descriptionField = TextInput({
+        type: 'text',
+        placeHolder: 'Short description',
+        initialValue: creating ? null : props.tip,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
+        maxLength: 32,
+        callBack: checkForm,
+    })
+    inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
+
+    const allSections = sectionDB.getAllSections()
+    const sectionField = SelectInput({
+        items: allSections.map(s => ({
+            value: s.id,
+            text: s.title,
+            selected: s.id === props.sectionId ? props.sectionId : undefined,
+            style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
+        })),// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
+        initialValue: creating ? null : props.sectionId,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
+        callBack: checkForm,
+    })
+    inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
 
     let sectionSelector
     if (!props.creating) {
@@ -99,41 +132,19 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
     submitButton.id = props.creating ? 'add-button' : 'update-button'
     submitButton.classList.add('tool-button')
     submitButton.textContent = ''
-    submitButton.disabled = !formValidate({
-        link: linkField.value,
-        logo: logoField.value,
-    }) || (
-        !hasChanged(
-            {
-                link: linkField.value,
-                logo: logoField.value,
-                description: descriptionField.value,
-                section: !props.creating && sectionSelector.value,
-            },
-            initialValues
-        ) && !props.creating
-    )
+    checkForm()
 
-    for (const f of [linkField, logoField, descriptionField, sectionSelector]) {
-        ['focusout', 'input'].forEach(eventName => {
-            ![null, undefined].includes(f) && f.addEventListener(eventName, e => {
-                submitButton.disabled = !formValidate({
-                    link: linkField.value,
-                    logo: logoField.value,
-                }) || (!hasChanged({
-                    link: linkField.value,
-                    logo: logoField.value,
-                    description: descriptionField.value,
-                    section: !props.creating && sectionSelector.value,
-                }, initialValues) && !props.creating)
-            })
-        })
-    }
-
-    submitButton.addEventListener('click', e => {
+    submitButton.addEventListener('click', () => {
+        let data = {
+            id: props.linkId,
+            active: true,
+            deleted: false,
+        }
+        inputFields.forEach(f => { data[f.propertyName] = f.inputField.getValue() })
+        console.log(data)
         db.createTemporary(
             'linkData',
-            {
+            /* {
                 id: props.linkId,
                 sectionId: !props.creating ? sectionSelector.value : props.sectionId,
                 href: linkField.value,
@@ -141,15 +152,15 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
                 tip: descriptionField.value,
                 active: true,
                 deleted: false,
-            },
+            } */data,
             temporaryData => {
                 props.clickHandler(temporaryData)
             }
         )
-        hide()
+        remove()
     })
 
-    container.addEventListener('mousedown', e => {
+    element.addEventListener('mousedown', e => {
         const rect = form.getBoundingClientRect()
         
         const left = rect.left
@@ -162,29 +173,25 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
 
         // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
         if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide()
+            remove()
         }
     })
 
-    container.addEventListener('mouseenter', e => {
-        linkField.focus()
+    element.addEventListener('mouseenter', () => {// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
+        inputFields.find(f => f.autoFocus).inputField.focus()
     })
 
-    modalTracker.formModalOpen && document.addEventListener('keyup', e => {
-        e.key === 'Escape' && hide()
+    element.addEventListener('keyup', e => {
+        e.key === 'Escape' && remove()
     })
-
-    form.appendChild(linkField)
-    form.appendChild(logoField)
-    form.appendChild(descriptionField)
-    if (!props.creating) {
-        form.appendChild(sectionSelector)
-    }
+    
+    inputFields.forEach(f => append(form, f.inputField))
+    
     form.appendChild(submitButton)
 
-    container.appendChild(form)
+    element.appendChild(form)
 
-    return container
+    return element
 }
 
 const SectionFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
@@ -304,9 +311,9 @@ const SectionFormModalComponent = props => {// TODO - Make this into a component
         titleField.focus()
     })
 
-    modalTracker.formModalOpen && document.addEventListener('keyup', e => {
+    /* modalTracker.formModalOpen && document.addEventListener('keyup', e => {
         e.key === 'Escape' && hide()
-    })
+    }) */
 
     form.appendChild(titleField)
     form.appendChild(colorAccentField)

@@ -27,7 +27,6 @@ body {
   height: 100vh; width: 100vw;
   background: #1c1e1e;
   display: flex;
-  /* padding: 10px; */
   font-family: Verdana, sans-serif;
 }
 
@@ -36,7 +35,7 @@ body {
 
 /* MAIN */
 body main {
-  /* width: 100vw; */ height: 100%;
+  height: 100%;
   display: flex; justify-content: flex-start; align-items: flex-start; gap: 10px;
   overflow: auto;
   padding: 100px;
@@ -46,17 +45,7 @@ body main {
 
 
 /* FORM */
-/* body main .tool-button {
-  display: block;
-  width: 20px; height: 20px;
-  opacity: .6;
-  border-radius: 50%;
-} */
-/* body main .tool-button:hover {
-  opacity: 1;
-  transition: all 0.1s ease-in;
-} */
-body #form-container {
+body #form-container {/* HEEPING THIS UNTIL ALL FORMS HAVE BEEN UDJUSTED */
   background: #0009;
   display: flex; justify-content: center; align-items: center;
   position: fixed; left: 0px; top: 0px;
@@ -65,14 +54,14 @@ body #form-container {
   animation: blur-form-in 0.3s ease-in-out 1;
 }
 body #form {
-  display: flex; justify-content: center; align-items: center; gap: 5px;
+  /* display: flex; justify-content: center; align-items: center; gap: 5px;
   background: #3338;
   min-width: 300px;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  animation: pop-form-in 0.3s ease-in-out 1; */
   /* border: 1px solid #3c3c3c; */
-  animation: pop-form-in 0.3s ease-in-out 1;
 }
 #form input,
 #form select {
@@ -119,22 +108,12 @@ body #form {
 
 
 /* ANIMATIONS */
-@keyframes pop-in {
-  70% {
-    transform: scale(1.2);
-  }
-}
 @keyframes roll-out {
   0% {
     transform: scaleX(0.1);
   }
   100% {
     transform: scaleY(1);
-  }
-}
-@keyframes push-in {
-  70% {
-    transform: scale(0.99);
   }
 }
 @keyframes pop-form-in {
