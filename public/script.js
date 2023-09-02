@@ -17,8 +17,8 @@ const DB_NAME = 'DATA-BASE'
 // GLOBALS
 const modalTracker = { formModalOpen: false }
 
-const LinkFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
-    const linkData = props.linkData || {}
+const FormModal = props => {
+    const tmpData = props.tmpData || {}
     const clickHandler = props.clickHandler
 
     const style = props.style || {}
@@ -107,10 +107,10 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
     })
 
     submitButton.addEventListener('click', () => {
-        inputFields.forEach(f => { linkData[f.propertyName] = f.inputField.getValue() })
+        inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
         db.createTemporary(
-            'linkData',
-            linkData,
+            'tmpData',
+            tmpData,
             temporaryData => {
                 clickHandler(temporaryData)
             }
@@ -137,7 +137,7 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
     form.appendChild(submitButton)
     element.appendChild(form)
 
-    return element
+    return element// TODO - NEED TO RETURN OBJECT CONTAINING element AS A PROPERTY
 }
 
 const SectionFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
@@ -338,9 +338,8 @@ const MainComponent = props => {
                     },
                     hover: { opacity: '1' },
                     clickHandler: () => {
-                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        // select('#form-container')?.remove()
                         const inputFields = []
+
                         const linkField = TextInput({
                             type: 'url',
                             placeholder: 'Link',
@@ -359,7 +358,7 @@ const MainComponent = props => {
 
                         const descriptionField = TextInput({
                             type: 'text',
-                            placeHolder: 'Short description',
+                            placeholder: 'Short description',
                             initialValue: tip,
                             maxLength: 32,
                         })
@@ -378,8 +377,9 @@ const MainComponent = props => {
                         inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
 
                         document.body.appendChild(
-                            LinkFormModalComponent({
-                                linkData: {
+                            FormModal({
+                                creating: false,
+                                tmpData: {
                                     id,
                                     sectionId,
                                     href,
@@ -394,14 +394,7 @@ const MainComponent = props => {
                                         disabled: { backgroundImage: backgroundImage(icon('check-disabled')) },
                                     }
                                 },
-                                creating: false,
                                 inputFields,
-                                //------------------
-                                sectionId: sectionId,
-                                linkId: id,
-                                href: href,
-                                src: src,
-                                tip: tip,
                                 clickHandler: temporaryData => {
                                     linkDB.updateLinkPropertyById(temporaryData)
                                     loadPage()
@@ -427,7 +420,7 @@ const MainComponent = props => {
         const extendedView = section.extendedView
         const buttonGroup = ButtonGroup({
             options: { type: 'rounded' },
-            buttons:[
+            buttons: [
                 {
                     style: { backgroundImage: backgroundImage(icon('pen')) },
                     hover: { opacity: '1' },
@@ -464,13 +457,33 @@ const MainComponent = props => {
                     style: { backgroundImage: backgroundImage(icon('plus')) },
                     hover: { opacity: '1' },
                     clickHandler: () => {
-                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        select('#form-container')?.remove()
+                        const inputFields = []
+
+                        const linkField = TextInput({ type: 'url', placeholder: 'Link', required: true })
+                        inputFields.push({ inputField: linkField, propertyName: 'href' })
+
+                        const logoField = TextInput({ type: 'url', placeholder: 'Logo URL',/* (it can be a local file URL)', */ required: true })
+                        inputFields.push({ inputField: logoField, propertyName: 'src' })
+
+                        const descriptionField = TextInput({ type: 'text', placeholder: 'Short description', maxLength: 32 })
+                        inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
+                        
                         document.body.appendChild(
-                            LinkFormModalComponent({
+                            FormModal({
                                 creating: true,
-                                sectionId: id,
-                                linkId: crypto.randomUUID(),
+                                tmpData: {
+                                    id: crypto.randomUUID(),
+                                    sectionId: id,
+                                    active: true,
+                                    deleted: false,
+                                },
+                                style: {
+                                    submitButton: {
+                                        enabled: { backgroundImage: backgroundImage(icon('plus')) },
+                                        disabled: { backgroundImage: backgroundImage(icon('plus-disabled')) },
+                                    }
+                                },
+                                inputFields,
                                 clickHandler: temporaryData => {
                                     linkDB.createLink(temporaryData)
                                     loadPage()
