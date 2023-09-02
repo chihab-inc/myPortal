@@ -7,7 +7,7 @@ const TextInput = props => {
     const required = props.required || false
     const maxLength = props.maxLength || 524288
     const initialValue = props.initialValue
-    const callBack = props.callBack || (() => {})
+    let callBack = props.callBack || (() => {})
     
     const remove = () => {
         element.remove()
@@ -45,6 +45,10 @@ const TextInput = props => {
 
     const getValue = () => element.value
 
+    const setCallBack = cb => {
+        callBack = cb
+    }
+
     const element = create('input')
     element.type = ['email', 'password', 'search', 'tel', 'text', 'url'].includes(type) ? type : 'text'
     element.placeholder = placeholder
@@ -72,7 +76,7 @@ const TextInput = props => {
         })
     })
 
-    return { element, remove, focus, isValid, hasChanged, getValue }
+    return { element, remove, focus, isValid, hasChanged, getValue, setCallBack }
 }
 
 export { TextInput }

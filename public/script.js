@@ -18,12 +18,13 @@ const DB_NAME = 'DATA-BASE'
 const modalTracker = { formModalOpen: false }
 
 const LinkFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
-    const style = props.style || {}
-    const fields = props.fields = []
-    const creating = props.creating
-    const initialValues = props.initialValues || {}
+    const linkData = props.linkData || {}
+    const clickHandler = props.clickHandler
 
-    const inputFields = []
+    const style = props.style || {}
+    const creating = props.creating
+    const inputFields = props.inputFields || []
+
 
     const checkForm = () => {
         let allValid = true
@@ -33,6 +34,7 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
             someChanged = someChanged || f.hasChanged()
         })
         submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
+        setElementStyle(submitButton, submitButton.disabled ? style.submitButton.disabled : style.submitButton.enabled)
     }
 
     const remove = () => {
@@ -73,122 +75,66 @@ const LinkFormModalComponent = props => {// TODO - Make this into a component th
         boxShadow: '0 0 30px rgba(0, 0, 0, 0.6)',
         animation: 'pop-form-in 0.3s ease-in-out 1',
     })
-
-    const linkField = TextInput({
-        type: 'url',
-        placeholder: 'Link',
-        initialValue: creating ? null : props.href,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
-        required: true && creating, // TODO - 'true' SHOULD BE DYNAMIC (props.required) same as above
-        callBack: checkForm,
-    })
-    inputFields.push({ inputField: linkField, propertyName: 'href', autoFocus: true })
-
-    const logoField = TextInput({
-        type: 'url',
-        placeholder: 'Logo URL (it can be a local file URL)',
-        initialValue: creating ? null : props.src,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
-        required: true && creating, // TODO - 'true' SHOULD BE DYNAMIC (props.required) same as above
-        callBack: checkForm,
-    })
-    inputFields.push({ inputField: logoField, propertyName: 'src' })
-
-    const descriptionField = TextInput({
-        type: 'text',
-        placeHolder: 'Short description',
-        initialValue: creating ? null : props.tip,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
-        maxLength: 32,
-        callBack: checkForm,
-    })
-    inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
-
-    const allSections = sectionDB.getAllSections()
-    const sectionField = SelectInput({
-        items: allSections.map(s => ({
-            value: s.id,
-            text: s.title,
-            selected: s.id === props.sectionId ? props.sectionId : undefined,
-            style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
-        })),// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
-        initialValue: creating ? null : props.sectionId,// TODO - THIS NEEDS TO BE GENERIC => IN A LOOP THROUGH INPUTS GET THE INITIAL VALUE OF THE CORRESPONDING INPUT
-        callBack: checkForm,
-    })
-    inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
-
-    let sectionSelector
-    if (!props.creating) {
-        sectionSelector = create('select')
-        sectionDB.getAllSections().forEach(s => {
-            let option = create('option')
-            option.value = s.id
-            option.textContent = s.title
-            if (s.id === props.sectionId) {
-                option.selected = true
-            }
-            sectionSelector.appendChild(option)
-        })
-    }
-
+    
     let submitButton = create('button')
-    submitButton.id = props.creating ? 'add-button' : 'update-button'
-    submitButton.classList.add('tool-button')
+    setElementStyle(submitButton, {
+        ...style.submitButton || {},
+        minWidth: '40px',
+        height: '40px',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        border: 'none',
+        boxSizing: 'border-box',
+        borderRadius: '50%',
+        opacity: '.6',
+        cursor: 'pointer',
+        transition: 'all .1s ease-in-out',
+    })
     submitButton.textContent = ''
     checkForm()
 
+    submitButton.addEventListener('mouseenter', () => {
+        setElementStyle(submitButton, {
+            opacity: '1',
+        })
+    })
+
+    submitButton.addEventListener('mouseleave', () => {
+        setElementStyle(submitButton, {
+            opacity: '.6',
+        })
+    })
+
     submitButton.addEventListener('click', () => {
-        let data = {
-            id: props.linkId,
-            active: true,
-            deleted: false,
-        }
-        inputFields.forEach(f => { data[f.propertyName] = f.inputField.getValue() })
-        console.log(data)
+        inputFields.forEach(f => { linkData[f.propertyName] = f.inputField.getValue() })
         db.createTemporary(
             'linkData',
-            /* {
-                id: props.linkId,
-                sectionId: !props.creating ? sectionSelector.value : props.sectionId,
-                href: linkField.value,
-                src: logoField.value,
-                tip: descriptionField.value,
-                active: true,
-                deleted: false,
-            } */data,
+            linkData,
             temporaryData => {
-                props.clickHandler(temporaryData)
+                clickHandler(temporaryData)
             }
         )
         remove()
     })
 
     element.addEventListener('mousedown', e => {
-        const rect = form.getBoundingClientRect()
-        
-        const left = rect.left
-        const top = rect.top
-        const right = rect.right
-        const bottom = rect.bottom
-
-        const x = e.pageX
-        const y = e.pageY
-
-        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
-        if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            remove()
-        }
+        return element !== e.target ? null : remove()
     })
 
     element.addEventListener('mouseenter', () => {// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
-        inputFields.find(f => f.autoFocus).inputField.focus()
+        inputFields[0].inputField.focus()
     })
 
     element.addEventListener('keyup', e => {
         e.key === 'Escape' && remove()
     })
     
-    inputFields.forEach(f => append(form, f.inputField))
-    
+    inputFields.forEach(f => {
+        f.inputField.setCallBack(checkForm)
+        append(form, f.inputField)
+    })
     form.appendChild(submitButton)
-
     element.appendChild(form)
 
     return element
@@ -393,10 +339,64 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        select('#form-container')?.remove()
+                        // select('#form-container')?.remove()
+                        const inputFields = []
+                        const linkField = TextInput({
+                            type: 'url',
+                            placeholder: 'Link',
+                            initialValue: href,
+                            required: true,
+                        })
+                        inputFields.push({ inputField: linkField, propertyName: 'href' })
+
+                        const logoField = TextInput({
+                            type: 'url',
+                            placeholder: 'Logo URL',// (it can be a local file URL)',
+                            initialValue: src,
+                            required: true,
+                        })
+                        inputFields.push({ inputField: logoField, propertyName: 'src' })
+
+                        const descriptionField = TextInput({
+                            type: 'text',
+                            placeHolder: 'Short description',
+                            initialValue: tip,
+                            maxLength: 32,
+                        })
+                        inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
+
+                        const allSections = sectionDB.getAllSections()
+                        const sectionField = SelectInput({
+                            items: allSections.map(s => ({
+                                value: s.id,
+                                text: s.title,
+                                selected: s.id === sectionId ? sectionId : undefined,
+                                style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
+                            })),
+                            initialValue: sectionId,
+                        })
+                        inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
+
                         document.body.appendChild(
                             LinkFormModalComponent({
+                                linkData: {
+                                    id,
+                                    sectionId,
+                                    href,
+                                    src,
+                                    tip,
+                                    active,
+                                    deleted,
+                                },
+                                style: {
+                                    submitButton: {
+                                        enabled: { backgroundImage: backgroundImage(icon('check')) },
+                                        disabled: { backgroundImage: backgroundImage(icon('check-disabled')) },
+                                    }
+                                },
                                 creating: false,
+                                inputFields,
+                                //------------------
                                 sectionId: sectionId,
                                 linkId: id,
                                 href: href,

@@ -5,7 +5,7 @@ const SelectInput = props => {
     const items = props.items || []
     const required = props.required || false
     const initialValue = props.initialValue
-    const callBack = props.callBack || (() => {})
+    let callBack = props.callBack || (() => {})
 
     const hasChanged = () => element.value !== initialValue
 
@@ -20,6 +20,10 @@ const SelectInput = props => {
     }
 
     const isValid = () => required ? !['', null, undefined].includes(element.value) : true
+
+    const setCallBack = cb => {
+        callBack = cb
+    }
 
     const element = create('select')
     setElementStyle(element, {
@@ -48,7 +52,7 @@ const SelectInput = props => {
         callBack()
     })
 
-    return { element, remove, focus, isValid, hasChanged, getValue }
+    return { element, remove, focus, isValid, hasChanged, getValue, setCallBack }
 }
 
 export { SelectInput }
