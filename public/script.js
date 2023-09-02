@@ -20,6 +20,7 @@ const MainComponent = props => {
     let main = create('main')
     main.id = 'main'
 
+    // CREATE LINK ELEMENTS
     let linkWrappers = []
     for (const link of props.config.links) {
         const id = link.id
@@ -159,6 +160,7 @@ const MainComponent = props => {
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
+    // CREATE SECTION ELEMENTS AND ADD LINK ELEMENTS
     let sectionComponents = []
     for (const section of props.config.sections) {
         const id = section.id
@@ -292,6 +294,8 @@ const MainComponent = props => {
             })
         )
     }
+
+    // ADD EATCH SECTION ELEMENT TO MAIN
     for (const sectionComponent of sectionComponents) {
         append(main, sectionComponent)
     }
