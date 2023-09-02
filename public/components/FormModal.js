@@ -1,3 +1,4 @@
+import { db } from '../db.js'
 import { create, setElementStyle, append } from '../web_utils.js'
 
 const FormModal = props => {
