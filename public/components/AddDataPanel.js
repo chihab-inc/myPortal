@@ -3,6 +3,7 @@ import { create, select, setElementStyle, append, icon, backgroundImage } from '
 const AddDataPanel = props => {
     const initial = props.initial
     const style = props.style || {}
+    const callBack = props.callBack
 
     const children = []
 
@@ -12,6 +13,7 @@ const AddDataPanel = props => {
     }
 
     const element = create('div')
+    element.id = 'add-data-panel'
     setElementStyle(element, {
         ...style,
         display: 'flex',
@@ -62,7 +64,7 @@ const AddDataPanel = props => {
     })
 
     element.addEventListener('click', e => {
-        props.callBack()
+        callBack()
     })
 
     element.appendChild(img)

@@ -11,262 +11,10 @@ import { Section } from './components/Section.js'
 import { AddDataPanel } from './components/AddDataPanel.js'
 import { TextInput } from './components/TextInput.js'
 import { SelectInput } from './components/SelectInput.js'
+import { ColorInput } from './components/ColorInput.js'
+import { FormModal } from './components/FormModal.js'
 
 const DB_NAME = 'DATA-BASE'
-
-// GLOBALS
-const modalTracker = { formModalOpen: false }
-
-const FormModal = props => {
-    const tmpData = props.tmpData || {}
-    const clickHandler = props.clickHandler
-
-    const style = props.style || {}
-    const creating = props.creating
-    const inputFields = props.inputFields || []
-
-
-    const checkForm = () => {
-        let allValid = true
-        let someChanged = false
-        inputFields.map(f => f.inputField).forEach(f => {
-            allValid = allValid && f.isValid()
-            someChanged = someChanged || f.hasChanged()
-        })
-        submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
-        setElementStyle(submitButton, submitButton.disabled ? style.submitButton.disabled : style.submitButton.enabled)
-    }
-
-    const remove = () => {
-        setElementStyle(form, { animation: 'push-form-out 0.3s ease-in-out 1' })
-        setElementStyle(element, { animation: 'blur-form-out 0.3s ease-in-out 1' })
-        setTimeout(() => {
-            inputFields.forEach(f => f.inputField.remove())
-            element.remove()
-        }, 300)
-    }
-
-    let element = create('div')
-    setElementStyle(element, {
-        background: '#0009',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'fixed',
-        left: '0px',
-        top: '0px',
-        width: '100vw',
-        height: '100vh',
-        backdropFilter: 'blur(15px)',
-        animation: 'blur-form-in 0.3s ease-in-out 1',
-    })
-
-    let form = create('div')
-    form.id = 'form'
-    setElementStyle(form, {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '5px',
-        background: '#3338',
-        minWidth: '300px',
-        padding: '10px',
-        borderRadius: '10px',
-        boxShadow: '0 0 30px rgba(0, 0, 0, 0.6)',
-        animation: 'pop-form-in 0.3s ease-in-out 1',
-    })
-    
-    let submitButton = create('button')
-    setElementStyle(submitButton, {
-        ...style.submitButton || {},
-        minWidth: '40px',
-        height: '40px',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        border: 'none',
-        boxSizing: 'border-box',
-        borderRadius: '50%',
-        opacity: '.6',
-        cursor: 'pointer',
-        transition: 'all .1s ease-in-out',
-    })
-    submitButton.textContent = ''
-    checkForm()
-
-    submitButton.addEventListener('mouseenter', () => {
-        setElementStyle(submitButton, {
-            opacity: '1',
-        })
-    })
-
-    submitButton.addEventListener('mouseleave', () => {
-        setElementStyle(submitButton, {
-            opacity: '.6',
-        })
-    })
-
-    submitButton.addEventListener('click', () => {
-        inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
-        db.createTemporary(
-            'tmpData',
-            tmpData,
-            temporaryData => {
-                clickHandler(temporaryData)
-            }
-        )
-        remove()
-    })
-
-    element.addEventListener('mousedown', e => {
-        return element !== e.target ? null : remove()
-    })
-
-    element.addEventListener('mouseenter', () => {// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
-        inputFields[0].inputField.focus()
-    })
-
-    element.addEventListener('keyup', e => {
-        e.key === 'Escape' && remove()
-    })
-    
-    inputFields.forEach(f => {
-        f.inputField.setCallBack(checkForm)
-        append(form, f.inputField)
-    })
-    form.appendChild(submitButton)
-    element.appendChild(form)
-
-    return element// TODO - NEED TO RETURN OBJECT CONTAINING element AS A PROPERTY
-}
-
-const SectionFormModalComponent = props => {// TODO - Make this into a component that takes form fields as props
-    modalTracker.formModalOpen = true
-
-    const initialValues = {
-        title: props.title,
-        colorAccent: props.colorAccent,
-    }
-
-    const hasChanged = (fields, initialValues) => {
-        return fields.title !== initialValues.title
-        || fields.colorAccent !== initialValues.colorAccent
-    }
-    const formValidate = fields => {
-        return (
-            !['', null, undefined].includes(fields.title)
-            && ![''].includes(fields.title.replaceAll(' ', ''))
-        )
-    }
-
-    const hide = () => {
-        if (modalTracker.formModalOpen) {
-            modalTracker.formModalOpen = false
-            let form = select('#form')
-            form.style.animation = 'push-form-out 0.3s ease-in-out 1'
-            let formContainer = select('#form-container')
-            formContainer.style.animation = 'blur-form-out 0.3s ease-in-out 1'
-            setTimeout(() => {
-                select('#form-container')?.remove()
-                document.body.style.overflow = 'auto'
-            }, 300)
-        }
-    }
-
-    let container = create('div')
-    container.id = 'form-container'
-
-    let form = create('div')
-    form.id = 'form'
-
-    let titleField = create('input')
-    titleField.type = 'text'
-    titleField.placeholder = 'Title'
-    titleField.value = props.creating ? null : props.title
-
-    let colorAccentField = create('input')
-    colorAccentField.type = 'color'
-    colorAccentField.value = props.creating ? '#bf616a' : props.colorAccent
-
-    let submitButton = create('button')
-    submitButton.id = props.creating ? 'add-button' : 'update-button'
-    submitButton.classList.add('tool-button')
-    submitButton.textContent = ''
-    submitButton.disabled = !formValidate({ title: titleField.value })
-    || (
-        !hasChanged(
-            {
-                title: titleField.value,
-                colorAccent: colorAccentField.value,
-            },
-            initialValues
-        ) && !props.creating
-    )
-
-    for (const f of [titleField, colorAccentField]) {
-        ['focusout', 'input'].forEach(eventName => {
-            ![null, undefined].includes(f) && f.addEventListener(eventName, e => {
-                submitButton.disabled = !formValidate({ title: titleField.value })
-                || (
-                    !hasChanged(
-                        {
-                            title: titleField.value,
-                            colorAccent: colorAccentField.value,
-                        },
-                        initialValues
-                    ) && !props.creating
-                )
-            })
-        })
-    }
-
-    submitButton.addEventListener('click', e => {
-        db.createTemporary(
-            'sectionData',
-            {
-                id: props.sectionId,
-                title: titleField.value,
-                colorAccent: colorAccentField.value,
-                extendedView: false,
-            },
-            temporaryData => {
-                props.clickHandler(temporaryData)
-            }
-        )
-        hide()
-    })
-
-    container.addEventListener('mousedown', e => {
-        const rect = form.getBoundingClientRect()
-        
-        const left = rect.left
-        const top = rect.top
-        const right = rect.right
-        const bottom = rect.bottom
-
-        const x = e.pageX
-        const y = e.pageY
-
-        // CURSOR PLACEMENT CONDITION TO IGNORE EVENT ON CHILD ELEMENTS
-        if (!(x > left && x < right) || !(y > top && y < bottom)) {
-            hide()
-        }
-    })
-
-    container.addEventListener('mouseenter', e => {
-        titleField.focus()
-    })
-
-    /* modalTracker.formModalOpen && document.addEventListener('keyup', e => {
-        e.key === 'Escape' && hide()
-    }) */
-
-    form.appendChild(titleField)
-    form.appendChild(colorAccentField)
-    form.appendChild(submitButton)
-    container.appendChild(form)
-    return container
-}
 
 const MainComponent = props => {
     let main = create('main')
@@ -376,7 +124,7 @@ const MainComponent = props => {
                         })
                         inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
 
-                        document.body.appendChild(
+                        append(document.body,
                             FormModal({
                                 creating: false,
                                 tmpData: {
@@ -401,7 +149,6 @@ const MainComponent = props => {
                                 }
                             })
                         )
-                        document.body.style.overflow = 'hidden'
                     }
                 },
             ],
@@ -425,23 +172,44 @@ const MainComponent = props => {
                     style: { backgroundImage: backgroundImage(icon('pen')) },
                     hover: { opacity: '1' },
                     clickHandler: () => {
-                        // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-                        select('#form-container')?.remove()
-                        document.body.appendChild(
-                            SectionFormModalComponent({
+                        const inputFields = []
+
+                        const titleField = TextInput({
+                            type: 'text',
+                            placeholder: 'Title',
+                            initialValue: title,
+                            required: true,
+                        })
+                        inputFields.push({ inputField: titleField, propertyName: 'title' })
+
+                        const colorField = ColorInput({
+                            initialValue: colorAccent,
+                            required: true,
+                        })
+                        inputFields.push({ inputField: colorField, propertyName: 'colorAccent' })
+
+                        append(document.body,
+                            FormModal({
                                 creating: false,
-                                sectionId: id,
-                                title: title,
-                                colorAccent: colorAccent,
-                                extendedView: extendedView,
-                                linkId: crypto.randomUUID(),
+                                tmpData: {
+                                    id,
+                                    title,
+                                    colorAccent,
+                                    extendedView,
+                                },
+                                style: {
+                                    submitButton: {
+                                        enabled: { backgroundImage: backgroundImage(icon('check')) },
+                                        disabled: { backgroundImage: backgroundImage(icon('check-disabled')) },
+                                    }
+                                },
+                                inputFields,
                                 clickHandler: temporaryData => {
                                     sectionDB.updateSectionPropertyById(temporaryData)
                                     loadPage()
                                 }
                             })
                         )
-                        document.body.style.overflow = 'hidden'
                     },
                 },
                 {
@@ -468,7 +236,7 @@ const MainComponent = props => {
                         const descriptionField = TextInput({ type: 'text', placeholder: 'Short description', maxLength: 32 })
                         inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
                         
-                        document.body.appendChild(
+                        append(document.body,
                             FormModal({
                                 creating: true,
                                 tmpData: {
@@ -490,7 +258,6 @@ const MainComponent = props => {
                                 }
                             })
                         )
-                        document.body.style.overflow = 'hidden'
                     },
                 },
                 {
@@ -533,7 +300,6 @@ const MainComponent = props => {
 }
 
 const loadPage = () => {
-    // RESET MAIN TO AVOID LAGGING DUPLICATES
     select('#main')?.remove()
     select('#add-data-panel')?.remove()
 
@@ -545,28 +311,43 @@ const loadPage = () => {
     const addDataPanel = AddDataPanel({
         initial: noData,
         callBack: () => {
-            // RESET FORM CONTAINER TO AVOID LAGGING DUPLICATES
-            select('#form-container')?.remove()
-            document.body.appendChild(
-                SectionFormModalComponent({
-                    creating: true,
-                    sectionId: crypto.randomUUID(),
+            const inputFields = []
+
+            const titleField = TextInput({ type: 'text', placeholder: 'Title', required: true })
+            inputFields.push({ inputField: titleField, propertyName: 'title' })
+
+            const colorField = ColorInput({ required: true })
+            inputFields.push({ inputField: colorField, propertyName: 'colorAccent' })
+            
+            append(document.body,
+                FormModal({
+                    creating: false,
+                    tmpData: {
+                        id: crypto.randomUUID(),
+                        extendedView: false,
+                    },
+                    style: {
+                        submitButton: {
+                            enabled: { backgroundImage: backgroundImage(icon('plus')) },
+                            disabled: { backgroundImage: backgroundImage(icon('plus-disabled')) },
+                        }
+                    },
+                    inputFields,
                     clickHandler: temporaryData => {
                         sectionDB.createSection(temporaryData)
                         loadPage()
                     }
                 })
             )
-            document.body.style.overflow = 'hidden'
         }
     })
 
     
     if (!noData) {
-        document.body.appendChild(
-            MainComponent({ config: db.getFromDB(DB_NAME) })
-        )
+        const main = MainComponent({ config: db.getFromDB(DB_NAME) })
+        document.body.appendChild(main)
     }
+
     append(document.body, addDataPanel)
 }
 

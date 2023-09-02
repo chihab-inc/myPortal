@@ -31,7 +31,7 @@ const Section = props => {
     children.push(header)
     setElementStyle(header, {
         display: 'flex',
-        justifyContent: hasLinks ? 'space-between' : 'flec-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
         height: '20px',
@@ -68,11 +68,12 @@ const Section = props => {
         alignItems: 'flex-start',
         gap: '5px',
         width: '100%',
+        minHeight: '110px',
         padding: '5px',
         listStyleType: 'none',
         borderRadius: '5px',
     })
-    hasLinks && element.appendChild(ul)
+    element.appendChild(ul)
 
     element.addEventListener('mouseenter', e => {
         append(header, buttonGroup)
