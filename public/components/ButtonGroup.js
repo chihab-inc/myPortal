@@ -26,6 +26,9 @@ const ButtonGroup = props => {
         display: 'flex',
         flexDirection: ['vertical', 'v'].includes(options.orientation || 'horizontal') ? 'column' : 'row',
         position: 'relative',
+        // MacOS-like effect
+        /* border: '1px solid #888d8d40',
+        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
     })
     options.position && setElementStyle(element, {
         position: 'absolute',

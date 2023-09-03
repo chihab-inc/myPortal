@@ -43,8 +43,6 @@ const Section = props => {
     h2.innerText = title
     setElementStyle(h2, {
         background: '#2a2c2c',
-        // background: '#2a2c2c80',
-        // backdropFilter: 'blur(15px)',
         minWidth: '50%',
         maxWidth: '60%',
         height: '100%',
@@ -52,6 +50,11 @@ const Section = props => {
         fontSize: '1em',
         color: colorAccent,
         borderRadius: '5px',
+        /* // MacOS-like effect
+        background: '#2a2c2c40',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid #888d8d40',
+        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
     })
     header.appendChild(h2)
     element.appendChild(header)
@@ -60,8 +63,6 @@ const Section = props => {
     children.push(ul)
     setElementStyle(ul, {
         background: '#2a2c2c',
-        // background: '#2a2c2c80',
-        // backdropFilter: 'blur(15px)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
@@ -72,6 +73,12 @@ const Section = props => {
         padding: '5px',
         listStyleType: 'none',
         borderRadius: '5px',
+        /* // MacOS-like effect
+        padding: '3px',
+        background: '#2a2c2c40',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid #888d8d40',
+        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
     })
     element.appendChild(ul)
 
