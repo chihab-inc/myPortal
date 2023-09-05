@@ -232,8 +232,35 @@ const MainComponent = props => {
                         const linkField = TextInput({ type: 'url', placeholder: 'Link', required: true })
                         inputFields.push({ inputField: linkField, propertyName: 'href' })
 
-                        const logoField = TextInput({ type: 'url', placeholder: 'Logo URL',/* (it can be a local file URL)', */ required: true })
-                        inputFields.push({ inputField: logoField, propertyName: 'src' })
+                        const logoField = TextInput({type: 'url',
+                            placeholder: 'Logo URL',/* (it can be a local file URL)', */
+                            required: true,
+                            transformation: url => {
+                                const w = 100
+                                const h = 100
+                                
+                                const image = new Image()
+                                image.crossOrigin = 'anonymous'
+                                image.src = url
+                                
+                                return new Promise((resolve, reject) => {
+                                    image.complete ? resolve() : reject()
+                                })
+                                .then(r => {
+                                    const canvas = document.createElement('canvas')
+                                    canvas.setAttribute('width', `${w}px`)
+                                    canvas.setAttribute('height', `${h}px`)
+                                    
+                                    const ctx = canvas.getContext('2d')
+                                    ctx.drawImage(image, 0, 0)
+                                    
+                                    return canvas.toDataURL('image/png')
+                                }).catch(e => {
+                                    return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGVZjidx1E9suWbF20B9Yra5NUqhk61hdTAp5uvLSMRTxwdxDF71A7-zQVzCRaQ1gKGsU&usqp=CAU'// url
+                                })
+                            },
+                        })
+                        inputFields.push({ inputField: logoField, propertyName: 'src', promise: true })
 
                         const descriptionField = TextInput({ type: 'text', placeholder: 'Short description', maxLength: 32 })
                         inputFields.push({ inputField: descriptionField, propertyName: 'tip' })

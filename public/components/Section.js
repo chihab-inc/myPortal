@@ -15,7 +15,7 @@ const Section = props => {
         element.remove()
     }
 
-    const element = create('element')
+    const element = create('section')
     setElementStyle(element, {
         display: 'flex',
         flexDirection: 'column',

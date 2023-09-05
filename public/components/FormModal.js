@@ -91,7 +91,15 @@ const FormModal = props => {
     })
 
     submitButton.addEventListener('click', () => {
-        inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
+        inputFields.forEach(f => {
+            f.promise
+            ? f.inputField.getValue().then(r => {
+                tmpData[f.propertyName] = r
+            }).catch(e => {
+                tmpData[f.propertyName] = e
+            })
+            : tmpData[f.propertyName] = f.inputField.getValue()
+        })
         db.createTemporary(
             'tmpData',
             tmpData,

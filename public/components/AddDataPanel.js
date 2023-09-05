@@ -25,6 +25,11 @@ const AddDataPanel = props => {
         position: initial ? 'static' : 'fixed',
         top: initial ? 'auto' : '20px',
         left: initial ? 'auto' : '20px',
+        /* // MOVING ADD DATA PANEL INTO BOTTOM CENTER
+        bottom: initial ? 'auto' : '20px',
+        left: initial ? 'auto' : '-webkit-calc(50% - 30px)',
+        left: initial ? 'auto' : '-moz-calc(50% - 30px)',
+        left: initial ? 'auto' : 'calc(50% - 30px)', */
         height: initial ? style.height || 'auto' : '60px',
         width: initial ? style.width || 'auto' : '60px',
         borderRadius: initial ? 'none' : '50%',

@@ -7,6 +7,7 @@ const TextInput = props => {
     const required = props.required || false
     const maxLength = props.maxLength || 524288
     const initialValue = props.initialValue
+    const transformation = props.transformation || (v => v)
     let callBack = props.callBack || (() => {})
     
     const remove = () => {
@@ -43,7 +44,9 @@ const TextInput = props => {
 
     const hasChanged = () => element.value !== initialValue
 
-    const getValue = () => element.value
+    const getValue = () => {
+        return transformation ? transformation(element.value) : element.value
+    }
 
     const setCallBack = cb => {
         callBack = cb

@@ -6,6 +6,7 @@ const LinkAnchor = props => {
     const active = props.active
 
     const remove = () => {
+        image.remove()
         element.remove()
     }
     
@@ -14,10 +15,10 @@ const LinkAnchor = props => {
     element.href = href
     setElementStyle(element, {
         background: '#ffffff',
-        backgroundImage: backgroundImage(bgImage),
-        backgroundSize: '100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        // backgroundImage: backgroundImage(bgImage),
+        // backgroundSize: '100%',
+        // backgroundPosition: 'center',
+        // backgroundRepeat: 'no-repeat',
         opacity: active ? '1' : '.1',
         pointerEvents: active ? 'auto' : 'none',
         width: '100%',
@@ -27,6 +28,15 @@ const LinkAnchor = props => {
         textDecoration: 'none',
         transition: 'all 0.1s ease-in'
     })
+
+    const image = create('img')
+    image.src = bgImage
+    setElementStyle(image, {
+        width: '100%',
+        height: '100%',
+        borderRadius: '5px',
+    })
+    element.appendChild(image)
 
     element.addEventListener('mouseenter', e => {
         setElementStyle(element, { boxShadow: '0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24)' })
