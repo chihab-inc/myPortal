@@ -29,7 +29,7 @@ const LinkAnchor = props => {
     })
 
     element.addEventListener('mouseenter', e => {
-        setElementStyle(element, { boxShadow: '0 4px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.24)' })
+        setElementStyle(element, { boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' })
     })
     element.addEventListener('mouseleave', e => {
         setElementStyle(element, { boxShadow: 'none' })
