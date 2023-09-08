@@ -6,6 +6,7 @@ const LinkAnchor = props => {
     const active = props.active
     const globalStyle = props.globalStyle
     const theme = globalStyle.style.theme || {}
+    const callBack = props.callBack
 
     const remove = () => {
         image.remove()
@@ -27,7 +28,7 @@ const LinkAnchor = props => {
     })
 
     const image = create('img')
-    image.src = src
+    callBack(image)
     setElementStyle(image, {
         width: '100%',
         height: '100%',
