@@ -25,7 +25,7 @@ const MainComponent = props => {
     main.id = 'main'
 
     // CREATE LINK ELEMENTS
-    let linkWrappers = []
+    const linkWrappers = []
     for (const link of props.config.links) {
         const id = link.id
         const sectionId = link.sectionId
@@ -164,14 +164,36 @@ const MainComponent = props => {
                 },
             ],
         })
-        const anchor = LinkAnchor({ globalStyle, href, src, active })
+        // CONVERT IMAGE INTO BASE  AND STORE IT IN DATABASE FOR FASTER LOADING
+        const srcB64 = (image) => {
+            image.crossOrigin = 'anonymous'
+            if (linkDB.getLinkById(id).srcB64) {
+                image.src = linkDB.getLinkById(id).srcB64
+            } else {
+                image.src = src
+                image.addEventListener('load', () => {
+                    const w = image.naturalWidth
+                    const h = image.naturalHeight
+                    
+                    const canvas = document.createElement('canvas')
+                    canvas.setAttribute('width', `${w}px`)
+                    canvas.setAttribute('height', `${h}px`)
+                    
+                    const ctx = canvas.getContext('2d')
+                    ctx.drawImage(image, 0, 0)
+        
+                    linkDB.updateLinkPropertyById({id, srcB64: canvas.toDataURL('image/png')})
+                })
+            }
+        }
+        const anchor = LinkAnchor({ globalStyle, href, src, callBack: srcB64, active })
         const description = LinkDescription({ globalStyle, tip })
-        let linkComponent = Link({ globalStyle, id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
+        const linkComponent = Link({ globalStyle, id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
     // CREATE SECTION ELEMENTS AND ADD LINK ELEMENTS
-    let sectionComponents = []
+    const sectionComponents = []
     for (const section of props.config.sections) {
         const id = section.id
         const title = section.title
@@ -232,9 +254,12 @@ const MainComponent = props => {
                     style: { backgroundImage: backgroundImage(icon('cross')) },
                     hover: { opacity: '1' },
                     clickHandler: () => {
-                        sectionDB.deleteSectionById(id)
-                        linkDB.permanentlyDeleteLinksBySectionId(id)
-                        loadPage({ globalStyle })
+                        // ANCHOR - CONFIRMATION
+                        if (confirm(`Delete section "${title}" and every link contained in it?`)) {
+                            sectionDB.deleteSectionById(id)
+                            linkDB.permanentlyDeleteLinksBySectionId(id)
+                            loadPage({ globalStyle })
+                        }
                     },
                 },
                 {
