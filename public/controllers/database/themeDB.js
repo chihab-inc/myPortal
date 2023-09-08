@@ -5,9 +5,9 @@ const DB_NAME = 'THEME'
 
 db.init(DB_NAME)
 
-themeDB.createTheme = () => {// TOTO - this overwrites the database
+themeDB.createTheme = () => {
     db.updateDB(DB_NAME, dataBase => {
-        dataBase.name = 'macosLike'
+        dataBase.name = 'flat'
         dataBase.dark = true
     })
 }
