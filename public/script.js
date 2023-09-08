@@ -254,12 +254,12 @@ const MainComponent = props => {
                     style: { backgroundImage: backgroundImage(icon('cross')) },
                     hover: { opacity: '1' },
                     clickHandler: () => {
-                        // ANCHOR - CONFIRMATION
+                        /* // ANCHOR - CONFIRMATION
                         if (confirm(`Delete section "${title}" and every link contained in it?`)) {
-                            sectionDB.deleteSectionById(id)
-                            linkDB.permanentlyDeleteLinksBySectionId(id)
-                            loadPage({ globalStyle })
-                        }
+                        } */
+                        sectionDB.deleteSectionById(id)
+                        linkDB.permanentlyDeleteLinksBySectionId(id)
+                        loadPage({ globalStyle })
                     },
                 },
                 {
