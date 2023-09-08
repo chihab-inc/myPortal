@@ -4,6 +4,8 @@ import { max } from '../utils.js'
 const ButtonGroup = props => {
     const options = props.options || {}
     const buttons = props.buttons || []
+    const globalStyle = props.globalStyle
+    const theme = globalStyle.style.theme || {}
 
     const remove = () => {
         element.remove()
@@ -11,24 +13,21 @@ const ButtonGroup = props => {
 
     const element = create('ul')
     setElementStyle(element, {
-        background: '#1f1f1f',
+        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
         borderRadius: {
-            'squared': '2px',
-            'rounded': '10px',
-            'bubbles': '10px',
+            'squared': globalStyle.style.general.borderRadiusS,
+            'rounded': globalStyle.style.general.borderRadiusL,
+            'bubbles': globalStyle.style.general.borderRadiusL,
         }[options.type || 'bubbles'],
         padding: {
-            'squared': '0px',
-            'rounded': '0px',
-            'bubbles': '2px',
+            'squared': globalStyle.style.general.paddingNone,
+            'rounded': globalStyle.style.general.paddingNone,
+            'bubbles': globalStyle.style.general.paddingXS,
         }[options.type || 'bubbles'],
         listStyleType: 'none',
         display: 'flex',
         flexDirection: ['vertical', 'v'].includes(options.orientation || 'horizontal') ? 'column' : 'row',
         position: 'relative',
-        // MacOS-like effect
-        /* boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
-        // MacOS-like effect ends here
     })
     options.position && setElementStyle(element, {
         position: 'absolute',
@@ -53,12 +52,12 @@ const ButtonGroup = props => {
             : options.buttonWidth && options.buttonHeight
                 ? options.buttonWidth.toString().includes('px') && options.buttonWidth.toString().includes('px')
                     ? max(options.buttonWidth, options.buttonHeight)
-                    : '20px'
+                    : globalStyle.style.general.borderRadiusL
                 : options.buttonWidth
-                    ? max(options.buttonWidth, '20px')
+                    ? max(options.buttonWidth, globalStyle.style.general.borderRadiusL)
                     : options.buttonHeight
-                        ? max('20px', options.buttonHeight)
-                        : '20px'
+                        ? max(globalStyle.style.general.borderRadiusL, options.buttonHeight)
+                        : globalStyle.style.general.borderRadiusL
 
         const style = {
             // Take external style, then add to it pre-defined style while overwriting external style properties with pre-defined ones
@@ -75,9 +74,9 @@ const ButtonGroup = props => {
                 width: options.buttonWidth || '20px',
                 height: options.buttonHeight || '20px',
                 borderRadius: {
-                    'squared': '2px',
+                    'squared': globalStyle.style.general.borderRadiusS,
                     'rounded': nbButtons === 1
-                        ? '50%'
+                        ? globalStyle.style.general.borderRadiusCircle
                         : idx === 0
                             ? options.orientation === 'v' ? `${maxBorderRadius} ${maxBorderRadius} 0% 0%` : `${maxBorderRadius} 0% 0% ${maxBorderRadius}`
                             : idx === nbButtons - 1
@@ -92,10 +91,10 @@ const ButtonGroup = props => {
         setElementStyle(button, style)
 
         button.addEventListener('click', b.clickHandler || (() => {}))
-        button.addEventListener('mouseenter', e => {
+        button.addEventListener('mouseenter', () => {
             setElementStyle(button, b.hover)
         })
-        button.addEventListener('mouseleave', e => {
+        button.addEventListener('mouseleave', () => {
             setElementStyle(button, style)
         })
 

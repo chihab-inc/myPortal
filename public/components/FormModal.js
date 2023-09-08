@@ -1,14 +1,15 @@
-import { db } from '../db.js'
+import { db } from '../controllers/database/db.js'
 import { create, setElementStyle, append } from '../web_utils.js'
 
 const FormModal = props => {
     const tmpData = props.tmpData || {}
     const clickHandler = props.clickHandler
-
     const style = props.style || {}
     const creating = props.creating
+    const globalStyle = props.globalStyle
+    const theme = globalStyle.style.theme || {}
+    
     const inputFields = props.inputFields || []
-
 
     const checkForm = () => {
         let allValid = true
@@ -32,7 +33,7 @@ const FormModal = props => {
 
     let element = create('div')
     setElementStyle(element, {
-        background: '#0009',
+        backgroundColor: globalStyle.style.general.backgroundColorPrimaryWithTransparency,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -41,7 +42,7 @@ const FormModal = props => {
         top: '0px',
         width: '100vw',
         height: '100vh',
-        backdropFilter: 'blur(15px)',
+        backdropFilter: globalStyle.style.general.backdropFilter,
         animation: 'blur-form-in 0.3s ease-in-out 1',
     })
 
@@ -51,12 +52,12 @@ const FormModal = props => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '5px',
-        background: '#3338',
+        gap: globalStyle.style.general.flexGapS,
+        backgroundColor: globalStyle.style.general.backgroundColorSecondaryWithTransparency,
         minWidth: '300px',
-        padding: '10px',
-        borderRadius: '10px',
-        boxShadow: '0 0 30px rgba(0, 0, 0, 0.6)',
+        padding: globalStyle.style.general.paddingL,
+        borderRadius: globalStyle.style.general.borderRadiusL,
+        boxShadow: globalStyle.style.general.boxShadow,
         animation: 'pop-form-in 0.3s ease-in-out 1',
     })
     
@@ -65,28 +66,28 @@ const FormModal = props => {
         ...style.submitButton || {},
         minWidth: '40px',
         height: '40px',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        border: 'none',
+        backgroundPosition: globalStyle.style.general.backgroundPosition,
+        backgroundSize: globalStyle.style.general.backgroundSize,
+        backgroundRepeat: globalStyle.style.general.backgroundRepeat,
+        border: globalStyle.style.general.noBorder,
         boxSizing: 'border-box',
-        borderRadius: '50%',
-        opacity: '.6',
+        borderRadius: globalStyle.style.general.borderRadiusCircle,
+        opacity: globalStyle.style.general.buttonOpacity,
         cursor: 'pointer',
-        transition: 'all .1s ease-in-out',
+        transition: `all ${globalStyle.style.general.transitionQuick}`,
     })
     submitButton.textContent = ''
     checkForm()
 
     submitButton.addEventListener('mouseenter', () => {
         setElementStyle(submitButton, {
-            opacity: '1',
+            opacity: globalStyle.style.general.buttonHoverOpacity,
         })
     })
 
     submitButton.addEventListener('mouseleave', () => {
         setElementStyle(submitButton, {
-            opacity: '.6',
+            opacity: globalStyle.style.general.buttonOpacity,
         })
     })
 
