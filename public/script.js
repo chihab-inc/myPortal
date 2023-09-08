@@ -47,7 +47,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.permanentlyDeleteLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -58,7 +58,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.recoverDeletedLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
             ]
@@ -71,7 +71,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.deleteLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -82,7 +82,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.toggleLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 active && {
@@ -156,7 +156,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     linkDB.updateLinkPropertyById(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -222,7 +222,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     sectionDB.updateSectionPropertyById(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -234,7 +234,7 @@ const MainComponent = props => {
                     clickHandler: () => {
                         sectionDB.deleteSectionById(id)
                         linkDB.permanentlyDeleteLinksBySectionId(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -271,7 +271,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     linkDB.createLink(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -282,7 +282,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         sectionDB.toggleExtendedViewById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -290,7 +290,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.toggleLinksBySectionId(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
             ]
@@ -359,7 +359,7 @@ const loadPage = props => {
                     inputFields,
                     clickHandler: temporaryData => {
                         sectionDB.createSection(temporaryData)
-                        loadPage()
+                        loadPage({ globalStyle })
                     }
                 })
             )
@@ -387,7 +387,6 @@ const init = () => {
             themeDB.createTheme()
         }
         const globalStyle = global_style({ theme: themeDB.getTheme() })
-        console.log(themeDB.getTheme(), '->', globalStyle.style.theme)
         // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
         resetDisplaySettings()
         loadPage({ globalStyle })

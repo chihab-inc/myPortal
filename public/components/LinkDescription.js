@@ -19,7 +19,7 @@ const LinkDescription = props => {
         color: globalStyle.style.general.fontColor,
         fontSize: globalStyle.style.general.fontSizeS,
         whiteSpace: 'nowrap',
-        zIndex: '3',
+        zIndex: globalStyle.style.general.zIndexMiddle,
         borderRadius: globalStyle.style.general.borderRadiusM,
         boxSizing: 'border-box',
         padding: globalStyle.style.general.paddingM,

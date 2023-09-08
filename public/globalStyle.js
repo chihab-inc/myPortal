@@ -43,6 +43,9 @@ let globalStyle = props => {
             noBorder: 'none',
             backdropFilter: 'blur(15px)',
             boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+            zIndexBottom: '0',
+            zIndexMiddle: '1',
+            zIndexTop: '1',
         },
     }
     

@@ -2,12 +2,13 @@ import { setElementStyle, backgroundImage, create } from '../web_utils.js'
 
 const LinkAnchor = props => {
     const href = props.href
-    const bgImage = props.src
+    const src = props.src
     const active = props.active
     const globalStyle = props.globalStyle
     const theme = globalStyle.style.theme || {}
 
     const remove = () => {
+        image.remove()
         element.remove()
     }
     
@@ -15,10 +16,6 @@ const LinkAnchor = props => {
     element.target = '_blank'
     element.href = href
     setElementStyle(element, {
-        backgroundImage: backgroundImage(bgImage),
-        backgroundPosition: globalStyle.style.general.backgroundPosition,
-        backgroundSize: globalStyle.style.general.backgroundSize,
-        backgroundRepeat: globalStyle.style.general.backgroundRepeat,
         opacity: active ? '1' : '.1',
         pointerEvents: active ? 'auto' : 'none',
         width: '100%',
@@ -28,6 +25,15 @@ const LinkAnchor = props => {
         textDecoration: 'none',
         transition: `all ${globalStyle.style.general.transitionQuick}`
     })
+
+    const image = create('img')
+    image.src = src
+    setElementStyle(image, {
+        width: '100%',
+        height: '100%',
+        borderRadius: globalStyle.style.general.borderRadiusM,
+    })
+    element.appendChild(image)
 
     element.addEventListener('mouseenter', e => {
         setElementStyle(element, { boxShadow: globalStyle.style.general.boxShadow })
