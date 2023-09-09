@@ -7,6 +7,9 @@ const TextInput = props => {
     const required = props.required || false
     const maxLength = props.maxLength || 524288
     const initialValue = props.initialValue
+    const globalStyle = props.globalStyle
+    const theme = globalStyle.style.theme || {}
+    
     let callBack = props.callBack || (() => {})
     
     const remove = () => {
@@ -57,20 +60,20 @@ const TextInput = props => {
         ...style,
         height: '40px',
         minWidth: '40px',
-        borderRadius: '4px',
-        border: 'none',
-        fontSize: '1em',
-        padding: '5px',
-        paddingLeft: '10px',
+        borderRadius: globalStyle.style.general.borderRadiusS,
+        border: globalStyle.style.general.noBorder,
+        fontSize: globalStyle.style.general.fontSizeM,
+        padding: globalStyle.style.general.fontSizeM,
+        paddingLeft: globalStyle.style.general.paddingL,
         outline: 'none',
-        background: '#fff',
+        backgroundColor: globalStyle.style.general.backgroundColorInput,
     })
 
     const eventNames = ['focusout', 'input']
     eventNames.forEach(eventName => {
         element.addEventListener(eventName, () => {
             setElementStyle(element, {
-                background: !isValid() ? '#f99' : '#fff',
+                backgroundColor: !isValid() ? globalStyle.style.general.backgroundColorInputInvalid : globalStyle.style.general.backgroundColorInput,
             })
             callBack()
         })
