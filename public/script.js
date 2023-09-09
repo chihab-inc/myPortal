@@ -1,6 +1,7 @@
-import { linkDB } from './linkDB.js'
-import { sectionDB } from './sectionDB.js'
-import { db } from './db.js'
+import { linkDB } from './controllers/database/linkDB.js'
+import { sectionDB } from './controllers/database/sectionDB.js'
+import { themeDB } from './controllers/database/themeDB.js'
+import { db } from './controllers/database/db.js'
 import { create, select, setElementStyle, append, icon, backgroundImage } from './web_utils.js'
 import { ButtonGroup } from './components/ButtonGroup.js'
 import { Button } from './components/Button.js'
@@ -13,15 +14,18 @@ import { TextInput } from './components/TextInput.js'
 import { SelectInput } from './components/SelectInput.js'
 import { ColorInput } from './components/ColorInput.js'
 import { FormModal } from './components/FormModal.js'
+import { globalStyle as global_style } from './globalStyle.js'
 
 const DB_NAME = 'DATA-BASE'
 
 const MainComponent = props => {
+    const globalStyle = props.globalStyle
+    
     let main = create('main')
     main.id = 'main'
 
     // CREATE LINK ELEMENTS
-    let linkWrappers = []
+    const linkWrappers = []
     for (const link of props.config.links) {
         const id = link.id
         const sectionId = link.sectionId
@@ -31,7 +35,8 @@ const MainComponent = props => {
         const active = link.active
         const deleted = link.deleted
         const buttonGroup = ButtonGroup({
-            options: { orientation: 'v', type: 'rounded', position: { top: '5px', left: '5px' } },
+            globalStyle,
+            options: { orientation: 'v', globalStyle, type: 'rounded', position: { top: '5px', left: '5px' } },
             buttons: deleted
             ? [
                 {
@@ -42,7 +47,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.permanentlyDeleteLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -53,7 +58,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.recoverDeletedLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
             ]
@@ -66,7 +71,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.deleteLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -77,7 +82,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.toggleLinkById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 active && {
@@ -90,6 +95,7 @@ const MainComponent = props => {
                         const inputFields = []
 
                         const linkField = TextInput({
+                            globalStyle,
                             type: 'url',
                             placeholder: 'Link',
                             initialValue: href,
@@ -98,6 +104,7 @@ const MainComponent = props => {
                         inputFields.push({ inputField: linkField, propertyName: 'href' })
 
                         const logoField = TextInput({
+                            globalStyle,
                             type: 'url',
                             placeholder: 'Logo URL',// (it can be a local file URL)',
                             initialValue: src,
@@ -106,6 +113,7 @@ const MainComponent = props => {
                         inputFields.push({ inputField: logoField, propertyName: 'src' })
 
                         const descriptionField = TextInput({
+                            globalStyle,
                             type: 'text',
                             placeholder: 'Short description',
                             initialValue: tip,
@@ -115,6 +123,7 @@ const MainComponent = props => {
 
                         const allSections = sectionDB.getAllSections()
                         const sectionField = SelectInput({
+                            globalStyle,
                             items: allSections.map(s => ({
                                 value: s.id,
                                 text: s.title,
@@ -127,6 +136,7 @@ const MainComponent = props => {
 
                         append(document.body,
                             FormModal({
+                                globalStyle,
                                 creating: false,
                                 tmpData: {
                                     id,
@@ -146,7 +156,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     linkDB.updateLinkPropertyById(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -154,20 +164,43 @@ const MainComponent = props => {
                 },
             ],
         })
-        const anchor = LinkAnchor({ href, src, active })
-        const description = LinkDescription({ tip })
-        let linkComponent = Link({ id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
+        // CONVERT IMAGE INTO BASE 64 AND STORE IT IN DATABASE FOR FASTER LOADING
+        const srcB64 = (image) => {
+            image.crossOrigin = 'anonymous'
+            if (linkDB.getLinkById(id).srcB64) {
+                image.src = linkDB.getLinkById(id).srcB64
+            } else {
+                image.src = src
+                image.addEventListener('load', () => {
+                    const w = image.naturalWidth
+                    const h = image.naturalHeight
+                    
+                    const canvas = document.createElement('canvas')
+                    canvas.setAttribute('width', `${w}px`)
+                    canvas.setAttribute('height', `${h}px`)
+                    
+                    const ctx = canvas.getContext('2d')
+                    ctx.drawImage(image, 0, 0)
+        
+                    linkDB.updateLinkPropertyById({id, srcB64: canvas.toDataURL('image/png')})
+                })
+            }
+        }
+        const anchor = LinkAnchor({ globalStyle, href, src, callBack: srcB64, active })
+        const description = LinkDescription({ globalStyle, tip })
+        const linkComponent = Link({ globalStyle, id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
 
     // CREATE SECTION ELEMENTS AND ADD LINK ELEMENTS
-    let sectionComponents = []
+    const sectionComponents = []
     for (const section of props.config.sections) {
         const id = section.id
         const title = section.title
         const colorAccent = section.colorAccent
         const extendedView = section.extendedView
         const buttonGroup = ButtonGroup({
+            globalStyle,
             options: { type: 'rounded' },
             buttons: [
                 {
@@ -177,6 +210,7 @@ const MainComponent = props => {
                         const inputFields = []
 
                         const titleField = TextInput({
+                            globalStyle,
                             type: 'text',
                             placeholder: 'Title',
                             initialValue: title,
@@ -185,6 +219,7 @@ const MainComponent = props => {
                         inputFields.push({ inputField: titleField, propertyName: 'title' })
 
                         const colorField = ColorInput({
+                            globalStyle,
                             initialValue: colorAccent,
                             required: true,
                         })
@@ -192,6 +227,7 @@ const MainComponent = props => {
 
                         append(document.body,
                             FormModal({
+                                globalStyle,
                                 creating: false,
                                 tmpData: {
                                     id,
@@ -208,7 +244,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     sectionDB.updateSectionPropertyById(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -218,9 +254,12 @@ const MainComponent = props => {
                     style: { backgroundImage: backgroundImage(icon('cross')) },
                     hover: { opacity: '1' },
                     clickHandler: () => {
+                        /* // ANCHOR - CONFIRMATION
+                        if (confirm(`Delete section "${title}" and every link contained in it?`)) {
+                        } */
                         sectionDB.deleteSectionById(id)
                         linkDB.permanentlyDeleteLinksBySectionId(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -229,17 +268,18 @@ const MainComponent = props => {
                     clickHandler: () => {
                         const inputFields = []
 
-                        const linkField = TextInput({ type: 'url', placeholder: 'Link', required: true })
+                        const linkField = TextInput({ globalStyle, type: 'url', placeholder: 'Link', required: true })
                         inputFields.push({ inputField: linkField, propertyName: 'href' })
 
-                        const logoField = TextInput({ type: 'url', placeholder: 'Logo URL',/* (it can be a local file URL)', */ required: true })
+                        const logoField = TextInput({ globalStyle, type: 'url', placeholder: 'Logo URL',/* (it can be a local file URL)', */ required: true })
                         inputFields.push({ inputField: logoField, propertyName: 'src' })
 
-                        const descriptionField = TextInput({ type: 'text', placeholder: 'Short description', maxLength: 32 })
+                        const descriptionField = TextInput({ globalStyle, type: 'text', placeholder: 'Short description', maxLength: 32 })
                         inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
                         
                         append(document.body,
                             FormModal({
+                                globalStyle,
                                 creating: true,
                                 tmpData: {
                                     id: crypto.randomUUID(),
@@ -256,7 +296,7 @@ const MainComponent = props => {
                                 inputFields,
                                 clickHandler: temporaryData => {
                                     linkDB.createLink(temporaryData)
-                                    loadPage()
+                                    loadPage({ globalStyle })
                                 }
                             })
                         )
@@ -267,7 +307,7 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         sectionDB.toggleExtendedViewById(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
                 {
@@ -275,13 +315,14 @@ const MainComponent = props => {
                     hover: { opacity: '1' },
                     clickHandler: () => {
                         linkDB.toggleLinksBySectionId(id)
-                        loadPage()
+                        loadPage({ globalStyle })
                     },
                 },
             ]
         })
         sectionComponents.push(
             Section({
+                globalStyle,
                 id,
                 colorAccent,
                 title,
@@ -290,7 +331,7 @@ const MainComponent = props => {
                 links: linkWrappers
                     .filter(linkWrapper => linkWrapper.sectionId === id)
                     .filter(linkWrapper => !linkWrapper.deleted || (linkWrapper.deleted && extendedView))
-                    .map(linkWrapper => linkWrapper.linkComponent)
+                    .map(linkWrapper => linkWrapper.linkComponent),
             })
         )
     }
@@ -303,24 +344,27 @@ const MainComponent = props => {
     return main
 }
 
-const loadPage = () => {
+const loadPage = props => {
+    const globalStyle = props.globalStyle
+
     select('#main')?.remove()
     select('#add-data-panel')?.remove()
 
-    const noData = !db.getFromDB(DB_NAME) || sectionDB.getSectionCount() === 0
+    const noData = !db.getDatabase(DB_NAME) || sectionDB.getSectionCount() === 0
 
     document.body.style.justifyContent = noData ? 'center' : 'flex-start'
     document.body.style.alignItems = noData ? 'center' : 'flex-start'
     
     const addDataPanel = AddDataPanel({
         initial: noData,
+        globalStyle,
         callBack: () => {
             const inputFields = []
 
-            const titleField = TextInput({ type: 'text', placeholder: 'Title', required: true })
+            const titleField = TextInput({ type: 'text', globalStyle, placeholder: 'Title', required: true })
             inputFields.push({ inputField: titleField, propertyName: 'title' })
 
-            const colorField = ColorInput({ required: true })
+            const colorField = ColorInput({ globalStyle, required: true })
             inputFields.push({ inputField: colorField, propertyName: 'colorAccent' })
             
             append(document.body,
@@ -330,6 +374,7 @@ const loadPage = () => {
                         id: crypto.randomUUID(),
                         extendedView: false,
                     },
+                    globalStyle,
                     style: {
                         submitButton: {
                             enabled: { backgroundImage: backgroundImage(icon('plus')) },
@@ -339,7 +384,7 @@ const loadPage = () => {
                     inputFields,
                     clickHandler: temporaryData => {
                         sectionDB.createSection(temporaryData)
-                        loadPage()
+                        loadPage({ globalStyle })
                     }
                 })
             )
@@ -348,7 +393,7 @@ const loadPage = () => {
 
     
     if (!noData) {
-        const main = MainComponent({ config: db.getFromDB(DB_NAME) })
+        const main = MainComponent({ config: db.getDatabase(DB_NAME), globalStyle })
         document.body.appendChild(main)
     }
 
@@ -362,10 +407,14 @@ const resetDisplaySettings = () => {
 }
 
 const init = () => {
-    window.addEventListener('load', e => {
+    window.addEventListener('load', () => {
+        if (!themeDB.getTheme() || Object.keys(themeDB.getTheme()).length === 0) {
+            themeDB.createTheme()
+        }
+        const globalStyle = global_style({ theme: themeDB.getTheme() })
         // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
         resetDisplaySettings()
-        loadPage()
+        loadPage({ globalStyle })
     })
 }
 

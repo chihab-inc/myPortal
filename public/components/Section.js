@@ -6,6 +6,8 @@ const Section = props => {
     const links = props.links
     const hasLinks = links.length > 0
     const buttonGroup = props.buttonGroup
+    const globalStyle = props.globalStyle
+    const theme = globalStyle.style.theme || {}
 
     // Keep track of children elements to remove
     const children = []
@@ -21,7 +23,7 @@ const Section = props => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '5px',
+        gap: globalStyle.style.general.flexGapS,
         width: '425px',
         minWidth: '425px',
         minHeight: '20px',
@@ -35,26 +37,26 @@ const Section = props => {
         alignItems: 'center',
         width: '100%',
         height: '20px',
-        paddingRight: '5px',
+        paddingRight: globalStyle.style.general.paddingM,
     })
     
     const h2 = create('h2')
     children.push(h2)
     h2.innerText = title
     setElementStyle(h2, {
-        background: '#2a2c2c',
+        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
         minWidth: '50%',
         maxWidth: '60%',
         height: '100%',
         textAlign: 'center',
-        fontSize: '1em',
+        fontSize: globalStyle.style.general.fontSizeM,
         color: colorAccent,
-        borderRadius: '5px',
-        /* // MacOS-like effect
-        background: '#2a2c2c40',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid #888d8d40',
-        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
+        borderRadius: globalStyle.style.general.borderRadiusM,
+        ...{
+            backgroundColor: theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
+            border: theme.border || globalStyle.style.general.noBorder,
+            backdropFilter: theme.backdropFilter || globalStyle.style.general.backdropFilter,
+        },
     })
     header.appendChild(h2)
     element.appendChild(header)
@@ -62,23 +64,23 @@ const Section = props => {
     const ul = create('ul')
     children.push(ul)
     setElementStyle(ul, {
-        background: '#2a2c2c',
+        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        gap: '5px',
+        gap: globalStyle.style.general.flexGapS,
         width: '100%',
         minHeight: '110px',
-        padding: '5px',
+        padding: globalStyle.style.general.paddingM,
         listStyleType: 'none',
-        borderRadius: '5px',
-        /* // MacOS-like effect
-        padding: '3px',
-        background: '#2a2c2c40',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid #888d8d40',
-        boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px', */
+        borderRadius: globalStyle.style.general.borderRadiusM,
+        ...{
+            backgroundColor: theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
+            border: theme.border || globalStyle.style.general.noBorder,
+            padding: theme.padding || globalStyle.style.general.paddingM,
+            backdropFilter: theme.backdropFilter || globalStyle.style.general.backdropFilter,
+        },
     })
     element.appendChild(ul)
 
