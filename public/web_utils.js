@@ -11,7 +11,13 @@ const append = (parent, child) => {
     parent.appendChild(child.element)
 }
 
-const icon = icon => `./icons/${icon}.png`
+const icon = (icon, level=0) => {
+    let prefix = ''
+    for (let i = 0; i < level; i++) {
+        prefix += '../'
+    }
+    return `./${prefix}icons/${icon}.png`
+}
 
 const backgroundImage = url => `url(${url})`
 
