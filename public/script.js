@@ -164,29 +164,7 @@ const MainComponent = props => {
                 },
             ],
         })
-        // CONVERT IMAGE INTO BASE 64 AND STORE IT IN DATABASE FOR FASTER LOADING
-        const srcB64 = (image) => {
-            image.crossOrigin = 'anonymous'
-            if (linkDB.getLinkById(id).srcB64) {
-                image.src = linkDB.getLinkById(id).srcB64
-            } else {
-                image.src = src
-                image.addEventListener('load', () => {
-                    const w = image.naturalWidth
-                    const h = image.naturalHeight
-                    
-                    const canvas = document.createElement('canvas')
-                    canvas.setAttribute('width', `${w}px`)
-                    canvas.setAttribute('height', `${h}px`)
-                    
-                    const ctx = canvas.getContext('2d')
-                    ctx.drawImage(image, 0, 0)
-        
-                    linkDB.updateLinkPropertyById({id, srcB64: canvas.toDataURL('image/png')})
-                })
-            }
-        }
-        const anchor = LinkAnchor({ globalStyle, href, src, callBack: srcB64, active })
+        const anchor = LinkAnchor({ globalStyle, href, src, active })
         const description = LinkDescription({ globalStyle, tip })
         const linkComponent = Link({ globalStyle, id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
