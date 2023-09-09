@@ -4,9 +4,6 @@ const ColorInput = props => {
     const style = props.style || {}
     const required = props.required || false
     const initialValue = props.initialValue
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
-    
     let callBack = props.callBack || (() => {})
 
     const hasChanged = () => element.value !== initialValue
@@ -37,8 +34,8 @@ const ColorInput = props => {
         appearance: 'none',
         width: '48px',
         height: '48px',
-        backgroundColor: globalStyle.style.general.backgroundColorTransparent,
-        border: globalStyle.style.general.noBorder,
+        background: 'transparent',
+        border: 'none',
     })
 
     element.addEventListener('change', () => {

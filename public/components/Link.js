@@ -5,8 +5,6 @@ const Link = props => {
     const anchor = props.anchor
     const description = props.description
     const buttonGroup = props.buttonGroup
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
 
     const remove = () => {
         element.remove()

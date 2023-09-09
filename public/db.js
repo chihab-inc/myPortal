@@ -13,7 +13,7 @@ db.createCollection = (dbName, collectionName) => {
 
 // Generic method to allow updating a dabatase in localStorage
 db.updateDB = (dbName, callBack) => {
-    const dataBase = db.getDatabase(dbName)
+    const dataBase = db.getFromDB(dbName)
     callBack(dataBase)
     localStorage.setItem(dbName, JSON.stringify(dataBase))
 }
@@ -27,26 +27,23 @@ db.createTemporary = (temporaryDataName, data, callBack) => {
 }
 
 // Generic method to allow fetching a dabatase from localStorage
-db.getDatabase = (dbName, json=true) => {
-    return json ? JSON.parse(localStorage.getItem(dbName)) : localStorage.getItem(dbName)
+db.getFromDB = dbName => {
+    return JSON.parse(localStorage.getItem(dbName))
 }
 
 // Create databases and collections if not existing
-db.init = (dbName, collectionName=null) => {
+db.init = (dbName, collectionName) => {
     /*
      * If database doesn't exist then create
      * the database then create the collection
      * otherwise, just create the collection
     */
-    if (!db.getDatabase(dbName)) {
+    if (!db.getFromDB(dbName)) {
         db.createDB(dbName)
-        if ((!['', null, undefined].includes(collectionName))) {
-            db.createCollection(dbName, collectionName)
-        }
-    } else if (
-        !['', null, undefined].includes(collectionName)
-        && !db.getDatabase(dbName)[collectionName]
-    ) { db.createCollection(dbName, collectionName) }
+        db.createCollection(dbName, collectionName)
+    } else if (!db.getFromDB(dbName)[collectionName]) {
+        db.createCollection(dbName, collectionName)
+    }
 }
 
 export { db }

@@ -6,8 +6,6 @@ const Button = props => {
     let style = props.style || {}
     const hover = props.hover || {}
     const clickHandler = props.clickHandler || (() => {})
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
 
     const remove = () => {
         element.remove()
@@ -30,14 +28,14 @@ const Button = props => {
         ...{
             display: 'inline-block',
             boxSizing: 'border-box',
-            backgroundPosition: globalStyle.style.general.backgroundPosition,
-            backgroundSize: globalStyle.style.general.backgroundSize,
-            backgroundRepeat: globalStyle.style.general.backgroundRepeat,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
             width: style.width || '20px',
             height: style.height || '20px',
             position: 'relative',
             borderRadius: {
-                'squared': globalStyle.style.general.borderRadiusS,
+                'squared': '2px',
                 'rounded': maxBorderRadius,
                 'bubbles': maxBorderRadius,
             }[options.type || 'bubbles'],

@@ -2,8 +2,6 @@ import { setElementStyle, create } from '../web_utils.js'
 
 const LinkDescription = props => {
     const tip = props.tip
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
 
     const remove = () => {
         element.remove()
@@ -15,14 +13,14 @@ const LinkDescription = props => {
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
-        color: globalStyle.style.general.fontColor,
-        fontSize: globalStyle.style.general.fontSizeS,
+        background: '#333',
+        color: '#fff',
+        fontSize: '.6em',
         whiteSpace: 'nowrap',
-        zIndex: globalStyle.style.general.zIndexMiddle,
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        zIndex: '3',
+        borderRadius: '5px',
         boxSizing: 'border-box',
-        padding: globalStyle.style.general.paddingM,
+        padding: '5px',
         position: 'absolute',
         bottom: '5px',
         left: '5px',
