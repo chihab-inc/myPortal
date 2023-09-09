@@ -29,12 +29,12 @@ linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
 
 // Fetch link instance from database using link id
 linkDB.getLinkById = id => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME].find(l => l.id === id)
+    return db.getFromDB(DB_NAME)[COLLECTION_NAME].find(l => l.id === id)
 }
 
 // Fetch link instances from database using their section id
 linkDB.getLinksBySectionId = sectionId => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME].filter(l => l.sectionId === sectionId)
+    return db.getFromDB(DB_NAME)[COLLECTION_NAME].filter(l => l.sectionId === sectionId)
 }
 
 // Update link instance property with new value using link id
@@ -57,6 +57,7 @@ linkDB.recoverDeletedLinkById = id => {
 }
 
 // delete link instances from database using section id
+// TODO - Test this method before use
 linkDB.deleteLinksBySectionId = sectionId => {
     linkDB.getLinksBySectionId(sectionId).forEach(l => {
         linkDB.deleteLinkById(l.id)

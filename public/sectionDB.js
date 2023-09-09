@@ -24,12 +24,12 @@ sectionDB.updateSectionPropertyById = data => {
 
 // Fetch section instance from database using section id
 sectionDB.getSectionById = id => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME].find(s => s.id === id)
+    return db.getFromDB(DB_NAME)[COLLECTION_NAME].find(s => s.id === id)
 }
 
 // Fetch all section instances from database
 sectionDB.getAllSections = () => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME]
+    return db.getFromDB(DB_NAME)[COLLECTION_NAME]
 }
 
 // Coount all section instances in database

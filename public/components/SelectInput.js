@@ -5,9 +5,6 @@ const SelectInput = props => {
     const items = props.items || []
     const required = props.required || false
     const initialValue = props.initialValue
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
-
     let callBack = props.callBack || (() => {})
 
     const hasChanged = () => element.value !== initialValue
@@ -33,13 +30,13 @@ const SelectInput = props => {
         ...style,
         height: '40px',
         minWidth: '40px',
-        borderRadius: globalStyle.style.general.borderRadiusS,
-        border: globalStyle.style.general.noBorder,
-        fontSize: globalStyle.style.general.fontSizeM,
-        padding: globalStyle.style.general.paddingM,
-        paddingLeft: globalStyle.style.general.paddingL,
+        borderRadius: '4px',
+        border: 'none',
+        fontSize: '1em',
+        padding: '5px',
+        paddingLeft: '10px',
         outline: 'none',
-        backgroundColor: globalStyle.style.general.backgroundColorInput,
+        background: '#fff',
     })
 
     items.forEach(item => {
