@@ -164,7 +164,7 @@ const MainComponent = props => {
                 },
             ],
         })
-        // CONVERT IMAGE INTO BASE  AND STORE IT IN DATABASE FOR FASTER LOADING
+        // CONVERT IMAGE INTO BASE 64 AND STORE IT IN DATABASE FOR FASTER LOADING
         const srcB64 = (image) => {
             image.crossOrigin = 'anonymous'
             if (linkDB.getLinkById(id).srcB64) {
