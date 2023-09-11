@@ -1,11 +1,11 @@
 import { db } from '../controllers/database/db.js'
-import { create, setElementStyle, append } from '../web_utils.js'
+import { create, setElementStyle, append, backgroundImage } from '../web_utils.js'
 
 const FormModal = props => {
     const tmpData = props.tmpData || {}
-    const clickHandler = props.clickHandler
-    const style = props.style || {}
-    const creating = props.creating
+    const submitHandler = props.submitHandler
+    const submitButtonIcon = props.submitButtonIcon || {}
+    const creating = props.creating || false
     const globalStyle = props.globalStyle
     const theme = globalStyle.style.theme || {}
     
@@ -19,7 +19,11 @@ const FormModal = props => {
             someChanged = someChanged || f.hasChanged()
         })
         submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
-        setElementStyle(submitButton, submitButton.disabled ? style.submitButton.disabled : style.submitButton.enabled)
+        setElementStyle(submitButton, submitButton.disabled
+            ? { backgroundImage: backgroundImage(submitButtonIcon.disabled) }
+            : { backgroundImage: backgroundImage(submitButtonIcon.enabled) }
+        )
+        return ((!creating && allValid && someChanged) || (creating && allValid))
     }
 
     const remove = () => {
@@ -63,7 +67,6 @@ const FormModal = props => {
     
     let submitButton = create('button')
     setElementStyle(submitButton, {
-        ...style.submitButton || {},
         minWidth: '40px',
         height: '40px',
         backgroundPosition: globalStyle.style.general.backgroundPosition,
@@ -91,16 +94,21 @@ const FormModal = props => {
         })
     })
 
-    submitButton.addEventListener('click', () => {
-        inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
-        db.createTemporary(
-            'tmpData',
-            tmpData,
-            temporaryData => {
-                clickHandler(temporaryData)
+    const targets = [{target: submitButton, ev: 'click', condition: e => true}, {target: element, ev: 'keyup', condition: e => e.key === 'Enter'}]
+    targets.forEach(i => {
+        i.target.addEventListener(i.ev, e => {
+            if (i.condition(e) && checkForm()) {
+                inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
+                db.createTemporary(
+                    'tmpData',
+                    tmpData,
+                    temporaryData => {
+                        submitHandler(temporaryData)
+                    }
+                )
+                remove()
             }
-        )
-        remove()
+        })
     })
 
     element.addEventListener('mousedown', e => {

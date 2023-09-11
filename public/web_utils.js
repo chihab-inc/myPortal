@@ -7,8 +7,15 @@ const setElementStyle = (element, style) => {
     Object.assign(element.style, style)
 }
 
-const append = (parent, child) => {
-    parent.appendChild(child.element)
+const append = (parent, ...children) => {
+    children.forEach(child => {
+        parent.appendChild(child.element)
+    })
+}
+
+const pushElement = (array, element) => {
+    array.push(element)
+    return element
 }
 
 const icon = (icon, level=0) => {
@@ -26,6 +33,7 @@ export {
     select,
     setElementStyle,
     append,
+    pushElement,
     icon,
     backgroundImage,
 }

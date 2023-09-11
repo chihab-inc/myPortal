@@ -1,12 +1,17 @@
 import { setElementStyle, create } from '../web_utils.js'
 
 const LinkDescription = props => {
-    const tip = props.tip
+    let tip = props.tip
     const globalStyle = props.globalStyle
     const theme = globalStyle.style.theme || {}
 
     const remove = () => {
         element.remove()
+    }
+
+    const updateTip = _tip => {
+        tip = _tip
+        element.textContent = tip
     }
     
     const element = create('p')
@@ -30,7 +35,7 @@ const LinkDescription = props => {
         animation: 'roll-out 0.2s ease-in-out 1',
     })
 
-    return { element, remove }
+    return { element, remove, updateTip }
 }
 
 export { LinkDescription }

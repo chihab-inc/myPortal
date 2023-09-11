@@ -1,4 +1,4 @@
-import { create, select, setElementStyle, append, icon, backgroundImage } from '../web_utils.js'
+import { create, select, setElementStyle, append, pushElement, icon, backgroundImage } from '../web_utils.js'
 import { ButtonGroup } from './ButtonGroup.js'
 import { FormModal } from './FormModal.js'
 import { linkDB } from '../controllers/database/linkDB.js'
@@ -9,155 +9,183 @@ import { LinkDescription } from './LinkDescription.js'
 import { LinkAnchor } from './LinkAnchor.js'
 
 const Link = props => {
-    const id = props.id
-    const sectionId = props.sectionId
-    const href = props.href
-    const src = props.src
-    const tip = props.tip
-    const active = props.active
-    const deleted = props.deleted
+    let id = props.id
+    let sectionId = props.sectionId
+    let href = props.href
+    let src = props.src
+    let tip = props.tip
+    let active = props.active
+    let deleted = props.deleted
+    let parent = props.parent
 
-    // const anchor = props.anchor
-    // const description = props.description
-    // const buttonGroup = props.buttonGroup
+    const anchorHolder = []
+    const descriptionHolder = []
+    const buttonGroupHolder = []
+
     const globalStyle = props.globalStyle
     const theme = globalStyle.style.theme || {}
 
-    const buttonGroup = ButtonGroup({
+    // CREATING BUTTONGROUP BUTTONS INDIVIDUALLY
+    // BUTTONS DISPLAYED WHEN LINK IS DELETED
+    const permanentlyDeleteLinkButton = {
+        icon: icon('cross', 1),
+        clickHandler: () => {
+            linkDB.permanentlyDeleteLinkById(id)
+            // TODO - CONFIRMATION SHOULD GO HERE
+            remove()
+        },
+    }
+    const recoverLinkButton = {
+        icon: icon('arrow-left', 1),
+        clickHandler: () => {
+            linkDB.recoverDeletedLinkById(id)
+            // TODO - PARENT UPDATE
+            // loadPage({ globalStyle })
+        },
+    }
+    // BUTTONS DISPLAYED WHEN LINK IS NOT DELETED
+    const deleteLinkButton = {
+        icon: icon('cross', 1),
+        clickHandler: () => {
+            linkDB.deleteLinkById(id)
+            // TODO - PARENT UPDATE
+            // loadPage({ globalStyle })
+        },
+    }
+    const disableLinkButton = {
+        icon: icon('minus', 1),
+        clickHandler: () => {
+            linkDB.toggleLinkById(id)
+            updateActive(!active)
+        },
+    }
+    const editLinkButton = {
+        icon: icon('pen', 1),
+        clickHandler: () => {
+            const inputFields = []
+
+            const linkField = TextInput({
+                globalStyle,
+                type: 'url',
+                placeholder: 'Link',
+                initialValue: href,
+                required: true,
+            })
+            inputFields.push({ inputField: linkField, propertyName: 'href' })
+
+            const logoField = TextInput({
+                globalStyle,
+                type: 'url',
+                placeholder: 'Logo URL',// (it can be a local file URL)',
+                initialValue: src,
+                required: true,
+            })
+            inputFields.push({ inputField: logoField, propertyName: 'src' })
+
+            const descriptionField = TextInput({
+                globalStyle,
+                type: 'text',
+                placeholder: 'Short description',
+                initialValue: tip,
+                maxLength: 32,
+            })
+            inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
+
+            const allSections = sectionDB.getAllSections()
+            const sectionField = SelectInput({
+                globalStyle,
+                items: allSections.map(s => ({
+                    value: s.id,
+                    text: s.title,
+                    selected: s.id === sectionId ? sectionId : undefined,
+                    style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
+                })),
+                initialValue: sectionId,
+            })
+            inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
+
+            append(document.body,
+                FormModal({
+                    globalStyle,
+                    tmpData: {
+                        id,
+                        sectionId,
+                        href,
+                        src,
+                        tip,
+                        active,
+                        deleted,
+                    },
+                    submitButtonIcon: { enabled: icon('check', 1), disabled: icon('check-disabled', 1) },
+                    inputFields,
+                    submitHandler: temporaryData => {
+                        linkDB.updateLinkPropertyById(temporaryData)
+                        updateTip(linkDB.getLinkById(id).tip)
+                        updateHref(linkDB.getLinkById(id).href)
+                        updateSrc(linkDB.getLinkById(id).src)
+                        // TODO - MANAGE CHANGING SECTION <= NEED TO USE PARENT
+                        // loadPage({ globalStyle })
+                    }
+                })
+            )
+        }
+    }
+
+    let buttonGroup = ButtonGroup({
         globalStyle,
         options: { orientation: 'v', globalStyle, type: 'rounded', position: { top: '5px', left: '5px' } },
-        buttons: deleted
-        ? [
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('cross', 1)),
-                    boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                },
-                hover: { opacity: '1' },// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                clickHandler: () => {
-                    linkDB.permanentlyDeleteLinkById(id)
-                    loadPage({ globalStyle })
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('arrow-left', 1)),
-                    boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                },
-                hover: { opacity: '1' },// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                clickHandler: () => {
-                    linkDB.recoverDeletedLinkById(id)
-                    loadPage({ globalStyle })
-                },
-            },
-        ]
-        : [
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('cross', 1)),
-                    boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                },
-                hover: { opacity: '1' },// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                clickHandler: () => {
-                    linkDB.deleteLinkById(id)
-                    loadPage({ globalStyle })
-                },
-            },
-            {
-                style: {
-                    backgroundImage: backgroundImage(icon('minus', 1)),
-                    boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                },
-                hover: { opacity: '1' },// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                clickHandler: () => {
-                    linkDB.toggleLinkById(id)
-                    loadPage({ globalStyle })
-                },
-            },
-            active && {
-                style: {
-                    backgroundImage: backgroundImage(icon('pen', 1)),
-                    boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                },
-                hover: { opacity: '1' },// TODO - THIS SHOULD COME FROM GLOBAL STYLE
-                clickHandler: () => {
-                    const inputFields = []
-
-                    const linkField = TextInput({
-                        globalStyle,
-                        type: 'url',
-                        placeholder: 'Link',
-                        initialValue: href,
-                        required: true,
-                    })
-                    inputFields.push({ inputField: linkField, propertyName: 'href' })
-
-                    const logoField = TextInput({
-                        globalStyle,
-                        type: 'url',
-                        placeholder: 'Logo URL',// (it can be a local file URL)',
-                        initialValue: src,
-                        required: true,
-                    })
-                    inputFields.push({ inputField: logoField, propertyName: 'src' })
-
-                    const descriptionField = TextInput({
-                        globalStyle,
-                        type: 'text',
-                        placeholder: 'Short description',
-                        initialValue: tip,
-                        maxLength: 32,
-                    })
-                    inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
-
-                    const allSections = sectionDB.getAllSections()
-                    const sectionField = SelectInput({
-                        globalStyle,
-                        items: allSections.map(s => ({
-                            value: s.id,
-                            text: s.title,
-                            selected: s.id === sectionId ? sectionId : undefined,
-                            style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
-                        })),
-                        initialValue: sectionId,
-                    })
-                    inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
-
-                    append(document.body,
-                        FormModal({
-                            globalStyle,
-                            creating: false,
-                            tmpData: {
-                                id,
-                                sectionId,
-                                href,
-                                src,
-                                tip,
-                                active,
-                                deleted,
-                            },
-                            style: {
-                                submitButton: {
-                                    enabled: { backgroundImage: backgroundImage(icon('check', 1)) },
-                                    disabled: { backgroundImage: backgroundImage(icon('check-disabled', 1)) },
-                                }
-                            },
-                            inputFields,
-                            clickHandler: temporaryData => {
-                                linkDB.updateLinkPropertyById(temporaryData)
-                                // loadPage({ globalStyle })
-                            }
-                        })
-                    )
-                }
-            },
-        ],
+        buttons: {
+            true: [
+                permanentlyDeleteLinkButton,
+                recoverLinkButton,
+            ],
+            false: [
+                deleteLinkButton,
+                disableLinkButton,
+                active && editLinkButton,
+            ],
+        }[deleted],
     })
-    const description = LinkDescription({ globalStyle, tip })
-    const anchor = LinkAnchor({ globalStyle, href, src, active })
 
     const remove = () => {
         element.remove()
+    }
+    
+    const updateButtonGroup = () => {}
+
+    const updateSectionId = _sectionId => {
+        sectionId = _sectionId
+    }
+    const updateHref = _href => {
+        href = _href
+        anchorHolder.forEach(a => {
+            a.updateHref(href)
+        })
+    }
+    const updateSrc = _src => {
+        src = _src
+        anchorHolder.forEach(a => {
+            a.updateSrc(src)
+        })
+    }
+    const updateTip = _tip => {
+        tip = _tip
+        descriptionHolder.forEach(d => d.updateTip(tip))
+    }
+    const updateActive = _active => {
+        active = _active
+        anchorHolder.forEach(a => {
+            a.updateActive(active)
+        })
+    }
+    const updateDeleted = _deleted => {
+        deleted = _deleted
+    }
+
+    const populate = () => {
+        let anchor = pushElement(anchorHolder, LinkAnchor({ globalStyle, href, src, active }))
+        append(element, anchor)
+        pushElement(descriptionHolder, LinkDescription({ globalStyle, tip }))
     }
 
     let element = create('li')
@@ -167,19 +195,21 @@ const Link = props => {
         position: 'relative',
     })
     
-    append(element, anchor)
+    // append(element, anchor)
 
     element.addEventListener('mouseenter', e => {
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
-        tip && append(element, description)
+        tip && append(element, ...descriptionHolder)
         append(element, buttonGroup)
     })
     element.addEventListener('mouseleave', e => {
-        description.remove()
+        descriptionHolder.forEach(description => description.remove())
         buttonGroup.remove()
     })
+
+    populate()
     
-    return { element, remove }
+    return { element, populate, remove }
 }
 
 export { Link }

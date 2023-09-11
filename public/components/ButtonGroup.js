@@ -1,4 +1,4 @@
-import { setElementStyle, create } from '../web_utils.js'
+import { setElementStyle, create, backgroundImage } from '../web_utils.js'
 import { max } from '../utils.js'
 
 const ButtonGroup = props => {
@@ -47,28 +47,27 @@ const ButtonGroup = props => {
             alignItems: 'center',
         })
 
-        const maxBorderRadius = b.style.borderRadius
-            ? b.style.borderRadius
-            : options.buttonWidth && options.buttonHeight
-                ? options.buttonWidth.toString().includes('px') && options.buttonWidth.toString().includes('px')
-                    ? max(options.buttonWidth, options.buttonHeight)
+        const maxBorderRadius = options.buttonWidth && options.buttonHeight
+            ? options.buttonWidth.toString().includes('px') && options.buttonWidth.toString().includes('px')
+                ? max(options.buttonWidth, options.buttonHeight)
+                : globalStyle.style.general.borderRadiusL
+            : options.buttonWidth
+                ? max(options.buttonWidth, globalStyle.style.general.borderRadiusL)
+                : options.buttonHeight
+                    ? max(globalStyle.style.general.borderRadiusL, options.buttonHeight)
                     : globalStyle.style.general.borderRadiusL
-                : options.buttonWidth
-                    ? max(options.buttonWidth, globalStyle.style.general.borderRadiusL)
-                    : options.buttonHeight
-                        ? max(globalStyle.style.general.borderRadiusL, options.buttonHeight)
-                        : globalStyle.style.general.borderRadiusL
 
         const style = {
             // Take external style, then add to it pre-defined style while overwriting external style properties with pre-defined ones
-            ...b.style,
             ...{
                 display: 'inline-block',
                 boxSizing: 'border-box',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
-                opacity: '.6',
+                opacity: globalStyle.style.general.buttonOpacity,
+                boxShadow: globalStyle.style.general.boxShadow,
+                backgroundImage: backgroundImage(b.icon),
             },
             ...{
                 width: options.buttonWidth || '20px',
@@ -92,7 +91,7 @@ const ButtonGroup = props => {
 
         button.addEventListener('click', b.clickHandler || (() => {}))
         button.addEventListener('mouseenter', () => {
-            setElementStyle(button, b.hover)
+            setElementStyle(button, { opacity: globalStyle.style.general.buttonHoverOpacity })
         })
         button.addEventListener('mouseleave', () => {
             setElementStyle(button, style)
