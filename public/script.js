@@ -14,7 +14,7 @@ import { TextInput } from './components/TextInput.js'
 import { SelectInput } from './components/SelectInput.js'
 import { ColorInput } from './components/ColorInput.js'
 import { FormModal } from './components/FormModal.js'
-import { globalStyle as global_style } from './globalStyle.js'
+import { GlobalStyle } from './globalStyle.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -386,13 +386,13 @@ const resetDisplaySettings = () => {
 
 const init = () => {
     window.addEventListener('load', () => {
-        if (!themeDB.getTheme() || Object.keys(themeDB.getTheme()).length === 0) {
-            themeDB.createTheme()
-        }
-        const globalStyle = global_style({ theme: themeDB.getTheme() })
+        const id = 'd0073c43-4fda-4a1e-91f5-a24061cf34f6'
+        const x = Link(id)
+        !linkDB.getDeletedById(id) && append(document.body, x)
+        // const globalStyle = GlobalStyle({ theme: themeDB.getTheme() })
         // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
-        resetDisplaySettings()
-        loadPage({ globalStyle })
+        // resetDisplaySettings()
+        // loadPage({ globalStyle })
     })
 }
 

@@ -1,13 +1,28 @@
 import { setElementStyle, create } from '../web_utils.js'
+import { GlobalStyle } from '../globalStyle.js'
+import { linkDB } from '../controllers/database/linkDB.js'
 
-const LinkDescription = props => {
-    const tip = props.tip
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const LinkDescription = id => {
 
-    const remove = () => {
-        element.remove()
+    const globalStyle = GlobalStyle()
+
+    let tip = linkDB.getTipById(id)
+
+    const updateTip = () => updateUI('tip')
+
+    const updateUI = (...props) => {
+        props.forEach(prop => {
+            switch (prop) {
+                case 'tip':
+                    element.textContent = linkDB.getTipById(id)
+                    break
+                default:
+                    break
+            }
+        })
     }
+
+    const remove = () => element.remove()
     
     const element = create('p')
     element.textContent = tip
@@ -30,7 +45,7 @@ const LinkDescription = props => {
         animation: 'roll-out 0.2s ease-in-out 1',
     })
 
-    return { element, remove }
+    return { element, updateTip, remove }
 }
 
 export { LinkDescription }

@@ -10,21 +10,19 @@ linkDB.init = () => {
     }
 }
 
-linkDB.update = callBack => {
-    let links = get(DB_NAME)
-    callBack(links)
-    set(DB_NAME, links)
-}
+linkDB.update = callBack => set(DB_NAME, callBack(get(DB_NAME)))
 
 linkDB.updateLinkPropertyById = (id, prop, value) => {
     linkDB.update(links => {
         links.find(l => l.id === id)[prop] = value
+        return links
     })
 }
 
 linkDB.createLink = data => {
     linkDB.update(links => {
         links.push(data)
+        return links
     })
 }
 
@@ -75,6 +73,8 @@ linkDB.deleteLinksBySectionId = sectionId => {
 linkDB.permanentlyDeleteLinkById = id => {
     linkDB.update(links => {
         links = links.filter(l => l.id !== id)
+        console.log(links.length)
+        return links
     })
 }
 linkDB.permanentlyDeleteLinksBySectionId = sectionId => {

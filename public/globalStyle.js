@@ -1,8 +1,10 @@
+import { themeDB } from './controllers/database/themeDB.js'
+
 const primaryColor = '#1C1E1E'
 const secondaryColor = '#2A2C2C'
 
-let globalStyle = props => {
-    let theme = props.theme
+let GlobalStyle = () => {
+    let theme = themeDB.getTheme()
     
     let style = {
         general: {
@@ -69,4 +71,4 @@ let globalStyle = props => {
     return { style, setTheme }
 }
 
-export { globalStyle }
+export { GlobalStyle }
