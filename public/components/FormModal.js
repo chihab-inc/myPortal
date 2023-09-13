@@ -1,15 +1,10 @@
 import { db } from '../controllers/database/db.js'
-import { create, setElementStyle, append } from '../web_utils.js'
+import { GlobalStyle } from '../globalStyle.js'
+import { create, setElementStyle, append, animate, backgroundImage } from '../web_utils.js'
 
-const FormModal = props => {
-    const tmpData = props.tmpData || {}
-    const clickHandler = props.clickHandler
-    const style = props.style || {}
-    const creating = props.creating
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons, submitHandler) => {
     
-    const inputFields = props.inputFields || []
+    const globalStyle = GlobalStyle()
 
     const checkForm = () => {
         let allValid = true
@@ -19,19 +14,20 @@ const FormModal = props => {
             someChanged = someChanged || f.hasChanged()
         })
         submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
-        setElementStyle(submitButton, submitButton.disabled ? style.submitButton.disabled : style.submitButton.enabled)
+        setElementStyle(submitButton, { backgroundImage: backgroundImage(submitButtonIcons[!submitButton.disabled]) })
+        return (!creating && allValid && someChanged) || (creating && allValid)
     }
 
     const remove = () => {
-        setElementStyle(form, { animation: 'push-form-out 0.3s ease-in-out 1' })
-        setElementStyle(element, { animation: 'blur-form-out 0.3s ease-in-out 1' })
+        animate(form, 'push-form-out', globalStyle.style.general.transitionNormal, 1)
+        animate(element, 'blur-form-out', globalStyle.style.general.transitionNormal, 1)
         setTimeout(() => {
             inputFields.forEach(f => f.inputField.remove())
             element.remove()
         }, 300)
     }
 
-    let element = create('div')
+    const element = create('div')
     setElementStyle(element, {
         backgroundColor: globalStyle.style.general.backgroundColorPrimaryWithTransparency,
         display: 'flex',
@@ -43,11 +39,10 @@ const FormModal = props => {
         width: '100vw',
         height: '100vh',
         backdropFilter: globalStyle.style.general.backdropFilter,
-        animation: 'blur-form-in 0.3s ease-in-out 1',
     })
+    animate(element, 'blur-form-in', globalStyle.style.general.transitionNormal, 1)
 
-    let form = create('div')
-    form.id = 'form'
+    const form = create('div')
     setElementStyle(form, {
         display: 'flex',
         justifyContent: 'center',
@@ -58,14 +53,13 @@ const FormModal = props => {
         padding: globalStyle.style.general.paddingL,
         borderRadius: globalStyle.style.general.borderRadiusL,
         boxShadow: globalStyle.style.general.boxShadow,
-        animation: 'pop-form-in 0.3s ease-in-out 1',
     })
+    animate(form, 'pop-form-in', globalStyle.style.general.transitionNormal, 1)
     
-    let submitButton = create('button')
+    const submitButton = create('button')
     setElementStyle(submitButton, {
-        ...style.submitButton || {},
-        minWidth: '40px',
-        height: '40px',
+        minWidth: globalStyle.style.general.buttonSizeM,
+        height: globalStyle.style.general.buttonSizeM,
         backgroundPosition: globalStyle.style.general.backgroundPosition,
         backgroundSize: globalStyle.style.general.backgroundSize,
         backgroundRepeat: globalStyle.style.general.backgroundRepeat,
@@ -93,27 +87,15 @@ const FormModal = props => {
 
     submitButton.addEventListener('click', () => {
         inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
-        db.createTemporary(
-            'tmpData',
-            tmpData,
-            temporaryData => {
-                clickHandler(temporaryData)
-            }
-        )
+        db.createTemporary('tmpData', tmpData, temporaryData => submitHandler(temporaryData))
         remove()
     })
 
-    element.addEventListener('mousedown', e => {
-        return element !== e.target ? null : remove()
-    })
+    element.addEventListener('mousedown', e => element !== e.target ? null : remove())
 
-    element.addEventListener('mouseenter', () => {// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
-        inputFields[0].inputField.focus()
-    })
+    element.addEventListener('mouseenter', () => inputFields[0].inputField.focus())// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
 
-    element.addEventListener('keyup', e => {
-        e.key === 'Escape' && remove()
-    })
+    element.addEventListener('keyup', e => e.key === 'Escape' && remove())
     
     inputFields.forEach(f => {
         f.inputField.setCallBack(checkForm)

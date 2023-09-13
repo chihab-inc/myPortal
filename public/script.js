@@ -34,138 +34,6 @@ const MainComponent = props => {
         const tip = link.tip
         const active = link.active
         const deleted = link.deleted
-        const buttonGroup = ButtonGroup({
-            globalStyle,
-            options: { orientation: 'v', globalStyle, type: 'rounded', position: { top: '5px', left: '5px' } },
-            buttons: deleted
-            ? [
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('cross')),
-                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.permanentlyDeleteLinkById(id)
-                        loadPage({ globalStyle })
-                    },
-                },
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('arrow-left')),
-                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.recoverDeletedLinkById(id)
-                        loadPage({ globalStyle })
-                    },
-                },
-            ]
-            : [
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('cross')),
-                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.deleteLinkById(id)
-                        loadPage({ globalStyle })
-                    },
-                },
-                {
-                    style: {
-                        backgroundImage: backgroundImage(icon('minus')),
-                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        linkDB.toggleLinkById(id)
-                        loadPage({ globalStyle })
-                    },
-                },
-                active && {
-                    style: {
-                        backgroundImage: backgroundImage(icon('pen')),
-                        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
-                    },
-                    hover: { opacity: '1' },
-                    clickHandler: () => {
-                        const inputFields = []
-
-                        const linkField = TextInput({
-                            globalStyle,
-                            type: 'url',
-                            placeholder: 'Link',
-                            initialValue: href,
-                            required: true,
-                        })
-                        inputFields.push({ inputField: linkField, propertyName: 'href' })
-
-                        const logoField = TextInput({
-                            globalStyle,
-                            type: 'url',
-                            placeholder: 'Logo URL',// (it can be a local file URL)',
-                            initialValue: src,
-                            required: true,
-                        })
-                        inputFields.push({ inputField: logoField, propertyName: 'src' })
-
-                        const descriptionField = TextInput({
-                            globalStyle,
-                            type: 'text',
-                            placeholder: 'Short description',
-                            initialValue: tip,
-                            maxLength: 32,
-                        })
-                        inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
-
-                        const allSections = sectionDB.getAllSections()
-                        const sectionField = SelectInput({
-                            globalStyle,
-                            items: allSections.map(s => ({
-                                value: s.id,
-                                text: s.title,
-                                selected: s.id === sectionId ? sectionId : undefined,
-                                style: { background: allSections.find(ss => ss.id === s.id)?.colorAccent },
-                            })),
-                            initialValue: sectionId,
-                        })
-                        inputFields.push({ inputField: sectionField, propertyName: 'sectionId' })
-
-                        append(document.body,
-                            FormModal({
-                                globalStyle,
-                                creating: false,
-                                tmpData: {
-                                    id,
-                                    sectionId,
-                                    href,
-                                    src,
-                                    tip,
-                                    active,
-                                    deleted,
-                                },
-                                style: {
-                                    submitButton: {
-                                        enabled: { backgroundImage: backgroundImage(icon('check')) },
-                                        disabled: { backgroundImage: backgroundImage(icon('check-disabled')) },
-                                    }
-                                },
-                                inputFields,
-                                clickHandler: temporaryData => {
-                                    linkDB.updateLinkPropertyById(temporaryData)
-                                    loadPage({ globalStyle })
-                                }
-                            })
-                        )
-                    }
-                },
-            ],
-        })
-        const anchor = LinkAnchor({ globalStyle, href, src, active })
-        const description = LinkDescription({ globalStyle, tip })
         const linkComponent = Link({ globalStyle, id, sectionId, href, src, tip, deleted, buttonGroup, description, anchor })
         linkWrappers.push({ sectionId, deleted, linkComponent })
     }
@@ -386,7 +254,7 @@ const resetDisplaySettings = () => {
 
 const init = () => {
     window.addEventListener('load', () => {
-        const id = 'd0073c43-4fda-4a1e-91f5-a24061cf34f6'
+        const id = linkDB.getAllLinks()[0].id
         const x = Link(id)
         !linkDB.getDeletedById(id) && append(document.body, x)
         // const globalStyle = GlobalStyle({ theme: themeDB.getTheme() })

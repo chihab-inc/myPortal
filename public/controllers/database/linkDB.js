@@ -26,6 +26,7 @@ linkDB.createLink = data => {
     })
 }
 
+linkDB.getAllLinks = () => get(DB_NAME) // TODO - Only for debug, remove later
 linkDB.getLinkById = id => get(DB_NAME).find(l => l.id === id)
 linkDB.getLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId)
 
@@ -73,7 +74,6 @@ linkDB.deleteLinksBySectionId = sectionId => {
 linkDB.permanentlyDeleteLinkById = id => {
     linkDB.update(links => {
         links = links.filter(l => l.id !== id)
-        console.log(links.length)
         return links
     })
 }
