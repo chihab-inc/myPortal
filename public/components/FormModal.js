@@ -93,7 +93,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
 
     element.addEventListener('mousedown', e => element !== e.target ? null : remove())
 
-    element.addEventListener('mouseenter', () => inputFields[0].inputField.focus())// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
+    element.addEventListener('animationend', () => inputFields[0] && inputFields[0].inputField.focus())
 
     element.addEventListener('keyup', e => e.key === 'Escape' && remove())
     

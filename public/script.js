@@ -254,13 +254,16 @@ const resetDisplaySettings = () => {
 
 const init = () => {
     window.addEventListener('load', () => {
-        const id = linkDB.getAllLinks()[0].id
-        const x = Link(id)
-        !linkDB.getDeletedById(id) && append(document.body, x)
-        // const globalStyle = GlobalStyle({ theme: themeDB.getTheme() })
-        // RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
-        // resetDisplaySettings()
-        // loadPage({ globalStyle })
+
+        const main = create('main')
+        main.style.flexWrap = 'wrap'
+        main.style.gap = '5px'
+        linkDB.getAllLinks().forEach(link => append(main, Link(link.id)))
+        append(document.body, { element: main })
+        /* const globalStyle = GlobalStyle({ theme: themeDB.getTheme() })
+        RESET DISPLAY SETTINGS WHEN WHOLE DOM LOADS/RELOADS
+        resetDisplaySettings()
+        loadPage({ globalStyle }) */
     })
 }
 
