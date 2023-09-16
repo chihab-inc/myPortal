@@ -83,6 +83,7 @@ let GlobalStyle = () => {
                 { transform: 'scale(1.4)', offset: .75 },
                 { transform: 'scale(.5)', offset: 1 },
             ],
+            animationRollOutLeftRight: [ { transform: 'scaleX(0.1)' }, { transform: 'scaleX(1)' } ],
         },
     }
     

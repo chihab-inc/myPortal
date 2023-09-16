@@ -22,8 +22,8 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
     }
 
     const remove = () => {
-        form.animate(globalStyle.style.general.animationPushOut, { duration: 300, easing: 'ease-in-out', iterations: 1 })
-        element.animate(globalStyle.style.general.animationBlurOut, { duration: 300, easing: 'ease-in-out', iterations: 1 })
+        animate(form, 'pop-out', globalStyle.style.general.transitionNormal, 1)
+        animate(element, 'blur-out', globalStyle.style.general.transitionNormal, 1)
         setTimeout(() => {
             inputFields.forEach(f => f.inputField.remove())
             element.remove()
@@ -43,7 +43,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         height: '100vh',
         backdropFilter: globalStyle.style.general.backdropFilter,
     })
-    element.animate(globalStyle.style.general.animationBlurIn, { duration: 300, easing: 'ease-in-out', iterations: 1 })
+    animate(element, 'blur-in', globalStyle.style.general.transitionNormal, 1)
 
     const form = create('div')
     setElementStyle(form, {
@@ -57,7 +57,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         borderRadius: globalStyle.style.general.borderRadiusL,
         boxShadow: globalStyle.style.general.boxShadow,
     })
-    form.animate(globalStyle.style.general.animationPushIn, { duration: 300, easing: 'ease-in-out', iterations: 1 })
+    animate(form, 'pop-in', globalStyle.style.general.transitionNormal, 1)
     
     const submitButton = create('button')
     setElementStyle(submitButton, {

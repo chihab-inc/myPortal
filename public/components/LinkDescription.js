@@ -1,4 +1,4 @@
-import { setElementStyle, create } from '../web_utils.js'
+import { setElementStyle, create, animate } from '../web_utils.js'
 import { GlobalStyle } from '../globalStyle.js'
 import { linkDB } from '../controllers/database/linkDB.js'
 
@@ -42,8 +42,8 @@ const LinkDescription = id => {
         bottom: '5px',
         left: '5px',
         transformOrigin: 'left',
-        animation: 'roll-out 0.2s ease-in-out 1',
     })
+    animate(element, 'roll-out', globalStyle.style.general.transitionQuick, 1)
 
     return { element, updateTip, remove }
 }

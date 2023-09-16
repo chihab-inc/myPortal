@@ -65,25 +65,33 @@ body main {
 
 
 /* ANIMATIONS */
+@keyframes roll-in {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0.1);
+  }
+}
 @keyframes roll-out {
   0% {
     transform: scaleX(0.1);
   }
   100% {
-    transform: scaleY(1);
+    transform: scaleX(1);
   }
 }
-@keyframes pop-form-in {
+@keyframes pop-in {
   70% {
     transform: scale(1.4);
   }
 }
-@keyframes push-form-out {
+@keyframes pop-out {
   70% {
     transform: scale(1.4);
   }
 }
-@keyframes blur-form-in {
+@keyframes blur-in {
   from {
     background: #0000;
     backdrop-filter: blur(0px);
@@ -93,7 +101,7 @@ body main {
     backdrop-filter: blur(15px);
   }
 }
-@keyframes blur-form-out {
+@keyframes blur-out {
   from {
     background: #0009;
     backdrop-filter: blur(15px);
