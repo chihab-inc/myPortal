@@ -3,6 +3,9 @@ import { GlobalStyle } from '../globalStyle.js'
 import { create, setElementStyle, append, animate, backgroundImage } from '../web_utils.js'
 
 const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons, submitHandler) => {
+
+    // Flag to only allow closing event once
+    let closing = false
     
     const globalStyle = GlobalStyle()
 
@@ -19,8 +22,8 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
     }
 
     const remove = () => {
-        animate(form, 'push-form-out', globalStyle.style.general.transitionNormal, 1)
-        animate(element, 'blur-form-out', globalStyle.style.general.transitionNormal, 1)
+        form.animate(globalStyle.style.general.animationPushOut, { duration: 300, easing: 'ease-in-out', iterations: 1 })
+        element.animate(globalStyle.style.general.animationBlurOut, { duration: 300, easing: 'ease-in-out', iterations: 1 })
         setTimeout(() => {
             inputFields.forEach(f => f.inputField.remove())
             element.remove()
@@ -40,7 +43,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         height: '100vh',
         backdropFilter: globalStyle.style.general.backdropFilter,
     })
-    animate(element, 'blur-form-in', globalStyle.style.general.transitionNormal, 1)
+    element.animate(globalStyle.style.general.animationBlurIn, { duration: 300, easing: 'ease-in-out', iterations: 1 })
 
     const form = create('div')
     setElementStyle(form, {
@@ -54,7 +57,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         borderRadius: globalStyle.style.general.borderRadiusL,
         boxShadow: globalStyle.style.general.boxShadow,
     })
-    animate(form, 'pop-form-in', globalStyle.style.general.transitionNormal, 1)
+    form.animate(globalStyle.style.general.animationPushIn, { duration: 300, easing: 'ease-in-out', iterations: 1 })
     
     const submitButton = create('button')
     setElementStyle(submitButton, {
@@ -90,12 +93,22 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         db.createTemporary('tmpData', tmpData, temporaryData => submitHandler(temporaryData))
         remove()
     })
+    
+    element.addEventListener('mouseenter', () => inputFields[0] && inputFields[0].inputField.focus())
+    
+    element.addEventListener('mousedown', e => {
+        if (element === e.target && !closing) {
+            remove()
+            closing = true
+        }
+    })
 
-    element.addEventListener('mousedown', e => element !== e.target ? null : remove())
-
-    element.addEventListener('animationend', () => inputFields[0] && inputFields[0].inputField.focus())
-
-    element.addEventListener('keyup', e => e.key === 'Escape' && remove())
+    element.addEventListener('keyup', e => {
+        if (e.key === 'Escape' && !closing) {
+            remove()
+            closing = true
+        }
+    })
     
     inputFields.forEach(f => {
         f.inputField.setCallBack(checkForm)

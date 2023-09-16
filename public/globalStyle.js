@@ -53,6 +53,36 @@ let GlobalStyle = () => {
             zIndexBottom: '0',
             zIndexMiddle: '1',
             zIndexTop: '1',
+            animationBlurIn: [
+                {
+                    background: '#0000',
+                    backdropFilter: 'blur(0px)',
+                },
+                {
+                    background: '#0009',
+                    backdropFilter: 'blur(15px)',
+                },
+            ],
+            animationBlurOut: [
+                {
+                    background: '#0009',
+                    backdropFilter: 'blur(15px)',
+                },
+                {
+                    background: '#0000',
+                    backdropFilter: 'blur(0px)',
+                },
+            ],
+            animationPushIn: [
+                { transform: 'scale(.5)', offset: 0 },
+                { transform: 'scale(1.4)', offset: .75 },
+                { transform: 'scale(1)', offset: 1 },
+            ],
+            animationPushOut: [
+                { transform: 'scale(1)', offset: 0 },
+                { transform: 'scale(1.4)', offset: .75 },
+                { transform: 'scale(.5)', offset: 1 },
+            ],
         },
     }
     
