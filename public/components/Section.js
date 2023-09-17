@@ -145,7 +145,7 @@ const Section = (id, otherSectionUpdate) => {
 
     const updateUI = (...props) => {
         if (!props || props.length === 0) {
-            props = [ 'title', 'colorAccent', 'extendedView' ]
+            props = [ 'title', 'colorAccent', 'extendedView', 'add' ]
         }
         props.forEach(prop => {
             switch (prop) {
@@ -167,6 +167,8 @@ const Section = (id, otherSectionUpdate) => {
                     displayedLinks.forEach(l => l.updateUI('active'))
                     break
                 case 'add':
+                    buttonGroup.remove()
+                    updateButtonGroup()
                     updateLinks()
                     break
                 default:
@@ -252,7 +254,7 @@ const Section = (id, otherSectionUpdate) => {
     disableExtendedView()
     updateLinks()
     
-    return { element, remove }
+    return { element, updateUI, remove }
 }
 
 export { Section }

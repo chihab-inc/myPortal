@@ -14,6 +14,8 @@ const MainComponent = () => {
 
     const globalStyle = GlobalStyle()
 
+    const sections = {}
+
     const remove = () => element.remove()
     
     const element = create('main')
@@ -28,10 +30,13 @@ const MainComponent = () => {
         overflow: 'auto',
     })
 
-    const otherSectionUpdate = sectionId => sectionId
+    const otherSectionUpdate = sectionId => {
+        sections[sectionId].updateUI()
+    }
 
     sectionDB.getAllSections().map(section => section.id).forEach(id => {
         const section = Section(id, otherSectionUpdate)
+        sections[id] = section
         append(element, section)
     })
 
