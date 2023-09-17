@@ -1,21 +1,182 @@
-import { create, select, setElementStyle, append } from '../web_utils.js'
+import { linkDB } from '../controllers/database/linkDB.js'
+import { sectionDB } from '../controllers/database/sectionDB.js'
+import { GlobalStyle } from '../globalStyle.js'
+import { create, setElementStyle, append, icon } from '../web_utils.js'
+import { ButtonGroup } from './ButtonGroup.js'
+import { ColorInput } from './ColorInput.js'
+import { FormModal } from './FormModal.js'
+import { Link } from './Link.js'
+import { TextInput } from './TextInput.js'
 
-const Section = props => {
-    const title = props.title
-    const colorAccent = props.colorAccent
-    const links = props.links
-    const hasLinks = links.length > 0
-    const buttonGroup = props.buttonGroup
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const Section = (id, otherSectionUpdate) => {
 
-    // Keep track of children elements to remove
-    const children = []
+    const globalStyle = GlobalStyle()
+
+    const displayedLinks = []
     
-    const remove = () => {
-        children.forEach(c => c.remove())
-        element.remove()
+    const updateTitle = _title => {
+        sectionDB.updateTitledById(id, _title)
+        updateUI('title')
     }
+
+    const updateColorAccent = _colorAccent => {
+        sectionDB.updateColorAccentdById(id, _colorAccent)
+        updateUI('colorAccent')
+    }
+
+    const toggleExtendedView = () => {
+        sectionDB.toggleExtendedViewById(id)
+        updateUI('extendedView')
+    }
+
+    const disableExtendedView = () => {
+        sectionDB.disableExtendedViewById(id)
+        updateUI('extendedView')
+    }
+
+    const delete_ = () => {
+        // REQUEST CONFIRMATION BEFORE PERMANENTLY DELETING LINK
+        /* if (window.confirm('Sure?')) {
+            sectionDB.deleteSectionById(id)
+            linkDB.permanentlyDeleteLinksBySectionId(id)
+            updateUI('delete')
+        } */
+        sectionDB.deleteSectionById(id)
+        linkDB.permanentlyDeleteLinksBySectionId(id)
+        updateUI('delete')
+    }
+
+    const toggleActive = () => {
+        linkDB.toggleLinksBySectionId(id)
+        updateUI('active')
+    }
+
+    const createLink = data => {
+        linkDB.createLink(data)
+        updateUI('add')
+    }
+
+    const updateButtonGroup = () => {
+        let buttons = [
+            {
+                icon: icon('pen', 1),
+                clickHandler: () => {
+                    const inputFields = []
+
+                    const titleField = TextInput('Title', 'text', true, 32, sectionDB.getTitleById(id), {})
+                    inputFields.push({ inputField: titleField, propertyName: 'title' })
+
+                    const colorField = ColorInput(true, sectionDB.getColorAccentById(id), {})
+                    inputFields.push({ inputField: colorField, propertyName: 'colorAccent' })
+
+                    append(document.body,
+                        FormModal(
+                            {
+                                title: sectionDB.getTitleById(id),
+                                colorAccent: sectionDB.getColorAccentById(id),
+                            },
+                            false,
+                            inputFields,
+                            { true: icon('check', 1), false: icon('check-disabled', 1) },
+                            temporaryData => {
+                                updateTitle(temporaryData.title)
+                                updateColorAccent(temporaryData.colorAccent)
+                            }
+                        )
+                    )
+                },
+            },
+            {
+                icon: icon('cross', 1),
+                clickHandler: delete_,
+            },
+            {
+                icon: icon('plus', 1),
+                clickHandler: () => {
+                    const inputFields = []
+
+                    const linkField = TextInput('Link', 'url', true, 524288, null, {})
+                    inputFields.push({ inputField: linkField, propertyName: 'href' })
+
+                    const logoField = TextInput('Logo URL', 'url', true, 524288, null, {})
+                    inputFields.push({ inputField: logoField, propertyName: 'src' })
+
+                    const descriptionField = TextInput('Short Description', 'text', true, 32, null, {})
+                    inputFields.push({ inputField: descriptionField, propertyName: 'tip' })
+                    
+                    append(document.body,
+                        FormModal(
+                            {
+                                sectionId: id,
+                                active: true,
+                                deleted: false,
+                            },
+                            true,
+                            inputFields,
+                            { true: icon('plus', 1), false: icon('plus-disabled', 1) },
+                            temporaryData => createLink(temporaryData)
+                        )
+                    )
+                },
+            },
+        ].concat(linkDB.getLinkCountBySectionId(id) > 0 ? [
+            {
+                icon: icon(sectionDB.getExtendedViewById(id) ? 'hide' : 'view', 1),
+                clickHandler: toggleExtendedView,
+            },
+            {
+                icon: icon('minus', 1),
+                clickHandler: toggleActive,
+            },
+        ] : [])
+        buttonGroup = ButtonGroup({ type: 'rounded' }, buttons)
+    }
+
+    const updateLinks = () => {
+        displayedLinks.forEach(l => l.remove())
+        displayedLinks.length = 0// Clear array
+        const links = sectionDB.getExtendedViewById(id) ? linkDB.getLinksBySectionId(id) : linkDB.getNonDeletedLinksBySectionId(id)
+        links.forEach(link => append(ul, (() => {
+            const l = Link(link.id, updateUI, otherSectionUpdate)
+            displayedLinks.push(l)
+            return l
+        })()))
+    }
+
+    const updateUI = (...props) => {
+        if (!props || props.length === 0) {
+            props = [ 'title', 'colorAccent', 'extendedView' ]
+        }
+        props.forEach(prop => {
+            switch (prop) {
+                case 'title':
+                    h2.textContent = sectionDB.getTitleById(id)
+                    break
+                case 'colorAccent':
+                    setElementStyle(h2, { color: sectionDB.getColorAccentById(id) })
+                    break
+                case 'extendedView':
+                    buttonGroup.remove()
+                    updateButtonGroup()
+                    updateLinks()
+                    break
+                case 'delete':
+                    remove()
+                    break
+                case 'active':
+                    displayedLinks.forEach(l => l.updateUI('active'))
+                    break
+                case 'add':
+                    updateLinks()
+                    break
+                default:
+                    break
+            }
+        })
+    }
+
+    
+    const remove = () => element.remove()
 
     const element = create('section')
     setElementStyle(element, {
@@ -30,7 +191,6 @@ const Section = props => {
     })
 
     const header = create('header')
-    children.push(header)
     setElementStyle(header, {
         display: 'flex',
         justifyContent: 'space-between',
@@ -41,8 +201,7 @@ const Section = props => {
     })
     
     const h2 = create('h2')
-    children.push(h2)
-    h2.innerText = title
+    h2.textContent = sectionDB.getTitleById(id)
     setElementStyle(h2, {
         backgroundColor: globalStyle.style.general.backgroundColorSecondary,
         minWidth: '50%',
@@ -50,19 +209,18 @@ const Section = props => {
         height: '100%',
         textAlign: 'center',
         fontSize: globalStyle.style.general.fontSizeM,
-        color: colorAccent,
+        color: sectionDB.getColorAccentById(id),
         borderRadius: globalStyle.style.general.borderRadiusM,
         ...{
-            backgroundColor: theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
-            border: theme.border || globalStyle.style.general.noBorder,
-            backdropFilter: theme.backdropFilter || globalStyle.style.general.backdropFilter,
+            backgroundColor: globalStyle.style.theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
+            border: globalStyle.style.theme.border || globalStyle.style.general.noBorder,
+            backdropFilter: globalStyle.style.theme.backdropFilter || globalStyle.style.general.backdropFilter,
         },
     })
     header.appendChild(h2)
     element.appendChild(header)
     
     const ul = create('ul')
-    children.push(ul)
     setElementStyle(ul, {
         backgroundColor: globalStyle.style.general.backgroundColorSecondary,
         display: 'flex',
@@ -76,26 +234,23 @@ const Section = props => {
         listStyleType: 'none',
         borderRadius: globalStyle.style.general.borderRadiusM,
         ...{
-            backgroundColor: theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
-            border: theme.border || globalStyle.style.general.noBorder,
-            padding: theme.padding || globalStyle.style.general.paddingM,
-            backdropFilter: theme.backdropFilter || globalStyle.style.general.backdropFilter,
+            backgroundColor: globalStyle.style.theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
+            border: globalStyle.style.theme.border || globalStyle.style.general.noBorder,
+            padding: globalStyle.style.theme.padding || globalStyle.style.general.paddingM,
+            backdropFilter: globalStyle.style.theme.backdropFilter || globalStyle.style.general.backdropFilter,
         },
     })
     element.appendChild(ul)
 
-    element.addEventListener('mouseenter', e => {
-        append(header, buttonGroup)
-        children.push(buttonGroup)
-    })
+    let buttonGroup
+    updateButtonGroup()
 
-    element.addEventListener('mouseleave', e => {
-        buttonGroup.remove()
-    })
-    
-    links.forEach(link => {
-        append(ul, link)
-    })
+    element.addEventListener('mouseenter', () => append(header, buttonGroup))
+
+    element.addEventListener('mouseleave', () => buttonGroup.remove())
+
+    disableExtendedView()
+    updateLinks()
     
     return { element, remove }
 }

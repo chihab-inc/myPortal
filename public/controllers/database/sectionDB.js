@@ -10,21 +10,19 @@ sectionDB.init = () => {
     }
 }
 
-sectionDB.update = callBack => {
-    let sections = get(DB_NAME)
-    callBack(sections)
-    set(DB_NAME, sections)
-}
+sectionDB.update = callBack => set(DB_NAME, callBack(get(DB_NAME)))
 
 sectionDB.updateSectionPropertyById = (id, prop, value) => {
     sectionDB.update(sections => {
         sections.find(s => s.id === id)[prop] = value
+        return sections
     })
 }
 
 sectionDB.createSection = data => {
     sectionDB.update(sections => {
         sections.push(data)
+        return sections
     })
 }
 
@@ -41,11 +39,12 @@ sectionDB.updateColorAccentdById = (id, colorAccent) => sectionDB.updateSectionP
 sectionDB.getExtendedViewById = id => sectionDB.getSectionById(id).extendedView
 
 sectionDB.disableExtendedViewById = id => sectionDB.updateSectionPropertyById(id, 'extendedView', false)
-sectionDB.toggleExtendedViewById = id => sectionDB.updateSectionPropertyById(id, 'extendedView', sectionDB.getExtendedViewById(id))
+sectionDB.toggleExtendedViewById = id => sectionDB.updateSectionPropertyById(id, 'extendedView', !sectionDB.getExtendedViewById(id))
 
 sectionDB.deleteSectionById = id => {
-    db.update(sections => {
+    sectionDB.update(sections => {
         sections = sections.filter(s => s.id !== id)
+        return sections
     })
 }
 

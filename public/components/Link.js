@@ -9,14 +9,18 @@ import { TextInput } from './TextInput.js'
 import { SelectInput } from './SelectInput.js'
 import { sectionDB } from '../controllers/database/sectionDB.js'
 
-const Link = id => {
+const Link = (id, parentUpdateUI, newParentUpdateUI) => {
 
     const globalStyle = GlobalStyle()
 
     const updateSectionId = _sectionId => {
-        linkDB.updateSectionIdById(id, _sectionId)
-        remove()
-        // SectionWatcher[_sectionId].refreshLinks()
+        if (_sectionId !== linkDB.getSectionIdById(id)) {
+            linkDB.updateSectionIdById(id, _sectionId)
+            remove()
+            updateUI('sectionId')
+            newParentUpdateUI(_sectionId)
+            // SectionWatcher[_sectionId].refreshLinks()
+        }
     }
     
     const updateHref = _href => {
@@ -34,13 +38,8 @@ const Link = id => {
         updateUI('tip')
     }
 
-    const disable = () => {
-        linkDB.disableLinkById(id)
-        updateUI('active')
-    }
-
-    const enable = () => {
-        linkDB.enableLinkById(id)
+    const toggleActive = () => {
+        linkDB.toggleLinkById(id)
         updateUI('active')
     }
 
@@ -55,6 +54,11 @@ const Link = id => {
     }
 
     const permanentlyDelete = () => {
+        // REQUEST CONFIRMATION BEFORE PERMANENTLY DELETING LINK
+        /* if (window.confirm('Sure?')) {
+            linkDB.permanentlyDeleteLinkById(id)
+            updateUI('permanentlyDelete')
+        } */
         linkDB.permanentlyDeleteLinkById(id)
         updateUI('permanentlyDelete')
     }
@@ -63,7 +67,7 @@ const Link = id => {
         props.forEach(prop => {
             switch (prop) {
                 case 'sectionId':
-                    // TODO
+                    parentUpdateUI()
                     break
                 case 'href':
                     anchor.updateHref()
@@ -81,8 +85,8 @@ const Link = id => {
                     break
                 case 'delete':
                     buttonGroup.remove()
-                    remove()
                     updateButtonGroup()
+                    parentUpdateUI()
                     break
                 case 'permanentlyDelete':
                     remove()
@@ -90,7 +94,7 @@ const Link = id => {
                 case 'recover':
                     buttonGroup.remove()
                     updateButtonGroup()
-                    // TODO
+                    break
                 default:
                     break
             }
@@ -102,39 +106,37 @@ const Link = id => {
     const updateButtonGroup = () => {
         const active = linkDB.getActiveById(id)
         const deleted = linkDB.getDeletedById(id)
-        let buttons = null
+        let buttons = []
         if (deleted) {
             buttons = [
                 {
                     icon: icon('cross', 1),
                     clickHandler: () => {
-                        linkDB.permanentlyDeleteLinkById(id)
-                        // TODO - updateUI
+                        permanentlyDelete()
                     },
                 },
                 {
                     icon: icon('arrow-left', 1),
                     clickHandler: () => {
-                        linkDB.recoverDeletedLinkById(id)
-                        updateUI('recover')
+                        recover()
                     },
                 },
             ]
         } else {
-            const btns = [{
-                icon: icon('cross', 1),
-                clickHandler: () => {
-                    linkDB.deleteLinkById(id)
-                    updateUI('delete')
+            const btns = [
+                {
+                    icon: icon('cross', 1),
+                    clickHandler: () => {
+                        delete_()
+                    },
                 },
-            },
-            {
-                icon: icon('minus', 1),
-                clickHandler: () => {
-                    linkDB.toggleLinkById(id)
-                    updateUI('active')
-                },
-            }]
+                {
+                    icon: icon('minus', 1),
+                    clickHandler: () => {
+                        toggleActive()
+                    },
+                }
+            ]
             if (active) {
                 btns.push({
                     icon: icon('pen', 1),
@@ -171,14 +173,14 @@ const Link = id => {
                                     src: linkDB.getSrcById(id),
                                     tip: linkDB.getTipById(id),
                                 },
-                                false, inputFields,
+                                false,
+                                inputFields,
                                 { true: icon('check', 1), false: icon('check-disabled', 1) },
                                 temporaryData => {
                                     updateHref(temporaryData.href)
                                     updateSrc(temporaryData.src)
                                     updateTip(temporaryData.tip)
-                                    updateSectionId(temporaryData.sectionid)
-                                    updateUI('href', 'src', 'tip', /* 'sectionId' */)
+                                    updateSectionId(temporaryData.sectionId)
                                 },
                             )
                         )
@@ -203,31 +205,20 @@ const Link = id => {
 
     const description = LinkDescription(id)
 
-    let buttonGroup = null
+    let buttonGroup
+    updateButtonGroup()
 
     element.addEventListener('mouseenter', () => {
         // APPEND DESCRIPTION ONLY IF THERE IS A TIP/DESCRIPTION
         !['', null, undefined].includes(linkDB.getTipById(id)) && append(element, description)
-        updateButtonGroup()
         append(element, buttonGroup)
     })
     element.addEventListener('mouseleave', () => {
         description.remove()
         buttonGroup.remove()
-        buttonGroup = null
-    })
-
-    element.addEventListener('keyup', e => {
-        e.key === 'a' && updateHref('https://google.com/')
-        e.key === 'z' && updateSrc('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2008px-Google_%22G%22_Logo.svg.png')
-        e.key === 'e' && updateTip('Google')
-        e.key === 'r' && disable()
-        e.key === 't' && enable()
-        e.key === 'y' && delete_()
-        e.key === 'u' && permanentlyDelete()
     })
     
-    return { element, remove }
+    return { element, updateUI, remove }
 }
 
 export { Link }

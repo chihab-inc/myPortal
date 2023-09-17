@@ -21,7 +21,7 @@ linkDB.updateLinkPropertyById = (id, prop, value) => {
 
 linkDB.createLink = data => {
     linkDB.update(links => {
-        links.push(data)
+        links.push({ id: crypto.randomUUID(), ...data })
         return links
     })
 }
@@ -29,6 +29,9 @@ linkDB.createLink = data => {
 linkDB.getAllLinks = () => get(DB_NAME) // TODO - Only for debug, remove later
 linkDB.getLinkById = id => get(DB_NAME).find(l => l.id === id)
 linkDB.getLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId)
+linkDB.getNonDeletedLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId && !l.deleted)
+linkDB.getDeletedLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId && l.deleted)
+linkDB.getLinkCountBySectionId = sectionId => linkDB.getLinksBySectionId(sectionId).length
 
 linkDB.getSectionIdById = id => linkDB.getLinkById(id).sectionId
 linkDB.updateSectionIdById = (id, sectionId) => linkDB.updateLinkPropertyById(id, 'sectionId', sectionId)
