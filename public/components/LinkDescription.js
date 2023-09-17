@@ -30,20 +30,20 @@ const LinkDescription = id => {
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
-        color: globalStyle.style.general.fontColor,
-        fontSize: globalStyle.style.general.fontSizeS,
+        backgroundColor: globalStyle.general.backgroundColorSecondary,
+        color: globalStyle.general.fontColor,
+        fontSize: globalStyle.general.fontSizeS,
         whiteSpace: 'nowrap',
-        zIndex: globalStyle.style.general.zIndexMiddle,
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        zIndex: globalStyle.general.zIndexMiddle,
+        borderRadius: globalStyle.general.borderRadiusM,
         boxSizing: 'border-box',
-        padding: globalStyle.style.general.paddingM,
+        padding: globalStyle.general.paddingM,
         position: 'absolute',
         bottom: '5px',
         left: '5px',
         transformOrigin: 'left',
     })
-    animate(element, 'roll-out', globalStyle.style.general.transitionQuick, 1)
+    animate(element, 'roll-out', globalStyle.general.transitionQuick, 1)
 
     return { element, updateTip, remove }
 }

@@ -5,7 +5,7 @@ const AddDataPanel = props => {
     const style = props.style || {}
     const callBack = props.callBack
     const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+    const theme = globalStyle.theme || {}
 
     const children = []
 
@@ -22,7 +22,7 @@ const AddDataPanel = props => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: globalStyle.style.general.flexGapL,
+        gap: globalStyle.general.flexGapL,
         userSelect: 'none',
         position: initial ? 'static' : 'fixed',
         top: initial ? 'auto' : '20px',
@@ -36,21 +36,21 @@ const AddDataPanel = props => {
     children.push(img)
     img.src = icon('plus')
     setElementStyle(img, {
-        borderRadius: globalStyle.style.general.borderRadiusCircle,
-        boxShadow: globalStyle.style.general.boxShadow,
+        borderRadius: globalStyle.general.borderRadiusCircle,
+        boxShadow: globalStyle.general.boxShadow,
         height: '100%',
         maxHeight: '150px',
-        opacity: globalStyle.style.general.buttonOpacity,
-        transition: `all ${globalStyle.style.general.transitionQuick}`,
+        opacity: globalStyle.general.buttonOpacity,
+        transition: `all ${globalStyle.general.transitionQuick}`,
     })
     img.addEventListener('mouseenter', () => {
         setElementStyle(img, {
-            opacity: globalStyle.style.general.buttonHoverOpacity,
+            opacity: globalStyle.general.buttonHoverOpacity,
         })
     })
     img.addEventListener('mouseleave', () => {
         setElementStyle(img, {
-            opacity: globalStyle.style.general.buttonOpacity,
+            opacity: globalStyle.general.buttonOpacity,
         })
     })
 
@@ -60,9 +60,9 @@ const AddDataPanel = props => {
     setElementStyle(span, {
         textAlign: 'center',
         color: '#282c31',
-        fontSize: globalStyle.style.general.fontSizeL,
+        fontSize: globalStyle.general.fontSizeL,
         fontWeight: 'bold',
-        fontFamily: globalStyle.style.general.fontFamily,
+        fontFamily: globalStyle.general.fontFamily,
     })
 
     element.addEventListener('click', e => {

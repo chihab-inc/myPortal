@@ -10,16 +10,16 @@ const ButtonGroup = (options={}, buttons=[]) => {
 
     const element = create('ul')
     setElementStyle(element, {
-        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
+        backgroundColor: globalStyle.general.backgroundColorSecondary,
         borderRadius: {
-            'squared': globalStyle.style.general.borderRadiusS,
-            'rounded': globalStyle.style.general.borderRadiusL,
-            'bubbles': globalStyle.style.general.borderRadiusL,
+            'squared': globalStyle.general.borderRadiusS,
+            'rounded': globalStyle.general.borderRadiusL,
+            'bubbles': globalStyle.general.borderRadiusL,
         }[options.type || 'bubbles'],
         padding: {
-            'squared': globalStyle.style.general.paddingNone,
-            'rounded': globalStyle.style.general.paddingNone,
-            'bubbles': globalStyle.style.general.paddingXS,
+            'squared': globalStyle.general.paddingNone,
+            'rounded': globalStyle.general.paddingNone,
+            'bubbles': globalStyle.general.paddingXS,
         }[options.type || 'bubbles'],
         listStyleType: 'none',
         display: 'flex',
@@ -49,12 +49,12 @@ const ButtonGroup = (options={}, buttons=[]) => {
             options.buttonWidth && options.buttonHeight
             ? options.buttonWidth.toString().includes('px') && options.buttonWidth.toString().includes('px')
                 ? max(options.buttonWidth, options.buttonHeight)
-                : globalStyle.style.general.borderRadiusL
+                : globalStyle.general.borderRadiusL
             : options.buttonWidth
-                ? max(options.buttonWidth, globalStyle.style.general.borderRadiusL)
+                ? max(options.buttonWidth, globalStyle.general.borderRadiusL)
                 : options.buttonHeight
-                    ? max(globalStyle.style.general.borderRadiusL, options.buttonHeight)
-                    : globalStyle.style.general.borderRadiusL
+                    ? max(globalStyle.general.borderRadiusL, options.buttonHeight)
+                    : globalStyle.general.borderRadiusL
 
         const style = {
             ...{
@@ -63,17 +63,17 @@ const ButtonGroup = (options={}, buttons=[]) => {
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
-                opacity: globalStyle.style.general.buttonOpacity,
-                boxShadow: globalStyle.style.general.boxShadow,
+                opacity: globalStyle.general.buttonOpacity,
+                boxShadow: globalStyle.general.boxShadow,
                 backgroundImage: backgroundImage(b.icon),
             },
             ...{
                 width: options.buttonWidth || '20px',
                 height: options.buttonHeight || '20px',
                 borderRadius: {
-                    'squared': globalStyle.style.general.borderRadiusS,
+                    'squared': globalStyle.general.borderRadiusS,
                     'rounded': nbButtons === 1
-                        ? globalStyle.style.general.borderRadiusCircle
+                        ? globalStyle.general.borderRadiusCircle
                         : idx === 0
                             ? options.orientation === 'v' ? `${maxBorderRadius} ${maxBorderRadius} 0% 0%` : `${maxBorderRadius} 0% 0% ${maxBorderRadius}`
                             : idx === nbButtons - 1
@@ -89,7 +89,7 @@ const ButtonGroup = (options={}, buttons=[]) => {
 
         button.addEventListener('click', b.clickHandler || (() => {}))
         button.addEventListener('mouseenter', () => {
-            setElementStyle(button, { opacity: globalStyle.style.general.buttonHoverOpacity })
+            setElementStyle(button, { opacity: globalStyle.general.buttonHoverOpacity })
         })
         button.addEventListener('mouseleave', () => {
             setElementStyle(button, style)

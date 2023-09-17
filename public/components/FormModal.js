@@ -22,8 +22,8 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
     }
 
     const remove = () => {
-        animate(form, 'pop-out', globalStyle.style.general.transitionNormal, 1)
-        animate(element, 'blur-out', globalStyle.style.general.transitionNormal, 1)
+        animate(form, 'pop-out', globalStyle.general.transitionNormal, 1)
+        animate(element, 'blur-out', globalStyle.general.transitionNormal, 1)
         setTimeout(() => {
             inputFields.forEach(f => f.inputField.remove())
             element.remove()
@@ -32,7 +32,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
 
     const element = create('div')
     setElementStyle(element, {
-        backgroundColor: globalStyle.style.general.backgroundColorPrimaryWithTransparency,
+        backgroundColor: globalStyle.general.backgroundColorPrimaryWithTransparency,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -41,50 +41,50 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         top: '0px',
         width: '100vw',
         height: '100vh',
-        backdropFilter: globalStyle.style.general.backdropFilter,
+        backdropFilter: globalStyle.general.backdropFilter,
     })
-    animate(element, 'blur-in', globalStyle.style.general.transitionNormal, 1)
+    animate(element, 'blur-in', globalStyle.general.transitionNormal, 1)
 
     const form = create('div')
     setElementStyle(form, {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: globalStyle.style.general.flexGapS,
-        backgroundColor: globalStyle.style.general.backgroundColorSecondaryWithTransparency,
+        gap: globalStyle.general.flexGapS,
+        backgroundColor: globalStyle.general.backgroundColorSecondaryWithTransparency,
         minWidth: '300px',
-        padding: globalStyle.style.general.paddingL,
-        borderRadius: globalStyle.style.general.borderRadiusL,
-        boxShadow: globalStyle.style.general.boxShadow,
+        padding: globalStyle.general.paddingL,
+        borderRadius: globalStyle.general.borderRadiusL,
+        boxShadow: globalStyle.general.boxShadow,
     })
-    animate(form, 'pop-in', globalStyle.style.general.transitionNormal, 1)
+    animate(form, 'pop-in', globalStyle.general.transitionNormal, 1)
     
     const submitButton = create('button')
     setElementStyle(submitButton, {
-        minWidth: globalStyle.style.general.buttonSizeM,
-        height: globalStyle.style.general.buttonSizeM,
-        backgroundPosition: globalStyle.style.general.backgroundPosition,
-        backgroundSize: globalStyle.style.general.backgroundSize,
-        backgroundRepeat: globalStyle.style.general.backgroundRepeat,
-        border: globalStyle.style.general.noBorder,
+        minWidth: globalStyle.general.buttonSizeM,
+        height: globalStyle.general.buttonSizeM,
+        backgroundPosition: globalStyle.general.backgroundPosition,
+        backgroundSize: globalStyle.general.backgroundSize,
+        backgroundRepeat: globalStyle.general.backgroundRepeat,
+        border: globalStyle.general.noBorder,
         boxSizing: 'border-box',
-        borderRadius: globalStyle.style.general.borderRadiusCircle,
-        opacity: globalStyle.style.general.buttonOpacity,
+        borderRadius: globalStyle.general.borderRadiusCircle,
+        opacity: globalStyle.general.buttonOpacity,
         cursor: 'pointer',
-        transition: `all ${globalStyle.style.general.transitionQuick}`,
+        transition: `all ${globalStyle.general.transitionQuick}`,
     })
     submitButton.textContent = ''
     checkForm()
 
     submitButton.addEventListener('mouseenter', () => {
         setElementStyle(submitButton, {
-            opacity: globalStyle.style.general.buttonHoverOpacity,
+            opacity: globalStyle.general.buttonHoverOpacity,
         })
     })
 
     submitButton.addEventListener('mouseleave', () => {
         setElementStyle(submitButton, {
-            opacity: globalStyle.style.general.buttonOpacity,
+            opacity: globalStyle.general.buttonOpacity,
         })
     })
 

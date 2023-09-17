@@ -186,7 +186,7 @@ const Section = (id, otherSectionUpdate) => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: globalStyle.style.general.flexGapS,
+        gap: globalStyle.general.flexGapS,
         width: '425px',
         minWidth: '425px',
         minHeight: '20px',
@@ -199,24 +199,24 @@ const Section = (id, otherSectionUpdate) => {
         alignItems: 'center',
         width: '100%',
         height: '20px',
-        paddingRight: globalStyle.style.general.paddingM,
+        paddingRight: globalStyle.general.paddingM,
     })
     
     const h2 = create('h2')
     h2.textContent = sectionDB.getTitleById(id)
     setElementStyle(h2, {
-        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
+        backgroundColor: globalStyle.general.backgroundColorSecondary,
         minWidth: '50%',
         maxWidth: '60%',
         height: '100%',
         textAlign: 'center',
-        fontSize: globalStyle.style.general.fontSizeM,
+        fontSize: globalStyle.general.fontSizeM,
         color: sectionDB.getColorAccentById(id),
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        borderRadius: globalStyle.general.borderRadiusM,
         ...{
-            backgroundColor: globalStyle.style.theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
-            border: globalStyle.style.theme.border || globalStyle.style.general.noBorder,
-            backdropFilter: globalStyle.style.theme.backdropFilter || globalStyle.style.general.backdropFilter,
+            backgroundColor: globalStyle.theme.backgroundColorSecondary || globalStyle.general.backgroundColorSecondary,
+            border: globalStyle.theme.border || globalStyle.general.noBorder,
+            backdropFilter: globalStyle.theme.backdropFilter || globalStyle.general.backdropFilter,
         },
     })
     header.appendChild(h2)
@@ -224,22 +224,22 @@ const Section = (id, otherSectionUpdate) => {
     
     const ul = create('ul')
     setElementStyle(ul, {
-        backgroundColor: globalStyle.style.general.backgroundColorSecondary,
+        backgroundColor: globalStyle.general.backgroundColorSecondary,
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        gap: globalStyle.style.general.flexGapS,
+        gap: globalStyle.general.flexGapS,
         width: '100%',
         minHeight: '110px',
-        padding: globalStyle.style.general.paddingM,
+        padding: globalStyle.general.paddingM,
         listStyleType: 'none',
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        borderRadius: globalStyle.general.borderRadiusM,
         ...{
-            backgroundColor: globalStyle.style.theme.backgroundColorSecondary || globalStyle.style.general.backgroundColorSecondary,
-            border: globalStyle.style.theme.border || globalStyle.style.general.noBorder,
-            padding: globalStyle.style.theme.padding || globalStyle.style.general.paddingM,
-            backdropFilter: globalStyle.style.theme.backdropFilter || globalStyle.style.general.backdropFilter,
+            backgroundColor: globalStyle.theme.backgroundColorSecondary || globalStyle.general.backgroundColorSecondary,
+            border: globalStyle.theme.border || globalStyle.general.noBorder,
+            padding: globalStyle.theme.padding || globalStyle.general.paddingM,
+            backdropFilter: globalStyle.theme.backdropFilter || globalStyle.general.backdropFilter,
         },
     })
     element.appendChild(ul)

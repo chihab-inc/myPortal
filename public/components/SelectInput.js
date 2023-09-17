@@ -22,15 +22,15 @@ const SelectInput = (items=[], required=false, initialValue=null, style={}) => {
     const element = create('select')
     setElementStyle(element, {
         ...style,
-        height: globalStyle.style.general.inputHeight,
-        minWidth: globalStyle.style.general.inputWidth,
-        borderRadius: globalStyle.style.general.borderRadiusS,
-        border: globalStyle.style.general.noBorder,
-        fontSize: globalStyle.style.general.fontSizeM,
-        padding: globalStyle.style.general.paddingM,
-        paddingLeft: globalStyle.style.general.paddingL,
+        height: globalStyle.general.inputHeight,
+        minWidth: globalStyle.general.inputWidth,
+        borderRadius: globalStyle.general.borderRadiusS,
+        border: globalStyle.general.noBorder,
+        fontSize: globalStyle.general.fontSizeM,
+        padding: globalStyle.general.paddingM,
+        paddingLeft: globalStyle.general.paddingL,
         outline: 'none',
-        backgroundColor: globalStyle.style.general.backgroundColorInput,
+        backgroundColor: globalStyle.general.backgroundColorInput,
     })
 
     items.forEach(item => {

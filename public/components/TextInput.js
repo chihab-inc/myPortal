@@ -47,22 +47,22 @@ const TextInput = (placeholder, type='text', required=false, maxLength=524288, i
     initialValue && (element.value = initialValue)
     setElementStyle(element, {
         ...style,
-        height: globalStyle.style.general.inputHeight,
-        minWidth: globalStyle.style.general.inputWidth,
-        borderRadius: globalStyle.style.general.borderRadiusS,
-        border: globalStyle.style.general.noBorder,
-        fontSize: globalStyle.style.general.fontSizeM,
-        padding: globalStyle.style.general.fontSizeM,
-        paddingLeft: globalStyle.style.general.paddingL,
+        height: globalStyle.general.inputHeight,
+        minWidth: globalStyle.general.inputWidth,
+        borderRadius: globalStyle.general.borderRadiusS,
+        border: globalStyle.general.noBorder,
+        fontSize: globalStyle.general.fontSizeM,
+        padding: globalStyle.general.fontSizeM,
+        paddingLeft: globalStyle.general.paddingL,
         outline: 'none',
-        backgroundColor: globalStyle.style.general.backgroundColorInput,
+        backgroundColor: globalStyle.general.backgroundColorInput,
     })
 
     const eventNames = ['focusout', 'input']
     eventNames.forEach(eventName => {
         element.addEventListener(eventName, () => {
             setElementStyle(element, {
-                backgroundColor: !isValid() ? globalStyle.style.general.backgroundColorInputInvalid : globalStyle.style.general.backgroundColorInput,
+                backgroundColor: !isValid() ? globalStyle.general.backgroundColorInputInvalid : globalStyle.general.backgroundColorInput,
             })
             callBack()
         })

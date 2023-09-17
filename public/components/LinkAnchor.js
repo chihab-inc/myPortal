@@ -43,10 +43,10 @@ const LinkAnchor = id => {
         pointerEvents: linkDB.getActiveById(id) ? 'auto' : 'none',
         width: '100%',
         height: '100%',
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        borderRadius: globalStyle.general.borderRadiusM,
         display: 'inline-block',
         textDecoration: 'none',
-        transition: `all ${globalStyle.style.general.transitionQuick}`
+        transition: `all ${globalStyle.general.transitionQuick}`
     })
 
     const image = create('img')
@@ -54,12 +54,12 @@ const LinkAnchor = id => {
     setElementStyle(image, {
         width: '100%',
         height: '100%',
-        borderRadius: globalStyle.style.general.borderRadiusM,
+        borderRadius: globalStyle.general.borderRadiusM,
     })
     element.appendChild(image)
 
     element.addEventListener('mouseenter', () => {
-        setElementStyle(element, { boxShadow: globalStyle.style.general.boxShadow })
+        setElementStyle(element, { boxShadow: globalStyle.general.boxShadow })
     })
     element.addEventListener('mouseleave', () => {
         setElementStyle(element, { boxShadow: 'none' })

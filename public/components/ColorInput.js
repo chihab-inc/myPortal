@@ -27,10 +27,10 @@ const ColorInput = (required=false, initialValue=null, style={}) => {
         WebkitAppearance: 'none',
         MozAppearance: 'none',
         appearance: 'none',
-        width: globalStyle.style.general.inputWidth,
-        height: globalStyle.style.general.inputHeight,
-        backgroundColor: globalStyle.style.general.backgroundColorTransparent,
-        border: globalStyle.style.general.noBorder,
+        width: globalStyle.general.inputWidth,
+        height: globalStyle.general.inputHeight,
+        backgroundColor: globalStyle.general.backgroundColorTransparent,
+        border: globalStyle.general.noBorder,
     })
 
     element.addEventListener('change', () => { callBack() })

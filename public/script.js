@@ -7,6 +7,7 @@ import { TextInput } from './components/TextInput.js'
 import { ColorInput } from './components/ColorInput.js'
 import { FormModal } from './components/FormModal.js'
 import { GlobalStyle } from './globalStyle.js'
+import { themeDB } from './controllers/database/themeDB.js'
 
 const DB_NAME = 'DATA-BASE'
 
@@ -25,8 +26,8 @@ const MainComponent = () => {
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        gap: globalStyle.style.general.flexGapM,
-        padding: globalStyle.style.general.paddingXXL,
+        gap: globalStyle.general.flexGapM,
+        padding: globalStyle.general.paddingXXL,
         overflow: 'auto',
     })
 
@@ -100,9 +101,23 @@ const loadPage = props => {
 }
 
 const init = () => {
+
+    const globalStyle = GlobalStyle()
+    
     window.addEventListener('load', () => {
         const main = MainComponent()
-        append(document.body, main)
+        const body = document.body
+        setElementStyle(body, {
+            height: '100vh',
+            width: '100vw',
+            background: globalStyle.general.mainBackground,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            display: 'flex',
+            fontFamily: 'Verdana, sans-serif',
+        })
+        append(body, main)
     })
 }
 
