@@ -8,41 +8,9 @@ import { ColorInput } from './components/ColorInput.js'
 import { FormModal } from './components/FormModal.js'
 import { GlobalStyle } from './globalStyle.js'
 import { themeDB } from './controllers/database/themeDB.js'
+import { Main } from './components/Main.js'
 
 const DB_NAME = 'DATA-BASE'
-
-const MainComponent = () => {
-
-    const globalStyle = GlobalStyle()
-
-    const sections = {}
-
-    const remove = () => element.remove()
-    
-    const element = create('main')
-    setElementStyle(element, {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        gap: globalStyle.general.flexGapM,
-        padding: globalStyle.general.paddingXXL,
-        overflow: 'auto',
-    })
-
-    const otherSectionUpdate = sectionId => {
-        sections[sectionId].updateUI()
-    }
-
-    sectionDB.getAllSections().map(section => section.id).forEach(id => {
-        const section = Section(id, otherSectionUpdate)
-        sections[id] = section
-        append(element, section)
-    })
-
-    return { element, remove }
-}
 
 const loadPage = props => {
     const globalStyle = props.globalStyle
@@ -103,9 +71,8 @@ const loadPage = props => {
 const init = () => {
 
     const globalStyle = GlobalStyle()
-    
+
     window.addEventListener('load', () => {
-        const main = MainComponent()
         const body = document.body
         setElementStyle(body, {
             height: '100vh',
@@ -117,6 +84,8 @@ const init = () => {
             display: 'flex',
             fontFamily: 'Verdana, sans-serif',
         })
+
+        const main = Main()
         append(body, main)
     })
 }
