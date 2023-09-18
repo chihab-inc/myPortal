@@ -28,16 +28,29 @@ const Main = () => {
         sections[sectionId].updateUI()
     }
 
-    const updateUI = () => {}
+    const updateSections = () => {
+        Object.values(sections).forEach(section => section.remove())
+        sectionDB.getAllSections().map(section => section.id).forEach(id => {
+            const section = Section(id, updateUI, otherSectionUpdate)
+            sections[id] = section
+            append(element, section)
+        })
+    }
 
-    const addDataPanel = AddDataPanel(updateUI)
-    append(element, addDataPanel)
+    const updateAddDataPanel = () => {
+        addDataPanel.remove()
+        addDataPanel = AddDataPanel(updateUI)
+        append(element, addDataPanel)
+    }
 
-    sectionDB.getAllSections().map(section => section.id).forEach(id => {
-        const section = Section(id, otherSectionUpdate)
-        sections[id] = section
-        append(element, section)
-    })
+    const updateUI = () => {
+        updateSections()
+        updateAddDataPanel()
+    }
+
+    let addDataPanel = AddDataPanel(updateUI)
+
+    updateUI()
 
     return { element, remove }
 }

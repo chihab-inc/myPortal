@@ -8,7 +8,7 @@ import { FormModal } from './FormModal.js'
 import { Link } from './Link.js'
 import { TextInput } from './TextInput.js'
 
-const Section = (id, otherSectionUpdate) => {
+const Section = (id, parentUpdateUI, otherSectionUpdate) => {
 
     const globalStyle = GlobalStyle()
 
@@ -44,7 +44,7 @@ const Section = (id, otherSectionUpdate) => {
         sectionDB.deleteSectionById(id)
         linkDB.permanentlyDeleteLinksBySectionId(id)
         updateUI('delete')
-        // TODO - Update parent UI if no more sections left to display
+        parentUpdateUI()
     }
 
     const toggleActive = () => {

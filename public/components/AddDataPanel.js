@@ -9,14 +9,46 @@ const AddDataPanel = parentUpdateUI => {
 
     const globalStyle = GlobalStyle()
 
+    let initial = sectionDB.getSectionCount() === 0
+
     const remove = () => element.remove()
 
     const createSection = data => {
         sectionDB.createSection(data)
         parentUpdateUI()
+        updateUI()
     }
 
-    const initial = sectionDB.getSectionCount() === 0
+    const updateUI = () => {
+        image.remove()
+        text?.remove()
+
+        updateElement()
+        updateImage()
+
+        element.appendChild(image)
+        sectionDB.getSectionCount() === 0 && element.appendChild(text)
+    }
+
+    const updateElement = () => {
+        initial = sectionDB.getSectionCount() === 0
+        setElementStyle(element, {
+            top: initial ? '0px' : 'auto',
+            left: initial ? '0px' : 'auto',
+            bottom: initial ? '0px' : '20px',
+            right: initial ? '0px' : '20px',
+            height: initial ? 'auto' : globalStyle.general.buttonSizeL,
+            width: initial ? 'auto' : globalStyle.general.buttonSizeL,
+        })
+    }
+
+    const updateImage = () => {
+        initial = sectionDB.getSectionCount() === 0
+        setElementStyle(image, {
+            height: initial ? globalStyle.general.buttonSizeXL : '100%',
+            width: initial ? globalStyle.general.buttonSizeXL : '100%',
+        })
+    }
 
     const element = create('div')
     element.id = 'add-data-panel'
@@ -28,12 +60,6 @@ const AddDataPanel = parentUpdateUI => {
         gap: globalStyle.general.flexGapL,
         userSelect: 'none',
         position: 'fixed',
-        top: initial ? '0px' : 'auto',
-        left: initial ? '0px' : 'auto',
-        bottom: initial ? '0px' : '20px',
-        right: initial ? '0px' : '20px',
-        height: initial ? 'auto' : globalStyle.general.buttonSizeL,
-        width: initial ? 'auto' : globalStyle.general.buttonSizeL,
         background: 'none',
     })
 
@@ -42,9 +68,6 @@ const AddDataPanel = parentUpdateUI => {
     setElementStyle(image, {
         borderRadius: globalStyle.general.borderRadiusCircle,
         boxShadow: globalStyle.general.boxShadow,
-        height: initial ? globalStyle.general.buttonSizeXL : '100%',
-        width: initial ? globalStyle.general.buttonSizeXL : '100%',
-        // maxHeight: globalStyle.general.buttonSizeXL,
         opacity: globalStyle.general.buttonOpacity,
     })
     transition(image, 'all', globalStyle.general.transitionQuick)
@@ -61,9 +84,9 @@ const AddDataPanel = parentUpdateUI => {
         })
     })
 
-    const span = create('span')
-    span.textContent = 'Add New Section'
-    setElementStyle(span, {
+    const text = create('span')
+    text.textContent = 'Add New Section'
+    setElementStyle(text, {
         textAlign: 'center',
         color: globalStyle.general.backgroundColorSecondary,
         fontSize: globalStyle.general.fontSizeL,
@@ -89,10 +112,9 @@ const AddDataPanel = parentUpdateUI => {
         )
     })
 
-    element.appendChild(image)
-    initial && element.appendChild(span)
+    updateUI()
 
-    return { element, remove }
+    return { element, updateUI, remove }
 }
 
 export { AddDataPanel }
