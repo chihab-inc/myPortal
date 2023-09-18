@@ -44,6 +44,7 @@ const Section = (id, otherSectionUpdate) => {
         sectionDB.deleteSectionById(id)
         linkDB.permanentlyDeleteLinksBySectionId(id)
         updateUI('delete')
+        // TODO - Update parent UI if no more sections left to display
     }
 
     const toggleActive = () => {
@@ -108,8 +109,6 @@ const Section = (id, otherSectionUpdate) => {
                         FormModal(
                             {
                                 sectionId: id,
-                                active: true,
-                                deleted: false,
                             },
                             true,
                             inputFields,

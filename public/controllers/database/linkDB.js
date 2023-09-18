@@ -21,7 +21,7 @@ linkDB.updateLinkPropertyById = (id, prop, value) => {
 
 linkDB.createLink = data => {
     linkDB.update(links => {
-        links.push({ id: crypto.randomUUID(), ...data })
+        links.push({ id: crypto.randomUUID(), active: true, deleted: false, ...data })
         return links
     })
 }

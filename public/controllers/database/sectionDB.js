@@ -21,7 +21,7 @@ sectionDB.updateSectionPropertyById = (id, prop, value) => {
 
 sectionDB.createSection = data => {
     sectionDB.update(sections => {
-        sections.push(data)
+        sections.push({ id: crypto.randomUUID(), extendedView: false, ...data })
         return sections
     })
 }

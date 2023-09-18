@@ -19,7 +19,6 @@ const Link = (id, parentUpdateUI, newParentUpdateUI) => {
             remove()
             updateUI('sectionId')
             newParentUpdateUI(_sectionId)
-            // SectionWatcher[_sectionId].refreshLinks()
         }
     }
     

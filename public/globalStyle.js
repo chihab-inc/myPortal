@@ -15,6 +15,7 @@ let GlobalStyle = () => {
         buttonSizeS: '20px',
         buttonSizeM: '40px',
         buttonSizeL: '60px',
+        buttonSizeXL: '150px',
         inputHeight: '40px',
         inputWidth: '40px',
         flexGapS: '5px',
@@ -97,7 +98,7 @@ let GlobalStyle = () => {
         },
     }[themeDB.getTheme().name || 'flat']
 
-    const setTheme = theme => theme = theme[theme]
+    const setTheme = _theme => theme = theme[_theme]
 
     return { general, theme, setTheme }
 }

@@ -1,6 +1,7 @@
 import { sectionDB } from "../controllers/database/sectionDB.js"
 import { GlobalStyle } from "../globalStyle.js"
 import { append, create, setElementStyle } from "../web_utils.js"
+import { AddDataPanel } from "./AddDataPanel.js"
 import { Section } from "./Section.js"
 
 const Main = () => {
@@ -26,6 +27,11 @@ const Main = () => {
     const otherSectionUpdate = sectionId => {
         sections[sectionId].updateUI()
     }
+
+    const updateUI = () => {}
+
+    const addDataPanel = AddDataPanel(updateUI)
+    append(element, addDataPanel)
 
     sectionDB.getAllSections().map(section => section.id).forEach(id => {
         const section = Section(id, otherSectionUpdate)

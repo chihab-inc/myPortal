@@ -17,6 +17,12 @@ const animate = (element, animationName, animationTime, repetitions) => {
     })
 }
 
+const transition = (element, propertyName, transitionTime) => {
+    setElementStyle(element, {
+        transition: `${propertyName} ${transitionTime}`
+    })
+}
+
 const icon = (icon, level=0) => {
     let prefix = ''
     for (let i = 0; i < level; i++) {
@@ -35,4 +41,5 @@ export {
     icon,
     backgroundImage,
     animate,
+    transition,
 }
