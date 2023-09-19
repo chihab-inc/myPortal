@@ -19,8 +19,7 @@ const init = () => {
             fontFamily: 'Verdana, sans-serif',
         })
 
-        const main = Main()
-        append(body, main)
+        append(body, Main())
     })
 }
 
