@@ -29,4 +29,6 @@ themeDB.updateThemeProperty = (prop, value) => {
     })
 }
 
+themeDB.init()
+
 export { themeDB }

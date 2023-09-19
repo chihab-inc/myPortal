@@ -86,4 +86,6 @@ linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
     })
 }
 
+linkDB.init()
+
 export { linkDB }

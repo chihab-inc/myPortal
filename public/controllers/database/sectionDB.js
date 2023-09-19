@@ -48,4 +48,6 @@ sectionDB.deleteSectionById = id => {
     })
 }
 
+sectionDB.init()
+
 export { sectionDB }
