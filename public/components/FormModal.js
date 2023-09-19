@@ -1,15 +1,13 @@
 import { db } from '../controllers/database/db.js'
-import { create, setElementStyle, append } from '../web_utils.js'
+import { GlobalStyle } from '../globalStyle.js'
+import { create, setElementStyle, append, animate, backgroundImage } from '../web_utils.js'
 
-const FormModal = props => {
-    const tmpData = props.tmpData || {}
-    const clickHandler = props.clickHandler
-    const style = props.style || {}
-    const creating = props.creating
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons, submitHandler) => {
+
+    // Flag to only allow closing event once
+    let closing = false
     
-    const inputFields = props.inputFields || []
+    const globalStyle = GlobalStyle()
 
     const checkForm = () => {
         let allValid = true
@@ -19,21 +17,22 @@ const FormModal = props => {
             someChanged = someChanged || f.hasChanged()
         })
         submitButton.disabled = !((!creating && allValid && someChanged) || (creating && allValid))
-        setElementStyle(submitButton, submitButton.disabled ? style.submitButton.disabled : style.submitButton.enabled)
+        setElementStyle(submitButton, { backgroundImage: backgroundImage(submitButtonIcons[!submitButton.disabled]) })
+        return (!creating && allValid && someChanged) || (creating && allValid)
     }
 
     const remove = () => {
-        setElementStyle(form, { animation: 'push-form-out 0.3s ease-in-out 1' })
-        setElementStyle(element, { animation: 'blur-form-out 0.3s ease-in-out 1' })
+        animate(form, 'pop-out', globalStyle.general.transitionNormal, 1)
+        animate(element, 'blur-out', globalStyle.general.transitionNormal, 1)
         setTimeout(() => {
             inputFields.forEach(f => f.inputField.remove())
             element.remove()
         }, 300)
     }
 
-    let element = create('div')
+    const element = create('div')
     setElementStyle(element, {
-        backgroundColor: globalStyle.style.general.backgroundColorPrimaryWithTransparency,
+        backgroundColor: globalStyle.general.backgroundColorPrimaryWithTransparency,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -42,77 +41,73 @@ const FormModal = props => {
         top: '0px',
         width: '100vw',
         height: '100vh',
-        backdropFilter: globalStyle.style.general.backdropFilter,
-        animation: 'blur-form-in 0.3s ease-in-out 1',
+        backdropFilter: globalStyle.general.backdropFilter,
     })
+    animate(element, 'blur-in', globalStyle.general.transitionNormal, 1)
 
-    let form = create('div')
-    form.id = 'form'
+    const form = create('div')
     setElementStyle(form, {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: globalStyle.style.general.flexGapS,
-        backgroundColor: globalStyle.style.general.backgroundColorSecondaryWithTransparency,
+        gap: globalStyle.general.flexGapS,
+        backgroundColor: globalStyle.general.backgroundColorSecondaryWithTransparency,
         minWidth: '300px',
-        padding: globalStyle.style.general.paddingL,
-        borderRadius: globalStyle.style.general.borderRadiusL,
-        boxShadow: globalStyle.style.general.boxShadow,
-        animation: 'pop-form-in 0.3s ease-in-out 1',
+        padding: globalStyle.general.paddingL,
+        borderRadius: globalStyle.general.borderRadiusL,
+        boxShadow: globalStyle.general.boxShadow,
     })
+    animate(form, 'pop-in', globalStyle.general.transitionNormal, 1)
     
-    let submitButton = create('button')
+    const submitButton = create('button')
     setElementStyle(submitButton, {
-        ...style.submitButton || {},
-        minWidth: '40px',
-        height: '40px',
-        backgroundPosition: globalStyle.style.general.backgroundPosition,
-        backgroundSize: globalStyle.style.general.backgroundSize,
-        backgroundRepeat: globalStyle.style.general.backgroundRepeat,
-        border: globalStyle.style.general.noBorder,
+        minWidth: globalStyle.general.buttonSizeM,
+        height: globalStyle.general.buttonSizeM,
+        backgroundPosition: globalStyle.general.backgroundPosition,
+        backgroundSize: globalStyle.general.backgroundSize,
+        backgroundRepeat: globalStyle.general.backgroundRepeat,
+        border: globalStyle.general.noBorder,
         boxSizing: 'border-box',
-        borderRadius: globalStyle.style.general.borderRadiusCircle,
-        opacity: globalStyle.style.general.buttonOpacity,
+        borderRadius: globalStyle.general.borderRadiusCircle,
+        opacity: globalStyle.general.buttonOpacity,
         cursor: 'pointer',
-        transition: `all ${globalStyle.style.general.transitionQuick}`,
+        transition: `all ${globalStyle.general.transitionQuick}`,
     })
     submitButton.textContent = ''
     checkForm()
 
     submitButton.addEventListener('mouseenter', () => {
         setElementStyle(submitButton, {
-            opacity: globalStyle.style.general.buttonHoverOpacity,
+            opacity: globalStyle.general.buttonHoverOpacity,
         })
     })
 
     submitButton.addEventListener('mouseleave', () => {
         setElementStyle(submitButton, {
-            opacity: globalStyle.style.general.buttonOpacity,
+            opacity: globalStyle.general.buttonOpacity,
         })
     })
 
     submitButton.addEventListener('click', () => {
         inputFields.forEach(f => { tmpData[f.propertyName] = f.inputField.getValue() })
-        db.createTemporary(
-            'tmpData',
-            tmpData,
-            temporaryData => {
-                clickHandler(temporaryData)
-            }
-        )
+        db.createTemporary('tmpData', tmpData, temporaryData => submitHandler(temporaryData))
         remove()
     })
-
+    
+    element.addEventListener('mouseenter', () => inputFields[0] && inputFields[0].inputField.focus())
+    
     element.addEventListener('mousedown', e => {
-        return element !== e.target ? null : remove()
-    })
-
-    element.addEventListener('mouseenter', () => {// TODO - NEEDS TO BE ON LOAD, FIGURE OUT HOW
-        inputFields[0].inputField.focus()
+        if (element === e.target && !closing) {
+            remove()
+            closing = true
+        }
     })
 
     element.addEventListener('keyup', e => {
-        e.key === 'Escape' && remove()
+        if (e.key === 'Escape' && !closing) {
+            remove()
+            closing = true
+        }
     })
     
     inputFields.forEach(f => {

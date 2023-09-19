@@ -1,31 +1,23 @@
+import { GlobalStyle } from '../globalStyle.js'
 import { create, setElementStyle, append, icon, backgroundImage } from '../web_utils.js'
 
-const ColorInput = props => {
-    const style = props.style || {}
-    const required = props.required || false
-    const initialValue = props.initialValue
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const ColorInput = (required=false, initialValue=null, style={}) => {
     
-    let callBack = props.callBack || (() => {})
+    const globalStyle = GlobalStyle()
+    
+    let callBack = () => {}
 
     const hasChanged = () => element.value !== initialValue
 
     const getValue = () => element.value
 
-    const remove = () => {
-        element.remove()
-    }
+    const remove = () => element.remove()
 
-    const focus = () => {
-        element.focus()
-    }
+    const focus = () => element.focus()
 
     const isValid = () => required ? !['', null, undefined].includes(element.value) : true
 
-    const setCallBack = cb => {
-        callBack = cb
-    }
+    const setCallBack = cb => callBack = cb
 
     const element = create('input')
     element.type = 'color'
@@ -35,15 +27,13 @@ const ColorInput = props => {
         WebkitAppearance: 'none',
         MozAppearance: 'none',
         appearance: 'none',
-        width: '48px',
-        height: '48px',
-        backgroundColor: globalStyle.style.general.backgroundColorTransparent,
-        border: globalStyle.style.general.noBorder,
+        width: globalStyle.general.inputWidth,
+        height: globalStyle.general.inputHeight,
+        backgroundColor: globalStyle.general.backgroundColorTransparent,
+        border: globalStyle.general.noBorder,
     })
 
-    element.addEventListener('change', () => {
-        callBack()
-    })
+    element.addEventListener('change', () => { callBack() })
 
     return { element, remove, focus, isValid, hasChanged, getValue, setCallBack }
 }

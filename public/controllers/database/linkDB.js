@@ -1,104 +1,91 @@
-import { db } from './db.js'
-
 const linkDB = {}
-const DB_NAME = 'DATA-BASE'
-const COLLECTION_NAME = 'links'
+const DB_NAME = 'links'
 
-db.init(DB_NAME, COLLECTION_NAME)
+const get = item => JSON.parse(localStorage.getItem(item))// TODO - MOVE TO WEB_UTILS
+const set = (item, value) => localStorage.setItem(item, JSON.stringify(value))// TODO - MOVE TO WEB_UTILS
 
-// Insert new link instance into database
+linkDB.init = () => {
+    if (!get(DB_NAME)) {
+        set(DB_NAME, [])
+    }
+}
+
+linkDB.update = callBack => set(DB_NAME, callBack(get(DB_NAME)))
+
+linkDB.updateLinkPropertyById = (id, prop, value) => {
+    linkDB.update(links => {
+        links.find(l => l.id === id)[prop] = value
+        return links
+    })
+}
+
 linkDB.createLink = data => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME].push(data)
+    linkDB.update(links => {
+        links.push({ id: crypto.randomUUID(), active: true, deleted: false, ...data })
+        return links
     })
 }
 
-// Permanently delete link from database using its id
-linkDB.permanentlyDeleteLinkById = id => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME] = dataBase[COLLECTION_NAME].filter(l => l.id !== id)
-    })
+linkDB.getAllLinks = () => get(DB_NAME) // TODO - Only for debug, remove later
+linkDB.getLinkById = id => get(DB_NAME).find(l => l.id === id)
+linkDB.getLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId)
+linkDB.getNonDeletedLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId && !l.deleted)
+linkDB.getDeletedLinksBySectionId = sectionId => get(DB_NAME).filter(l => l.sectionId === sectionId && l.deleted)
+linkDB.getLinkCountBySectionId = sectionId => linkDB.getLinksBySectionId(sectionId).length
+
+linkDB.getSectionIdById = id => linkDB.getLinkById(id).sectionId
+linkDB.updateSectionIdById = (id, sectionId) => linkDB.updateLinkPropertyById(id, 'sectionId', sectionId)
+
+linkDB.getHrefById = id => linkDB.getLinkById(id).href
+linkDB.updateHrefById = (id, href) => linkDB.updateLinkPropertyById(id, 'href', href)
+
+linkDB.getSrcById = id => linkDB.getLinkById(id).src
+linkDB.updateSrcById = (id, src) => linkDB.updateLinkPropertyById(id, 'src', src)
+
+linkDB.getTipById = id => linkDB.getLinkById(id).tip
+linkDB.updateTipById = (id, tip) => linkDB.updateLinkPropertyById(id, 'tip', tip)
+
+linkDB.getActiveById = id => linkDB.getLinkById(id).active
+linkDB.disableLinkById = id => linkDB.updateLinkPropertyById(id, 'active', false)
+linkDB.enableLinkById = id => linkDB.updateLinkPropertyById(id, 'active', true)
+linkDB.toggleLinkById = id => linkDB.updateLinkPropertyById(id, 'active', !linkDB.getActiveById(id))
+linkDB.toggleLinksBySectionId = sectionId => {
+    linkDB.getLinksBySectionId(sectionId)
+    .filter(l => !l.deleted)
+    .some(l => l.active)
+        ? linkDB.getLinksBySectionId(sectionId)
+            .filter(l => !l.deleted)
+            .forEach(l => {
+                linkDB.disableLinkById(l.id)
+            })
+        : linkDB.getLinksBySectionId(sectionId)
+            .filter(l => !l.deleted)
+            .forEach(l => {
+                linkDB.enableLinkById(l.id)
+            })
 }
 
-// Permanently delete link instances from database using their sectionId
-linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
-    linkDB.getLinksBySectionId(sectionId).forEach(l => {
-        linkDB.permanentlyDeleteLinkById(l.id)
-    })
-}
-
-// Fetch link instance from database using link id
-linkDB.getLinkById = id => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME].find(l => l.id === id)
-}
-
-// Fetch link instances from database using their section id
-linkDB.getLinksBySectionId = sectionId => {
-    return db.getDatabase(DB_NAME)[COLLECTION_NAME].filter(l => l.sectionId === sectionId)
-}
-
-// Update link instance property with new value using link id
-linkDB.updateLinkPropertyById = data => {
-    db.updateDB(DB_NAME, dataBase => {
-        Object.keys(data).filter(k => ![null, undefined].includes(data[k])).forEach(d => {
-            dataBase[COLLECTION_NAME].find(l => l.id === data.id)[d] = data[d]
-        })
-    })
-}
-
-// delete link instance from database using link id
-linkDB.deleteLinkById = id => {
-    linkDB.updateLinkPropertyById({ id, deleted: true })
-}
-
-// delete link instance from database using link id
-linkDB.recoverDeletedLinkById = id => {
-    linkDB.updateLinkPropertyById({ id, deleted: false })
-}
-
-// delete link instances from database using section id
+linkDB.getDeletedById = id => linkDB.getLinkById(id).deleted
+linkDB.deleteLinkById = id => linkDB.updateLinkPropertyById(id, 'deleted', true)
+linkDB.recoverDeletedLinkById = id => linkDB.updateLinkPropertyById(id, 'deleted', false)
 linkDB.deleteLinksBySectionId = sectionId => {
     linkDB.getLinksBySectionId(sectionId).forEach(l => {
         linkDB.deleteLinkById(l.id)
     })
 }
 
-// disable link instance using link id
-linkDB.disableLinkById = id => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME].find(l => l.id === id).active = false
+linkDB.permanentlyDeleteLinkById = id => {
+    linkDB.update(links => {
+        links = links.filter(l => l.id !== id)
+        return links
+    })
+}
+linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
+    linkDB.getLinksBySectionId(sectionId).forEach(l => {
+        linkDB.permanentlyDeleteLinkById(l.id)
     })
 }
 
-// enable link instance using link id
-linkDB.enableLinkById = id => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME].find(l => l.id === id).active = true
-    })
-}
-
-// toggle link instance using link id
-linkDB.toggleLinkById = id => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[COLLECTION_NAME].find(l => l.id === id).active = !dataBase[COLLECTION_NAME].find(l => l.id === id).active
-    })
-}
-
-// disable link instances using section id
-linkDB.toggleLinksBySectionId = sectionId => {
-    linkDB.getLinksBySectionId(sectionId)
-    .filter(l => !l.deleted)
-    .some(l => l.active)
-        ? linkDB.getLinksBySectionId(sectionId)
-        .filter(l => !l.deleted)
-        .forEach(l => {
-            linkDB.disableLinkById(l.id)
-        })
-        : linkDB.getLinksBySectionId(sectionId)
-        .filter(l => !l.deleted)
-        .forEach(l => {
-            linkDB.enableLinkById(l.id)
-        })
-}
+linkDB.init()
 
 export { linkDB }

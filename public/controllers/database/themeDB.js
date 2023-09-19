@@ -1,25 +1,34 @@
-import { db } from './db.js'
-
 const themeDB = {}
-const DB_NAME = 'THEME'
+const DB_NAME = 'theme'
 
-db.init(DB_NAME)
+const get = item => JSON.parse(localStorage.getItem(item))// TODO - MOVE TO WEB_UTILS
+const set = (item, value) => localStorage.setItem(item, JSON.stringify(value))// TODO - MOVE TO WEB_UTILS
 
-themeDB.createTheme = () => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase.name = 'flat'
-        dataBase.dark = true
+themeDB.init = () => {
+    if (!get(DB_NAME)) {
+        set(DB_NAME, {
+            name: 'flat',
+            dark: true,
+            colors: { primaryColor: '#1C1E1E', secondaryColor: '#2A2C2C' },
+            background: { type: 'color', value: '#1C1E1E' }
+        })
+    }
+}
+
+themeDB.update = callBack => {
+    let theme = get(DB_NAME)
+    callBack(theme)
+    set(DB_NAME, theme)
+}
+
+themeDB.getTheme = () => get(DB_NAME)
+
+themeDB.updateThemeProperty = (prop, value) => {
+    themeDB.update(theme => {
+        theme[prop] = value
     })
 }
 
-themeDB.updateThemeProperty = data => {
-    db.updateDB(DB_NAME, dataBase => {
-        dataBase[data.property] = data.value
-    })
-}
-
-themeDB.getTheme = () => {
-    return db.getDatabase(DB_NAME)
-}
+themeDB.init()
 
 export { themeDB }

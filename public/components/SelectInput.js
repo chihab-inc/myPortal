@@ -1,45 +1,36 @@
+import { GlobalStyle } from '../globalStyle.js'
 import { create, setElementStyle } from '../web_utils.js'
 
-const SelectInput = props => {
-    const style = props.style || {}
-    const items = props.items || []
-    const required = props.required || false
-    const initialValue = props.initialValue
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const SelectInput = (items=[], required=false, initialValue=null, style={}) => {
 
-    let callBack = props.callBack || (() => {})
+    const globalStyle = GlobalStyle()
+
+    let callBack = () => {}
+    
+    const remove = () => element.remove()
+
+    const focus = () => element.focus()
+    
+    const isValid = () => required ? !['', null, undefined].includes(element.value) : true
 
     const hasChanged = () => element.value !== initialValue
 
     const getValue = () => element.value
 
-    const remove = () => {
-        element.remove()
-    }
-
-    const focus = () => {
-        element.focus()
-    }
-
-    const isValid = () => required ? !['', null, undefined].includes(element.value) : true
-
-    const setCallBack = cb => {
-        callBack = cb
-    }
+    const setCallBack = cb => callBack = cb
 
     const element = create('select')
     setElementStyle(element, {
         ...style,
-        height: '40px',
-        minWidth: '40px',
-        borderRadius: globalStyle.style.general.borderRadiusS,
-        border: globalStyle.style.general.noBorder,
-        fontSize: globalStyle.style.general.fontSizeM,
-        padding: globalStyle.style.general.paddingM,
-        paddingLeft: globalStyle.style.general.paddingL,
+        height: globalStyle.general.inputHeight,
+        minWidth: globalStyle.general.inputWidth,
+        borderRadius: globalStyle.general.borderRadiusS,
+        border: globalStyle.general.noBorder,
+        fontSize: globalStyle.general.fontSizeM,
+        padding: globalStyle.general.paddingM,
+        paddingLeft: globalStyle.general.paddingL,
         outline: 'none',
-        backgroundColor: globalStyle.style.general.backgroundColorInput,
+        backgroundColor: globalStyle.general.backgroundColorInput,
     })
 
     items.forEach(item => {
@@ -51,9 +42,7 @@ const SelectInput = props => {
         element.appendChild(option)
     })
 
-    element.addEventListener('change', () => {
-        callBack()
-    })
+    element.addEventListener('change', () => { callBack() })
 
     return { element, remove, focus, isValid, hasChanged, getValue, setCallBack }
 }

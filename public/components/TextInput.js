@@ -1,24 +1,15 @@
+import { GlobalStyle } from '../globalStyle.js'
 import { create, select, setElementStyle } from '../web_utils.js'
 
-const TextInput = props => {
-    const style = props.style || {}
-    const type = props.type || 'text'
-    const placeholder = props.placeholder
-    const required = props.required || false
-    const maxLength = props.maxLength || 524288
-    const initialValue = props.initialValue
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const TextInput = (placeholder, type='text', required=false, maxLength=524288, initialValue=null, style={}) => {
     
-    let callBack = props.callBack || (() => {})
-    
-    const remove = () => {
-        element.remove()
-    }
+    const globalStyle = GlobalStyle()
 
-    const focus = () => {
-        element.focus()
-    }
+    let callBack = () => {}
+    
+    const remove = () => element.remove()
+
+    const focus = () => element.focus()
 
     const isValid = () => {
         const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/
@@ -48,9 +39,7 @@ const TextInput = props => {
 
     const getValue = () => element.value
 
-    const setCallBack = cb => {
-        callBack = cb
-    }
+    const setCallBack = cb => callBack = cb
 
     const element = create('input')
     element.type = ['email', 'password', 'search', 'tel', 'text', 'url'].includes(type) ? type : 'text'
@@ -58,22 +47,22 @@ const TextInput = props => {
     initialValue && (element.value = initialValue)
     setElementStyle(element, {
         ...style,
-        height: '40px',
-        minWidth: '40px',
-        borderRadius: globalStyle.style.general.borderRadiusS,
-        border: globalStyle.style.general.noBorder,
-        fontSize: globalStyle.style.general.fontSizeM,
-        padding: globalStyle.style.general.fontSizeM,
-        paddingLeft: globalStyle.style.general.paddingL,
+        height: globalStyle.general.inputHeight,
+        minWidth: globalStyle.general.inputWidth,
+        borderRadius: globalStyle.general.borderRadiusS,
+        border: globalStyle.general.noBorder,
+        fontSize: globalStyle.general.fontSizeM,
+        padding: globalStyle.general.fontSizeM,
+        paddingLeft: globalStyle.general.paddingL,
         outline: 'none',
-        backgroundColor: globalStyle.style.general.backgroundColorInput,
+        backgroundColor: globalStyle.general.backgroundColorInput,
     })
 
     const eventNames = ['focusout', 'input']
     eventNames.forEach(eventName => {
         element.addEventListener(eventName, () => {
             setElementStyle(element, {
-                backgroundColor: !isValid() ? globalStyle.style.general.backgroundColorInputInvalid : globalStyle.style.general.backgroundColorInput,
+                backgroundColor: !isValid() ? globalStyle.general.backgroundColorInputInvalid : globalStyle.general.backgroundColorInput,
             })
             callBack()
         })

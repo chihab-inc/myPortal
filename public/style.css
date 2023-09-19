@@ -1,3 +1,8 @@
+/* FONT IMPORT */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+
+
+
 * {
   margin: 0; padding: 0; box-sizing: border-box; user-select: none;
 }
@@ -32,58 +37,37 @@
   border: none;
   border-radius: 5px;
 }
-body {
-  height: 100vh; width: 100vw;
-  background: #1c1e1e;
-  /* MacOS-like effect */
-  /* background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'); */
-  /* background-image: url('https://4kwallpapers.com/images/wallpapers/macos-big-sur-stock-daytime-lone-tree-sedimentary-rocks-6016x6016-3783.jpg'); */
-  /* background-image: url('https://images.pexels.com/photos/845242/pexels-photo-845242.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
-  /* background-image: url('https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg'); */
-  /* background-image: url('https://wallpaperaccess.com/download/mac-landscape-928941'); */
-  /* background-image: url('https://images.pexels.com/photos/1428277/pexels-photo-1428277.jpeg'); */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* MacOS-like effect ends here */
-  display: flex;
-  font-family: Verdana, sans-serif;
-}
-
-
-
-
-/* MAIN */
-body main {
-  width: 100%; height: 100%;
-  display: flex; justify-content: flex-start; align-items: flex-start; gap: 10px;
-  overflow: auto;
-  padding: 100px;
-}
-
 
 
 
 /* ANIMATIONS */
+@keyframes roll-in {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0.1);
+  }
+}
 @keyframes roll-out {
   0% {
     transform: scaleX(0.1);
   }
   100% {
-    transform: scaleY(1);
+    transform: scaleX(1);
   }
 }
-@keyframes pop-form-in {
+@keyframes pop-in {
   70% {
     transform: scale(1.4);
   }
 }
-@keyframes push-form-out {
+@keyframes pop-out {
   70% {
     transform: scale(1.4);
   }
 }
-@keyframes blur-form-in {
+@keyframes blur-in {
   from {
     background: #0000;
     backdrop-filter: blur(0px);
@@ -93,7 +77,7 @@ body main {
     backdrop-filter: blur(15px);
   }
 }
-@keyframes blur-form-out {
+@keyframes blur-out {
   from {
     background: #0009;
     backdrop-filter: blur(15px);

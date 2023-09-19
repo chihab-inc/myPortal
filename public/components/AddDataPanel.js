@@ -1,78 +1,120 @@
-import { create, select, setElementStyle, append, icon, backgroundImage } from '../web_utils.js'
+import { sectionDB } from '../controllers/database/sectionDB.js'
+import { GlobalStyle } from '../globalStyle.js'
+import { create, setElementStyle, append, icon, backgroundImage, transition } from '../web_utils.js'
+import { ColorInput } from './ColorInput.js'
+import { FormModal } from './FormModal.js'
+import { TextInput } from './TextInput.js'
 
-const AddDataPanel = props => {
-    const initial = props.initial
-    const style = props.style || {}
-    const callBack = props.callBack
-    const globalStyle = props.globalStyle
-    const theme = globalStyle.style.theme || {}
+const AddDataPanel = parentUpdateUI => {
 
-    const children = []
+    const globalStyle = GlobalStyle()
 
-    const remove = () => {
-        children.forEach(c => c.remove())
-        element.remove()
+    let initial = sectionDB.getSectionCount() === 0
+
+    const remove = () => element.remove()
+
+    const createSection = data => {
+        sectionDB.createSection(data)
+        parentUpdateUI()
+        updateUI()
+    }
+
+    const updateUI = () => {
+        image.remove()
+        text?.remove()
+
+        updateElement()
+        updateImage()
+
+        element.appendChild(image)
+        sectionDB.getSectionCount() === 0 && element.appendChild(text)
+    }
+
+    const updateElement = () => {
+        initial = sectionDB.getSectionCount() === 0
+        setElementStyle(element, {
+            top: initial ? '0px' : 'auto',
+            left: initial ? '0px' : 'auto',
+            bottom: initial ? '0px' : '20px',
+            right: initial ? '0px' : '20px',
+            height: initial ? 'auto' : globalStyle.general.buttonSizeL,
+            width: initial ? 'auto' : globalStyle.general.buttonSizeL,
+        })
+    }
+
+    const updateImage = () => {
+        initial = sectionDB.getSectionCount() === 0
+        setElementStyle(image, {
+            height: initial ? globalStyle.general.buttonSizeXL : '100%',
+            width: initial ? globalStyle.general.buttonSizeXL : '100%',
+        })
     }
 
     const element = create('div')
     element.id = 'add-data-panel'
     setElementStyle(element, {
-        ...style,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: globalStyle.style.general.flexGapL,
+        gap: globalStyle.general.flexGapL,
         userSelect: 'none',
-        position: initial ? 'static' : 'fixed',
-        top: initial ? 'auto' : '20px',
-        left: initial ? 'auto' : '20px',
-        height: initial ? style.height || 'auto' : '60px',
-        width: initial ? style.width || 'auto' : '60px',
+        position: 'fixed',
         background: 'none',
     })
 
-    const img = create('img')
-    children.push(img)
-    img.src = icon('plus')
-    setElementStyle(img, {
-        borderRadius: globalStyle.style.general.borderRadiusCircle,
-        boxShadow: globalStyle.style.general.boxShadow,
-        height: '100%',
-        maxHeight: '150px',
-        opacity: globalStyle.style.general.buttonOpacity,
-        transition: `all ${globalStyle.style.general.transitionQuick}`,
+    const image = create('img')
+    image.src = icon('plus', 1)
+    setElementStyle(image, {
+        borderRadius: globalStyle.general.borderRadiusCircle,
+        boxShadow: globalStyle.general.boxShadow,
+        opacity: globalStyle.general.buttonOpacity,
     })
-    img.addEventListener('mouseenter', () => {
-        setElementStyle(img, {
-            opacity: globalStyle.style.general.buttonHoverOpacity,
-        })
-    })
-    img.addEventListener('mouseleave', () => {
-        setElementStyle(img, {
-            opacity: globalStyle.style.general.buttonOpacity,
+    transition(image, ['all'], [globalStyle.general.transitionQuick])
+    
+    image.addEventListener('mouseenter', () => {
+        setElementStyle(image, {
+            opacity: globalStyle.general.buttonHoverOpacity,
         })
     })
 
-    const span = create('span')
-    children.push(span)
-    span.textContent = 'Add New Section'
-    setElementStyle(span, {
+    image.addEventListener('mouseleave', () => {
+        setElementStyle(image, {
+            opacity: globalStyle.general.buttonOpacity,
+        })
+    })
+
+    const text = create('span')
+    text.textContent = 'Add New Section'
+    setElementStyle(text, {
         textAlign: 'center',
-        color: '#282c31',
-        fontSize: globalStyle.style.general.fontSizeL,
+        color: globalStyle.general.backgroundColorSecondary,
+        fontSize: globalStyle.general.fontSizeL,
         fontWeight: 'bold',
-        fontFamily: globalStyle.style.general.fontFamily,
+        fontFamily: globalStyle.general.fontFamily,
     })
 
-    element.addEventListener('click', e => {
-        callBack()
+    element.addEventListener('click', () => {
+        const inputFields = []
+
+        const titleField = TextInput('Title', 'text',true, 32, null, {})
+        inputFields.push({ inputField: titleField, propertyName: 'title' })
+
+        const colorField = ColorInput(true, null, {})
+        inputFields.push({ inputField: colorField, propertyName: 'colorAccent' })
+
+        append(document.body,
+            FormModal(
+                {}, true, inputFields,
+                { true: icon('plus', 1), false: icon('plus-disabled', 1) },
+                temporaryData => createSection(temporaryData),
+            )
+        )
     })
 
-    element.appendChild(img)
-    initial && element.appendChild(span)
+    updateUI()
 
-    return { element, remove }
+    return { element, updateUI, remove }
 }
 
 export { AddDataPanel }
