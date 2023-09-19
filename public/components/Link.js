@@ -60,6 +60,7 @@ const Link = (id, parentUpdateUI, newParentUpdateUI) => {
         } */
         linkDB.permanentlyDeleteLinkById(id)
         updateUI('permanentlyDelete')
+        parentUpdateUI()
     }
 
     const updateUI = (...props) => {
