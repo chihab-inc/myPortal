@@ -24,7 +24,8 @@ const Main = () => {
         alignItems: 'flex-start',
         gap: globalStyle.general.flexGapM,
         padding: globalStyle.general.paddingXXL,
-        overflow: 'auto',
+        overflowY: 'auto',
+        overflowX: 'hidden',
     })
 
     const otherSectionUpdate = sectionId => {

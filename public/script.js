@@ -21,10 +21,10 @@ const init = () => {
         })
 
         const main = Main()
+        const scrollOverlay = ScrollOverlay(main)
+        
         append(body, main)
-        // const scrollOverlay = ScrollOverlay(main)
-        // append(body, main)
-        // append(body, scrollOverlay)
+        append(body, scrollOverlay)
     })
 }
 
