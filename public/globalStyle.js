@@ -9,6 +9,7 @@ let GlobalStyle = () => {
         borderRadiusS: '3px',
         borderRadiusM: '5px',
         borderRadiusL: '10px',
+        borderRadiusXL: '100px',
         borderRadiusCircle: '50%',
         buttonOpacity: '.6',
         buttonHoverOpacity: '1',
@@ -28,6 +29,7 @@ let GlobalStyle = () => {
         fontSizeM: '1em',
         fontSizeL: '1.8em',
         fontFamily: '“Helvetica Neue”, Helvetica, Arial, sans-serif',
+        iconFontFamily: '"Nanum Gothic", sans-serif',
         fontColor: '#ffffff',
         mainBackground: mainBackground.type === 'image' ? `url(${mainBackground.value})` : mainBackground.value,
         backgroundPosition: 'center',
@@ -52,7 +54,7 @@ let GlobalStyle = () => {
         boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
         zIndexBottom: '0',
         zIndexMiddle: '1',
-        zIndexTop: '1',
+        zIndexTop: '2',
         animationBlurIn: [
             {
                 background: '#0000',

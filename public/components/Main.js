@@ -12,6 +12,9 @@ const Main = () => {
 
     const remove = () => element.remove()
     
+    const scrollLeft = speed => element.scrollLeft -= speed
+    const scrollRight = speed => element.scrollLeft += speed
+    
     const element = create('main')
     setElementStyle(element, {
         width: '100%',
@@ -52,7 +55,7 @@ const Main = () => {
 
     updateUI()
 
-    return { element, remove }
+    return { element, scrollLeft, scrollRight, remove }
 }
 
 export { Main }

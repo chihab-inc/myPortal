@@ -1,6 +1,7 @@
 import { Main } from './components/Main.js'
 import { GlobalStyle } from './globalStyle.js'
 import { append, setElementStyle } from './web_utils.js'
+import { ScrollOverlay } from './components/ScrollOverlay.js'
 
 const init = () => {
 
@@ -19,7 +20,11 @@ const init = () => {
             fontFamily: 'Verdana, sans-serif',
         })
 
-        append(body, Main())
+        const main = Main()
+        append(body, main)
+        // const scrollOverlay = ScrollOverlay(main)
+        // append(body, main)
+        // append(body, scrollOverlay)
     })
 }
 

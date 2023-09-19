@@ -70,7 +70,7 @@ const AddDataPanel = parentUpdateUI => {
         boxShadow: globalStyle.general.boxShadow,
         opacity: globalStyle.general.buttonOpacity,
     })
-    transition(image, 'all', globalStyle.general.transitionQuick)
+    transition(image, ['all'], [globalStyle.general.transitionQuick])
     
     image.addEventListener('mouseenter', () => {
         setElementStyle(image, {

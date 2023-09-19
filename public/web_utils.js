@@ -17,9 +17,13 @@ const animate = (element, animationName, animationTime, repetitions) => {
     })
 }
 
-const transition = (element, propertyName, transitionTime) => {
+const transition = (element, propertyNames, transitionTimes) => {
+    let transitions = []
+    for (const [idx, propertyName] of propertyNames.entries()) {
+        transitions.push(`${propertyName} ${transitionTimes[idx]}`)
+    }
     setElementStyle(element, {
-        transition: `${propertyName} ${transitionTime}`
+        transition: `${transitions.join(', ')}`
     })
 }
 
