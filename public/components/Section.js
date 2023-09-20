@@ -189,6 +189,7 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
         width: '427px',
         minWidth: '427px',
         minHeight: '20px',
+        zIndex: globalStyle.general.zIndexBottom,
     })
 
     const header = create('header')
@@ -246,9 +247,15 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
     let buttonGroup
     updateButtonGroup()
 
-    element.addEventListener('mouseenter', () => append(header, buttonGroup))
+    element.addEventListener('mouseenter', () => {
+        setElementStyle(element, { zIndex: globalStyle.general.zIndexMiddle })
+        append(header, buttonGroup)
+    })
 
-    element.addEventListener('mouseleave', () => buttonGroup.remove())
+    element.addEventListener('mouseleave', () => {
+        setElementStyle(element, { zIndex: globalStyle.general.zIndexBottom })
+        buttonGroup.remove()
+    })
 
     disableExtendedView()
     updateLinks()

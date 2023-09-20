@@ -34,7 +34,7 @@ const LinkDescription = id => {
         color: globalStyle.general.fontColor,
         fontSize: globalStyle.general.fontSizeS,
         whiteSpace: 'nowrap',
-        zIndex: globalStyle.general.zIndexMiddle,
+        zIndex: globalStyle.general.zIndexTop,
         borderRadius: globalStyle.general.borderRadiusM,
         boxSizing: 'border-box',
         padding: globalStyle.general.paddingM,
