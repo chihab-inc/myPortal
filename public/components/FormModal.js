@@ -1,6 +1,6 @@
 import { db } from '../controllers/database/db.js'
 import { GlobalStyle } from '../globalStyle.js'
-import { create, setElementStyle, append, animate, backgroundImage } from '../web_utils.js'
+import { create, setElementStyle, append, animate, backgroundImage, transition } from '../web_utils.js'
 
 const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons, submitHandler) => {
 
@@ -42,6 +42,7 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         width: '100vw',
         height: '100vh',
         backdropFilter: globalStyle.general.backdropFilter,
+        zIndex: globalStyle.general.zIndexTop,
     })
     animate(element, 'blur-in', globalStyle.general.transitionNormal, 1)
 
@@ -71,8 +72,8 @@ const FormModal = (tmpData={}, creating=false, inputFields=[], submitButtonIcons
         borderRadius: globalStyle.general.borderRadiusCircle,
         opacity: globalStyle.general.buttonOpacity,
         cursor: 'pointer',
-        transition: `all ${globalStyle.general.transitionQuick}`,
     })
+    transition(submitButton, ['all'], [globalStyle.general.transitionQuick])
     submitButton.textContent = ''
     checkForm()
 

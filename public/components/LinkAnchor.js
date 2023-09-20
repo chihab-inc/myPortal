@@ -1,4 +1,4 @@
-import { setElementStyle, create } from '../web_utils.js'
+import { setElementStyle, create, transition } from '../web_utils.js'
 import { GlobalStyle } from '../globalStyle.js'
 import { linkDB } from '../controllers/database/linkDB.js'
 
@@ -46,8 +46,8 @@ const LinkAnchor = id => {
         borderRadius: globalStyle.general.borderRadiusM,
         display: 'inline-block',
         textDecoration: 'none',
-        transition: `all ${globalStyle.general.transitionQuick}`
     })
+    transition(element, ['all'], [globalStyle.general.transitionQuick])
 
     const image = create('img')
     image.src = linkDB.getSrcById(id)

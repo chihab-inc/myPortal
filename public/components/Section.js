@@ -186,8 +186,8 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
         justifyContent: 'center',
         alignItems: 'center',
         gap: globalStyle.general.flexGapS,
-        width: '425px',
-        minWidth: '425px',
+        width: '427px',
+        minWidth: '427px',
         minHeight: '20px',
     })
 
@@ -214,7 +214,7 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
         borderRadius: globalStyle.general.borderRadiusM,
         ...{
             backgroundColor: globalStyle.theme.backgroundColorSecondary || globalStyle.general.backgroundColorSecondary,
-            border: globalStyle.theme.border || globalStyle.general.noBorder,
+            border: globalStyle.theme.border || globalStyle.general.border,
             backdropFilter: globalStyle.theme.backdropFilter || globalStyle.general.backdropFilter,
         },
     })
@@ -236,7 +236,7 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
         borderRadius: globalStyle.general.borderRadiusM,
         ...{
             backgroundColor: globalStyle.theme.backgroundColorSecondary || globalStyle.general.backgroundColorSecondary,
-            border: globalStyle.theme.border || globalStyle.general.noBorder,
+            border: globalStyle.theme.border || globalStyle.general.border,
             padding: globalStyle.theme.padding || globalStyle.general.paddingM,
             backdropFilter: globalStyle.theme.backdropFilter || globalStyle.general.backdropFilter,
         },
