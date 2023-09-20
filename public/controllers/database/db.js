@@ -26,6 +26,15 @@ db.exportDB = () => {
     a.click()
 }
 
+db.importDB = dbString => {
+    const dbObject = JSON.parse(dbString)
+    const dbs = {}
+    dbs[SECTION_DB] = dbObject.sections
+    dbs[LINK_DB] = dbObject.links
+    dbs[THEME_DB] = dbObject.theme
+    Object.keys(dbs).forEach(d => localStorage.setItem(d, JSON.stringify(dbs[d])))
+}
+
 
 
 export { db }
