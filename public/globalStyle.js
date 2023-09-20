@@ -50,6 +50,7 @@ let GlobalStyle = () => {
         paddingXL: '20px',
         paddingXXL: '100px',
         noBorder: 'none',
+        border: `1px solid ${secondaryColor}`,
         backdropFilter: 'blur(15px)',
         boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
         zIndexBottom: '0',

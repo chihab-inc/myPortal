@@ -30,7 +30,7 @@ const ScrollOverlay = scrollTarget => {
 		minHeight: '150px',
 		pointerEvents: 'none',
 		position: 'fixed', top: '300px', left: '0', bottom: '300px',
-		zIndex: globalStyle.general.zIndexTop,
+		zIndex: globalStyle.general.zIndexMiddle,
 	})
 
 	const left = create('div')
