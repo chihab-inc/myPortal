@@ -8,6 +8,7 @@ import { FormModal } from './FormModal.js'
 import { TextInput } from './TextInput.js'
 import { SelectInput } from './SelectInput.js'
 import { sectionDB } from '../controllers/database/sectionDB.js'
+import { ConfirmModal } from './ConfirmModal.js'
 
 const Link = (id, parentUpdateUI, newParentUpdateUI) => {
 
@@ -53,14 +54,17 @@ const Link = (id, parentUpdateUI, newParentUpdateUI) => {
     }
 
     const permanentlyDelete = () => {
-        // REQUEST CONFIRMATION BEFORE PERMANENTLY DELETING LINK
-        /* if (window.confirm('Sure?')) {
-            linkDB.permanentlyDeleteLinkById(id)
-            updateUI('permanentlyDelete')
-        } */
-        linkDB.permanentlyDeleteLinkById(id)
-        updateUI('permanentlyDelete')
-        parentUpdateUI()
+        append(document.body, ConfirmModal(
+                `Are you sure you want to permanently delete link '${linkDB.getTipById(id)}' from the database?`,
+                () => {
+                    linkDB.permanentlyDeleteLinkById(id)
+                    updateUI('permanentlyDelete')
+                    parentUpdateUI()
+
+                },
+                () => {}
+            )
+        )
     }
 
     const updateUI = (...props) => {
