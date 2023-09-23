@@ -7,6 +7,7 @@ import { ColorInput } from './ColorInput.js'
 import { FormModal } from './FormModal.js'
 import { Link } from './Link.js'
 import { TextInput } from './TextInput.js'
+import { ConfirmModal } from './ConfirmModal.js'
 
 const Section = (id, parentUpdateUI, otherSectionUpdate) => {
 
@@ -35,16 +36,17 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
     }
 
     const delete_ = () => {
-        // REQUEST CONFIRMATION BEFORE PERMANENTLY DELETING LINK
-        /* if (window.confirm('Sure?')) {
-            sectionDB.deleteSectionById(id)
-            linkDB.permanentlyDeleteLinksBySectionId(id)
-            updateUI('delete')
-        } */
-        sectionDB.deleteSectionById(id)
-        linkDB.permanentlyDeleteLinksBySectionId(id)
-        updateUI('delete')
-        parentUpdateUI()
+        append(document.body, ConfirmModal(
+                `Are you sure you want to permanently delete section '${sectionDB.getTitleById(id)}' and all of the links contained in it from the database?`,
+                () => {
+                    sectionDB.deleteSectionById(id)
+                    linkDB.permanentlyDeleteLinksBySectionId(id)
+                    updateUI('delete')
+                    parentUpdateUI()
+                },
+                () => {}
+            )
+        )
     }
 
     const toggleActive = () => {

@@ -86,6 +86,15 @@ linkDB.permanentlyDeleteLinksBySectionId = sectionId => {
     })
 }
 
+linkDB.updateLinkPositionsById = (movingLinkId, newNextLinkId) => {
+    linkDB.update(links => {
+        const toIndex = links.findIndex(link => link.id === newNextLinkId)
+        const fromIndex = links.findIndex(link => link.id === movingLinkId)
+        links.splice(fromIndex, 0, links.splice(toIndex, 1)[0])
+        return links
+    })
+}
+
 linkDB.init()
 
 export { linkDB }
