@@ -91,7 +91,6 @@ const AddDataPanel = parentUpdateUI => {
         color: globalStyle.general.backgroundColorSecondary,
         fontSize: globalStyle.general.fontSizeL,
         fontWeight: 'bold',
-        fontFamily: globalStyle.general.fontFamily,
     })
 
     element.addEventListener('click', () => {

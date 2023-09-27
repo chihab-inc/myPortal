@@ -17,7 +17,7 @@ const init = () => {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             display: 'flex',
-            fontFamily: 'Verdana, sans-serif',
+            fontFamily: globalStyle.general.fontFamily,
         })
 
         const main = Main()
