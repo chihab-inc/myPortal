@@ -27,16 +27,16 @@ const ScrollOverlay = scrollTarget => {
 	const element = create('div')
 	setElementStyle(element, {
 		width: '100%',
-		minHeight: '150px',
+		height: '250px',
 		pointerEvents: 'none',
-		position: 'fixed', top: '300px', left: '0', bottom: '300px',
+		position: 'fixed', top: 'calc((100% - 250px) / 2)', left: '0',
 		zIndex: globalStyle.general.zIndexMiddle,
 	})
 
 	const left = create('div')
 	left.textContent = '<'
 	setElementStyle(left, {
-		width: '20px',
+		width: globalStyle.general.buttonSizeS,
 		position: 'absolute', top: '0', left: '0', bottom: '0',
 		background: colorBackGroundIdle,
 		cursor: 'pointer', pointerEvents: 'auto',
@@ -52,7 +52,7 @@ const ScrollOverlay = scrollTarget => {
 		setElementStyle(left, {
 			background: colorBackGroundHover,
 			fontSize: globalStyle.general.fontSizeL,
-			width: '80px',
+			width: globalStyle.general.buttonSizeL,
 		})
 		hoverScrollIndex = setInterval(() => {
 			hoverScrollSpeed = Math.min(maxHoverScrollSpeed, hoverScrollSpeed + hoverScrollSpeedIncrement)
@@ -65,7 +65,7 @@ const ScrollOverlay = scrollTarget => {
 		setElementStyle(left, {
 			background: colorBackGroundIdle,
 			fontSize: globalStyle.general.fontSizeM,
-			width: '20px',
+			width: globalStyle.general.buttonSizeS,
 		})
 		clearInterval(hoverScrollIndex)
 		hoverScrollSpeed = 0
@@ -98,7 +98,7 @@ const ScrollOverlay = scrollTarget => {
 	const right = create('div')
 	right.textContent = '>'
 	setElementStyle(right, {
-		width: '20px',
+		width: globalStyle.general.buttonSizeS,
 		position: 'absolute', top: '0', right: '0', bottom: '0',
 		background: colorBackGroundIdle,
 		cursor: 'pointer', pointerEvents: 'auto',
@@ -114,7 +114,7 @@ const ScrollOverlay = scrollTarget => {
 		setElementStyle(right, {
 			background: colorBackGroundHover,
 			fontSize: globalStyle.general.fontSizeL,
-			width: '80px',
+			width: globalStyle.general.buttonSizeL,
 		})
 		hoverScrollIndex = setInterval(() => {
 			hoverScrollSpeed = Math.min(maxHoverScrollSpeed, hoverScrollSpeed + hoverScrollSpeedIncrement)
@@ -127,7 +127,7 @@ const ScrollOverlay = scrollTarget => {
 		setElementStyle(right, {
 			background: colorBackGroundIdle,
 			fontSize: globalStyle.general.fontSizeM,
-			width: '20px',
+			width: globalStyle.general.buttonSizeS,
 		})
 		clearInterval(hoverScrollIndex)
 		hoverScrollSpeed = 0
