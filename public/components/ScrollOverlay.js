@@ -9,7 +9,7 @@ const ScrollOverlay = scrollTarget => {
 	const colorBackGroundIdle = `${colorBackGroundBasic}33`
 	const colorBackGroundHover = `${colorBackGroundBasic}66`
 	const colorBackGroundPress = `${colorBackGroundBasic}aa`
-	const colorBorder = `${colorBackGroundBasic}55`
+	const border = `1px solid ${colorBackGroundBasic}55`
 
 	const remove = () => element.remove()
 
@@ -41,9 +41,9 @@ const ScrollOverlay = scrollTarget => {
 		background: colorBackGroundIdle,
 		cursor: 'pointer', pointerEvents: 'auto',
 		display: 'flex', justifyContent: 'center', alignItems: 'center',
-		color: colorBackGroundBasic, fontWeight: 'bold', fontFamily: globalStyle.general.iconFontFamily,
-		border: `1px solid ${colorBorder}`,
-		borderRadius: '0px 100px 100px 0px',
+		color: colorBackGroundBasic, fontWeight: 'bold',
+		border,
+		borderRadius: `0px ${globalStyle.general.borderRadiusXL} ${globalStyle.general.borderRadiusXL} 0px`,
 	})
 	transition(left, ['background', 'font-size', 'width'], [globalStyle.general.transitionNormal, globalStyle.general.transitionQuick, globalStyle.general.transitionQuick])
 
@@ -51,7 +51,7 @@ const ScrollOverlay = scrollTarget => {
 	left.addEventListener('mouseover', () => {
 		setElementStyle(left, {
 			background: colorBackGroundHover,
-			fontSize: '1.9em',
+			fontSize: globalStyle.general.fontSizeL,
 			width: '80px',
 		})
 		hoverScrollIndex = setInterval(() => {
@@ -64,7 +64,7 @@ const ScrollOverlay = scrollTarget => {
 	left.addEventListener('mouseleave', () => {
 		setElementStyle(left, {
 			background: colorBackGroundIdle,
-			fontSize: '1em',
+			fontSize: globalStyle.general.fontSizeM,
 			width: '20px',
 		})
 		clearInterval(hoverScrollIndex)
@@ -77,7 +77,7 @@ const ScrollOverlay = scrollTarget => {
 	left.addEventListener('mousedown', () => {
 		setElementStyle(left, {
 			background: colorBackGroundPress,
-			fontSize: '2.5em',
+			fontSize: globalStyle.general.fontSizeXL,
 		})
 		pressScrollIndex = setInterval(() => {
 			pressScrollSpeed = Math.min(maxPressScrollSpeed, pressScrollSpeed + pressScrollSpeedIncrement)
@@ -89,7 +89,7 @@ const ScrollOverlay = scrollTarget => {
 	left.addEventListener('mouseup', () => {
 		setElementStyle(left, {
 			background: colorBackGroundHover,
-			fontSize: '1.9em',
+			fontSize: globalStyle.general.fontSizeL,
 		})
 		clearInterval(pressScrollIndex)
 		pressScrollSpeed = 0
@@ -103,9 +103,9 @@ const ScrollOverlay = scrollTarget => {
 		background: colorBackGroundIdle,
 		cursor: 'pointer', pointerEvents: 'auto',
 		display: 'flex', justifyContent: 'center', alignItems: 'center',
-		color: colorBackGroundBasic, fontWeight: 'bold', fontFamily: globalStyle.general.iconFontFamily,
-		border: `1px solid ${colorBorder}`,
-		borderRadius: '100px 0px 0px 100px',
+		color: colorBackGroundBasic, fontWeight: 'bold',
+		border,
+		borderRadius: `${globalStyle.general.borderRadiusXL} 0px 0px ${globalStyle.general.borderRadiusXL}`,
 	})
 	transition(right, ['background', 'font-size', 'width'], [globalStyle.general.transitionNormal, globalStyle.general.transitionQuick, globalStyle.general.transitionQuick])
 
@@ -113,7 +113,7 @@ const ScrollOverlay = scrollTarget => {
 	right.addEventListener('mouseover', () => {
 		setElementStyle(right, {
 			background: colorBackGroundHover,
-			fontSize: '1.9em',
+			fontSize: globalStyle.general.fontSizeL,
 			width: '80px',
 		})
 		hoverScrollIndex = setInterval(() => {
@@ -126,7 +126,7 @@ const ScrollOverlay = scrollTarget => {
 	right.addEventListener('mouseleave', () => {
 		setElementStyle(right, {
 			background: colorBackGroundIdle,
-			fontSize: '1em',
+			fontSize: globalStyle.general.fontSizeM,
 			width: '20px',
 		})
 		clearInterval(hoverScrollIndex)
@@ -139,7 +139,7 @@ const ScrollOverlay = scrollTarget => {
 	right.addEventListener('mousedown', () => {
 		setElementStyle(right, {
 			background: colorBackGroundPress,
-			fontSize: '2.5em',
+			fontSize: globalStyle.general.fontSizeXL,
 		})
 		pressScrollIndex = setInterval(() => {
 			pressScrollSpeed = Math.min(maxPressScrollSpeed, pressScrollSpeed + pressScrollSpeedIncrement)
@@ -151,7 +151,7 @@ const ScrollOverlay = scrollTarget => {
 	right.addEventListener('mouseup', () => {
 		setElementStyle(right, {
 			background: colorBackGroundHover,
-			fontSize: '1.9em',
+			fontSize: globalStyle.general.fontSizeL,
 		})
 		clearInterval(pressScrollIndex)
 		pressScrollSpeed = 0
