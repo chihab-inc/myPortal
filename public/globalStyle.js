@@ -2,6 +2,7 @@ import { themeDB } from './controllers/database/themeDB.js'
 
 const primaryColor = themeDB.getTheme().colors.primaryColor
 const secondaryColor = themeDB.getTheme().colors.secondaryColor
+const accentColor = themeDB.getTheme().colors.accentColor
 const mainBackground = themeDB.getTheme().background
 
 let GlobalStyle = () => {
@@ -30,7 +31,8 @@ let GlobalStyle = () => {
         fontSizeL: '1.8em',
         fontSizeXL: '2.5em',
         fontFamily: '"Nanum Gothic", sans-serif',
-        fontColor: '#ffffff',
+        fontColor: '#eeeeee',
+        fontColorDark: '#111111',
         mainBackground: mainBackground.type === 'image' ? `url(${mainBackground.value})` : mainBackground.value,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
@@ -40,6 +42,7 @@ let GlobalStyle = () => {
         backgroundColorSecondary: secondaryColor,
         backgroundColorPrimaryWithTransparency: `${primaryColor}99`,
         backgroundColorSecondaryWithTransparency: `${secondaryColor}99`,
+        accentColor,
         backgroundColorInput: '#ffffff',
         backgroundColorInputInvalid: '#ff9999',
         paddingNone: '0px',

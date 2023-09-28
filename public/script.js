@@ -2,6 +2,7 @@ import { Main } from './components/Main.js'
 import { GlobalStyle } from './globalStyle.js'
 import { append, setElementStyle } from './web_utils.js'
 import { ScrollOverlay } from './components/ScrollOverlay.js'
+import { Toast } from './components/Toast.js'
 
 const init = () => {
 
@@ -25,6 +26,9 @@ const init = () => {
         
         append(body, main)
         append(body, scrollOverlay)
+
+        /*Toast('You have just done something totally awesome!!', () => { console.log('Closing Toast') })
+        .display(body)*/
     })
 }
 
