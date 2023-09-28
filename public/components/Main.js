@@ -14,6 +14,9 @@ const Main = () => {
     
     const scrollLeft = speed => element.scrollLeft -= speed
     const scrollRight = speed => element.scrollLeft += speed
+    const getScrollLeft = () => element.scrollLeft
+    const getClientWidth = () => element.clientWidth
+    const getScrollWidth = () => element.scrollWidth
     
     const element = create('main')
     setElementStyle(element, {
@@ -56,7 +59,7 @@ const Main = () => {
 
     updateUI()
 
-    return { element, scrollLeft, scrollRight, remove }
+    return { element, scrollLeft, scrollRight, remove, getScrollLeft, getClientWidth, getScrollWidth }
 }
 
 export { Main }

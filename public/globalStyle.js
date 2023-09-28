@@ -103,7 +103,13 @@ let GlobalStyle = () => {
 
     const setTheme = _theme => theme = theme[_theme]
 
-    return { general, theme, setTheme }
+    const settings = {
+        scrollSpeedHoverMax: 1,
+        scrollSpeedPressMax: 4,
+        scrollSpeedQuickMax: 8//64,
+    }
+
+    return { general, theme, settings, setTheme }
 }
 
 export { GlobalStyle }

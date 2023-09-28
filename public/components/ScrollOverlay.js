@@ -13,17 +13,51 @@ const ScrollOverlay = scrollTarget => {
 
 	const remove = () => element.remove()
 
+	let quickScrolling = false
+
 	let hoverScrollIndex
-	const maxHoverScrollSpeed = 2
-	const hoverScrollSpeedIncrement = .02
-	let hoverScrollSpeed = 0
+	const maxHoverScrollSpeed = globalStyle.settings.scrollSpeedHoverMax
 
 	let pressScrollIndex
-	const maxPressScrollSpeed = 8
-	const pressScrollSpeedIncrement = .1
-	let pressScrollSpeed = 0
+	const maxPressScrollSpeed = globalStyle.settings.scrollSpeedPressMax
 
-	// CHANGE ALL STYLES TO DEPEND ON GlobalStyle
+	let quickScrollIndex = 0
+	const maxQuickScrollSpeed = globalStyle.settings.scrollSpeedQuickMax
+
+	const scroll = (scrollDirection, maxScrollSpeed, style) => {
+		let scrollIndex
+		if (!quickScrolling) {
+			let scrollSpeed = 0
+			setElementStyle(scrollDirection === 'left' ? left : right, style)
+			scrollIndex = setInterval(() => {
+				scrollSpeed = Math.min(maxScrollSpeed, scrollSpeed + .1)
+				return scrollDirection === 'left' ? scrollTarget.scrollLeft(scrollSpeed) : scrollTarget.scrollRight(scrollSpeed)
+			}, 1)
+		}
+		return scrollIndex
+	}
+
+	const quickScroll = scrollDirection => {
+		quickScrolling = true
+		let scrollIndex
+		let scrollSpeed = 0
+		scrollIndex = setInterval(() => {
+			quickScrolling = scrollDirection === 'left' ? scrollTarget.getScrollLeft() > 0 : scrollTarget.getScrollLeft() + scrollTarget.getClientWidth() < scrollTarget.getScrollWidth()
+			if (quickScrolling) {
+				left.textContent = scrollDirection === 'left' ? '<<' : left.textContent
+				right.textContent = scrollDirection === 'right' ? '>>' : right.textContent
+				scrollSpeed = Math.min(maxQuickScrollSpeed, scrollSpeed + 1)
+				return scrollDirection === 'left' ? scrollTarget.scrollLeft(scrollSpeed) : scrollTarget.scrollRight(scrollSpeed)
+			} else {
+				left.textContent = scrollDirection === 'left' ? '<' : left.textContent
+				right.textContent = scrollDirection === 'right' ? '>' : right.textContent
+				clearInterval(scrollIndex)
+				scrollSpeed = 0
+			}
+		}, .1)
+		return scrollIndex
+	}
+
 	const element = create('div')
 	setElementStyle(element, {
 		width: '100%',
@@ -47,54 +81,6 @@ const ScrollOverlay = scrollTarget => {
 	})
 	transition(left, ['background', 'font-size', 'width'], [globalStyle.general.transitionNormal, globalStyle.general.transitionQuick, globalStyle.general.transitionQuick])
 
-
-	left.addEventListener('mouseover', () => {
-		setElementStyle(left, {
-			background: colorBackGroundHover,
-			fontSize: globalStyle.general.fontSizeL,
-			width: globalStyle.general.buttonSizeL,
-		})
-		hoverScrollIndex = setInterval(() => {
-			hoverScrollSpeed = Math.min(maxHoverScrollSpeed, hoverScrollSpeed + hoverScrollSpeedIncrement)
-			return scrollTarget.scrollLeft(hoverScrollSpeed)
-		}, 1)
-	})
-
-
-	left.addEventListener('mouseleave', () => {
-		setElementStyle(left, {
-			background: colorBackGroundIdle,
-			fontSize: globalStyle.general.fontSizeM,
-			width: globalStyle.general.buttonSizeS,
-		})
-		clearInterval(hoverScrollIndex)
-		hoverScrollSpeed = 0
-		clearInterval(pressScrollIndex)
-		pressScrollSpeed = 0
-	})
-
-
-	left.addEventListener('mousedown', () => {
-		setElementStyle(left, {
-			background: colorBackGroundPress,
-			fontSize: globalStyle.general.fontSizeXL,
-		})
-		pressScrollIndex = setInterval(() => {
-			pressScrollSpeed = Math.min(maxPressScrollSpeed, pressScrollSpeed + pressScrollSpeedIncrement)
-			return scrollTarget.scrollLeft(pressScrollSpeed)
-		}, 1)
-	})
-
-
-	left.addEventListener('mouseup', () => {
-		setElementStyle(left, {
-			background: colorBackGroundHover,
-			fontSize: globalStyle.general.fontSizeL,
-		})
-		clearInterval(pressScrollIndex)
-		pressScrollSpeed = 0
-	})
-
 	const right = create('div')
 	right.textContent = '>'
 	setElementStyle(right, {
@@ -109,19 +95,55 @@ const ScrollOverlay = scrollTarget => {
 	})
 	transition(right, ['background', 'font-size', 'width'], [globalStyle.general.transitionNormal, globalStyle.general.transitionQuick, globalStyle.general.transitionQuick])
 
-
-	right.addEventListener('mouseover', () => {
-		setElementStyle(right, {
-			background: colorBackGroundHover,
-			fontSize: globalStyle.general.fontSizeL,
-			width: globalStyle.general.buttonSizeL,
-		})
-		hoverScrollIndex = setInterval(() => {
-			hoverScrollSpeed = Math.min(maxHoverScrollSpeed, hoverScrollSpeed + hoverScrollSpeedIncrement)
-			return scrollTarget.scrollRight(hoverScrollSpeed)
-		}, 1)
+	left.addEventListener('mouseenter', () => {
+		quickScrolling = false
+		left.textContent = '<'
+		right.textContent = '>'
+		clearInterval(quickScrollIndex)
+		hoverScrollIndex = scroll(
+			'left', maxHoverScrollSpeed, { background: colorBackGroundHover, fontSize: globalStyle.general.fontSizeL, width: globalStyle.general.buttonSizeL }
+		)
 	})
 
+	left.addEventListener('mousedown', () => pressScrollIndex = scroll(
+		'left', maxPressScrollSpeed, { background: colorBackGroundPress, fontSize: globalStyle.general.fontSizeXL })
+	)
+
+	left.addEventListener('mouseleave', () => {
+		setElementStyle(left, {
+			background: colorBackGroundIdle,
+			fontSize: globalStyle.general.fontSizeM,
+			width: globalStyle.general.buttonSizeS,
+		})
+		clearInterval(hoverScrollIndex)
+		clearInterval(pressScrollIndex)
+	})
+
+	left.addEventListener('dblclick', () => quickScrollIndex = quickScroll('left'))
+
+	left.addEventListener('mouseup', () => {
+		if (!quickScrolling) {
+			setElementStyle(left, {
+				background: colorBackGroundHover,
+				fontSize: globalStyle.general.fontSizeL,
+			})
+			clearInterval(pressScrollIndex)
+		}
+	})
+
+	right.addEventListener('mouseenter', () => {
+		quickScrolling = false
+		left.textContent = '<'
+		right.textContent = '>'
+		clearInterval(quickScrollIndex)
+		hoverScrollIndex = scroll(
+			'right', maxHoverScrollSpeed, { background: colorBackGroundHover, fontSize: globalStyle.general.fontSizeL, width: globalStyle.general.buttonSizeL }
+		)
+	})
+
+	right.addEventListener('mousedown', () => pressScrollIndex = scroll(
+		'right', maxPressScrollSpeed, { background: colorBackGroundPress, fontSize: globalStyle.general.fontSizeXL })
+	)
 
 	right.addEventListener('mouseleave', () => {
 		setElementStyle(right, {
@@ -130,31 +152,19 @@ const ScrollOverlay = scrollTarget => {
 			width: globalStyle.general.buttonSizeS,
 		})
 		clearInterval(hoverScrollIndex)
-		hoverScrollSpeed = 0
 		clearInterval(pressScrollIndex)
-		pressScrollSpeed = 0
 	})
 
-
-	right.addEventListener('mousedown', () => {
-		setElementStyle(right, {
-			background: colorBackGroundPress,
-			fontSize: globalStyle.general.fontSizeXL,
-		})
-		pressScrollIndex = setInterval(() => {
-			pressScrollSpeed = Math.min(maxPressScrollSpeed, pressScrollSpeed + pressScrollSpeedIncrement)
-			return scrollTarget.scrollRight(pressScrollSpeed)
-		}, 1)
-	})
-
+	right.addEventListener('dblclick', () => quickScrollIndex = quickScroll('right'))
 
 	right.addEventListener('mouseup', () => {
-		setElementStyle(right, {
-			background: colorBackGroundHover,
-			fontSize: globalStyle.general.fontSizeL,
-		})
-		clearInterval(pressScrollIndex)
-		pressScrollSpeed = 0
+		if (!quickScrolling) {
+			setElementStyle(right, {
+				background: colorBackGroundHover,
+				fontSize: globalStyle.general.fontSizeL,
+			})
+			clearInterval(pressScrollIndex)
+		}
 	})
 
 	append(element, { element: left })
