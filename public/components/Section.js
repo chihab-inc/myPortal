@@ -8,6 +8,7 @@ import { FormModal } from './FormModal.js'
 import { Link } from './Link.js'
 import { TextInput } from './TextInput.js'
 import { ConfirmModal } from './ConfirmModal.js'
+import { Toast } from './Toast.js'
 
 const Section = (id, parentUpdateUI, otherSectionUpdate) => {
 
@@ -43,6 +44,7 @@ const Section = (id, parentUpdateUI, otherSectionUpdate) => {
                     linkDB.permanentlyDeleteLinksBySectionId(id)
                     updateUI('delete')
                     parentUpdateUI()
+                    Toast('Section and links permanently deleted').display(document.body)
                 },
                 () => {}
             )

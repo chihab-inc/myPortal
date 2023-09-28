@@ -9,6 +9,7 @@ import { TextInput } from './TextInput.js'
 import { SelectInput } from './SelectInput.js'
 import { sectionDB } from '../controllers/database/sectionDB.js'
 import { ConfirmModal } from './ConfirmModal.js'
+import { Toast } from './Toast.js'
 
 const Link = (id, parentUpdateUI, newParentUpdateUI) => {
 
@@ -60,7 +61,7 @@ const Link = (id, parentUpdateUI, newParentUpdateUI) => {
                     linkDB.permanentlyDeleteLinkById(id)
                     updateUI('permanentlyDelete')
                     parentUpdateUI()
-
+                    Toast('Link permanently deleted').display(document.body)
                 },
                 () => {}
             )
