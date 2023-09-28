@@ -106,7 +106,7 @@ let GlobalStyle = () => {
     const settings = {
         scrollSpeedHoverMax: 1,
         scrollSpeedPressMax: 4,
-        scrollSpeedQuickMax: 8//64,
+        scrollSpeedQuickMax: 64,
     }
 
     return { general, theme, settings, setTheme }
