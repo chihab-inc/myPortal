@@ -16,11 +16,7 @@ const ButtonGroup = (options={}, buttons=[]) => {
             'rounded': globalStyle.general.borderRadiusL,
             'bubbles': globalStyle.general.borderRadiusL,
         }[options.type || 'bubbles'],
-        padding: {
-            'squared': globalStyle.general.paddingNone,
-            'rounded': globalStyle.general.paddingNone,
-            'bubbles': globalStyle.general.paddingXS,
-        }[options.type || 'bubbles'],
+        padding: globalStyle.general.paddingNone,
         listStyleType: 'none',
         display: 'flex',
         flexDirection: ['vertical', 'v'].includes(options.orientation || 'horizontal') ? 'column' : 'row',
@@ -34,7 +30,7 @@ const ButtonGroup = (options={}, buttons=[]) => {
         left: options.position.left || 'auto',
     })
 
-    // Filter out the elements that are not a valid object (a.k.a. equal to false, null, undefined)
+    // FILTER OUT THE ELEMENTS THAT ARE NOT A VALID OBJECT (A.K.A. EQUAL TO FALSE, NULL, UNDEFINED)
     const nbButtons = buttons.filter((i) => ![false, null, undefined].includes(i)).length
     for (const [idx, b] of buttons.filter((i) => ![false, null, undefined].includes(i)).entries()) {
         const item = create('li')
