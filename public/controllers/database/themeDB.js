@@ -9,7 +9,7 @@ themeDB.init = () => {
         set(DB_NAME, {
             name: 'flat',
             dark: true,
-            colors: { primaryColor: '#1C1E1E', secondaryColor: '#2A2C2C' },
+            colors: { primaryColor: '#1C1E1E', secondaryColor: '#2A2C2C', accentColor:'#497f99' },
             background: { type: 'color', value: '#1C1E1E' }
         })
     }
