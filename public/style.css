@@ -59,12 +59,12 @@
 }
 @keyframes pop-in {
   70% {
-    transform: scale(1.4);
+    transform: scale(1.05);
   }
 }
 @keyframes pop-out {
   70% {
-    transform: scale(1.4);
+    transform: scale(1.05);
   }
 }
 @keyframes blur-in {
