@@ -1,32 +1,21 @@
-on: push
+name: Download and extract specific version of Node binary
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  build-node:
-    permissions: write-all
+  build:
     runs-on: ubuntu-latest
-    container: node:20
+
     steps:
-      - run: node --version
-      - run: npm --version
-      - uses: actions/checkout@v4
-      - run: npm install
-      - run: wget https://nodejs.org/dist/latest/win-x86/node.exe
-      - run: mkdir release/
-      - run: mv node.exe release/
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: wget https://nodejs.org/dist/v20.20.0/node-v20.20.0-linux-x64.tar.xz
+      - run: mkdir release
+      - run: unzip node-v20.20.0-linux-x64.tar.xz -d release/
+
+      - name: Upload release assets
+        uses: actions/upload-release-action@v3.1.0
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ github.event.repository.releases.upload_url }}
           file: release/*
