@@ -1,6 +1,7 @@
 on: push
 jobs:
   build-node:
+    permissions: write-all
     runs-on: ubuntu-latest
     container: node:20
     steps:
