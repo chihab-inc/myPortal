@@ -2,3 +2,4 @@
 .vscode
 .vscode/settings.json
 package-lock.json
+node_modules
