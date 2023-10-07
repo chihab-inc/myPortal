@@ -12,6 +12,14 @@ fi && \
 if [ -f "node_modules" ]; then
   rm -rf node_modules
 fi && \
+# check if package-lock.json exists and if so remove to it overwrite later with a more recent version
+if [ -f "package-lock.json" ]; then
+  rm package-lock.json
+fi && \
+# check if node_modules exists and if so remove to it overwrite later with a more recent version
+if [ -f "node_modules" ]; then
+  rm -rf node_modules
+fi && \
 echo '[ NPM INSTALL ]' && \
 npm install --save && \
 
