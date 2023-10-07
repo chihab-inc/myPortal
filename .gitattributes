@@ -1,7 +1,12 @@
+.vscode export-ignore
 .env export-ignore
 .git export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 package-lock.json export-ignore
 package.json export-ignore
-.vscode export-ignore
+run-linux.sh export-ignore
+run-macos.sh export-ignore
+run-windows.bat export-ignore
+update-local-node.sh export-ignore
+push-new-branch.sh export-ignore
