@@ -4,8 +4,15 @@
 ## THIS SCRIPT WILL REPLACE OR ADD VERSIONS OF NODE BINARIES FOR BOTH LINUX, MACOS, AND WINDOWS TO THE DIRECTORY
 ## IT WILL ALSO NPM UINSTALL ANY NEWLY ADDED MODULES SO THAT THE USER DOESN'T HAVE TO DO THAT
 
+# check if package-lock.json exists and if so remove to it overwrite later with a more recent version
+if [ -f "package-lock.json" ]; then
+  rm package-lock.json
+fi && \
+# check if node_modules exists and if so remove to it overwrite later with a more recent version
+if [ -f "node_modules" ]; then
+  rm -rf node_modules
+fi && \
 echo '[ NPM INSTALL ]' && \
-rm -rf node_modules && \
 npm install && \
 
 echo '[ DOWNLOADING NODE ]' && \
