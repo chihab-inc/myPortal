@@ -18,4 +18,4 @@ Execute the file run-windows.bat
 ## HOW TO USE?
 Once the server is running, open a browser and head to `localhost:3898`. This should bring up the app's page.
 
-# ENJOY!
+# ENJOY!!

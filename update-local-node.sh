@@ -13,7 +13,7 @@ if [ -f "node_modules" ]; then
   rm -rf node_modules
 fi && \
 echo '[ NPM INSTALL ]' && \
-npm install && \
+npm install --save && \
 
 echo '[ DOWNLOADING NODE ]' && \
 # check if node.exe exists and if so remove to it overwrite later with a more recent version
