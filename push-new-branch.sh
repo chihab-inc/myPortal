@@ -19,6 +19,7 @@ else
     
     # Build release archive if last commit
     if [ -z "$3" ]; then
+        echo 'UPDATEING LOCAL NODE BINARIES' && \
         ./update-local-node.sh
     fi && \
     
