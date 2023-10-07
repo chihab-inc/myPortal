@@ -12,34 +12,45 @@ fi && \
 if [ -f "node_modules" ]; then
   rm -rf node_modules
 fi && \
+# check if package-lock.json exists and if so remove to it overwrite later with a more recent version
+if [ -f "package-lock.json" ]; then
+  rm package-lock.json
+fi && \
+# check if node_modules exists and if so remove to it overwrite later with a more recent version
+if [ -f "node_modules" ]; then
+  rm -rf node_modules
+fi && \
 echo '[ NPM INSTALL ]' && \
-npm install && \
+npm install --save && \
+
+mkdir -p node
 
 echo '[ DOWNLOADING NODE ]' && \
 # check if node.exe exists and if so remove to it overwrite later with a more recent version
-if [ -f "node.exe" ]; then
-  rm node.exe
+if [ -f "node/node.exe" ]; then
+  rm node/node.exe
 fi && \
 wget https://nodejs.org/dist/latest/win-x86/node.exe && \ 
+mv node.exe node/node.exe && \
 
 # check if node exists and if so remove to it overwrite later with a more recent version
-if [ -f "node-linux" ]; then
-  rm node-linux
+if [ -f "node/node-linux" ]; then
+  rm node/node-linux
 fi && \
 wget https://nodejs.org/dist/latest/node-v20.8.0-linux-x64.tar.gz && \ 
 tar -xzf node-v20.8.0-linux-x64.tar.gz && \ 
 rm node-v20.8.0-linux-x64.tar.gz && \ 
-cp node-v20.8.0-linux-x64/bin/node ./node-linux && \ 
+cp node-v20.8.0-linux-x64/bin/node ./node/node-linux && \ 
 rm -R node-v20.8.0-linux-x64/ && \
 
 # check if node exists and if so remove to it overwrite later with a more recent version
-if [ -f "node-darwin" ]; then
-  rm node-darwin
+if [ -f "node/node-darwin" ]; then
+  rm node/node-darwin
 fi && \
 wget https://nodejs.org/dist/latest/node-v20.8.0-darwin-x64.tar.gz && \ 
 tar -xzf node-v20.8.0-darwin-x64.tar.gz && \ 
 rm node-v20.8.0-darwin-x64.tar.gz && \ 
-cp node-v20.8.0-darwin-x64/bin/node ./node-darwin && \ 
+cp node-v20.8.0-darwin-x64/bin/node ./node/node-darwin && \ 
 rm -R node-v20.8.0-darwin-x64/ && \
 
 echo 'DONE'
