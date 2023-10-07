@@ -37,6 +37,9 @@ npm cache clean --force && \
 echo '[ NPM INSTALL ]' && \
 npm install --save && \
 
+# COPY node_modules INTO myPortal
+cp -R node_modules myPortal && \
+
 # PREPARING USER ENVIRONMENT
 mkdir -p node
 
@@ -68,9 +71,7 @@ rm node-v20.8.0-darwin-x64.tar.gz && \
 cp node-v20.8.0-darwin-x64/bin/node ./node/node-darwin && \ 
 rm -R node-v20.8.0-darwin-x64/ && \
 
-# COPY node_modules INTO myPortal
-cp -R node_modules myPortal && \
-# COPY node INTO myPortal
+# MOVE node INTO myPortal
 mv node myPortal && \
 # REMOVE OLDER myPortal.zip IF EXISTS
 if [ -f "myPortal.zip" ]; then
