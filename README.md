@@ -11,7 +11,7 @@ You're here, so you have at least downloaded the package, extracted it and gotte
 #### YOU'RE ON LINUX
 Execute the file run-linux.sh
 #### YOU'RE ON MACOS
-Execute the file run-darwin.sh
+Execute the file run-macos.sh
 #### YOU'RE ON WINDOWS
 Execute the file run-windows.bat
 
