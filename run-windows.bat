@@ -2,6 +2,6 @@
 setlocal
 
 REM Run the index.js file with Node.js
-node\node.exe index.js
+start "MyPortal Server" "node/node.exe" "index.js"
 
 endlocal
